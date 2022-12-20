@@ -1,3 +1,5 @@
-# Test file
+# Pre-Commit Test File
 
-add your syntax here
+Testing `mdformat-mkdocs` as a `pre-commit` hook (`tox -e py#-hook`)
+
+FIXME: Add example lists

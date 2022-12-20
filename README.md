@@ -1,83 +1,60 @@
-# mdformat-plugin
+# mdformat-mkdocs
 
-[![Build Status][ci-badge]][ci-link]
-[![codecov.io][cov-badge]][cov-link]
-[![PyPI version][pypi-badge]][pypi-link]
+[![Build Status][ci-badge]][ci-link] [![PyPI version][pypi-badge]][pypi-link]
 
-An [mdformat](https://github.com/executablebooks/mdformat) plugin for...
+<!-- [![codecov.io][cov-badge]][cov-link]
+[cov-badge]: https://codecov.io/gh/executablebooks/mdformat-mkdocs/branch/main/graph/badge.svg
+[cov-link]: https://codecov.io/gh/executablebooks/mdformat-mkdocs
+ -->
 
-## Required changes for a new plugin
+An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocss.
 
-This demonstration is setup with a plugin named `plugin`.
-There are a number of locations to change.
-At a top level for a plugin `foo` at least the following changes are required
+## Usage
 
-- Global find and replace `mdformat_plugin` to `mdformat_foo` including folder names.
-- Global find and replace `mdformat-plugin` to `mdformat-foo` including folder names.
-- `tests/test_fixtures.py`: `output = mdformat.text(text, extensions={"plugin"})` becomes `output = mdformat.text(text, extensions={"foo"})`
-- `pyproject.toml` in addition to the global find and replace: `plugin = "mdformat_plugin"` becomes `foo = "mdformat_foo"`
+Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Do not forget to update authorship / maintainers in `pyproject.toml` as well.
+### Pre-commit
 
-## Development
-
-This package utilises [flit](https://flit.readthedocs.io) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
-
-To install these development dependencies:
-
-```bash
-pip install tox
+```yaml
+repos:
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.16
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-mkdocs
 ```
 
-To run the tests:
+### pipx
 
-```bash
-tox
+```sh
+pipx install mdformat
+pipx inject mdformat mdformat-mkdocs
 ```
 
-and with test coverage:
+## Caveats
 
-```bash
-tox -e py37-cov
-```
+This plugin currently only supports mkdocss that start with `!!! ...` and won't modify mkdocss for Github, which should cover most use cases. Future work is planned for other types.
 
-The easiest way to write tests, is to edit tests/fixtures.md
+See the example test file: [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md)
 
-To run the code formatting and style checks:
+As a quick summary:
 
-```bash
-tox -e py37-pre-commit
-```
+- [python-markdown](https://python-markdown.github.io/extensions/mkdocs/): is fully supported by `mdformat-mkdocs` and tested extensively in [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
+- [MKdocs](https://squidfunk.github.io/mkdocs-material/reference/mkdocss): Is fully supported
+- Unsupported, but won't modify:
+  - [Github](https://github.com/orgs/community/discussions/16925): Unsupported and will not modify
+  - [MyST](https://myst-parser.readthedocs.io/en/latest/syntax/roles-and-directives.html): Unsupported and will not modify
+  - [Remark-Admonitions](https://github.com/elviswolcott/remark-mkdocss): Unsupported and will not modify
+- `mdformat` will break mkdocss by:
+  - [reStructuredText](https://docutils.sourceforge.io/docs/ref/rst/directives.html#specific-mkdocss): Unsupported and *will break* by removing or modifying indentation
+  - [Obsidian Callouts](https://help.obsidian.md/How+to/Use+callouts): Unsupported and *will break* because `mdformat` adds extra characters
 
-or directly
+## Contributing
 
-```bash
-pip install pre-commit
-pre-commit run --all
-```
+See [CONTRIBUTING.md](https://github.com/KyleKing/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
 
-To run the pre-commit hook test:
-
-```bash
-tox -e py37-hook
-```
-
-## Publish to PyPi
-
-Either use flit directly:
-
-```bash
-pip install flit
-flit publish
-```
-
-or trigger the GitHub Action job, by creating a release with a tag equal to the version, e.g. `v0.0.1`.
-
-Note, this requires generating an API key on PyPi and adding it to the repository `Settings/Secrets`, under the name `PYPI_KEY`.
-
-[ci-badge]: https://github.com/executablebooks/mdformat-plugin/workflows/CI/badge.svg?branch=master
-[ci-link]: https://github.com/executablebooks/mdformat/actions?query=workflow%3ACI+branch%3Amaster+event%3Apush
-[cov-badge]: https://codecov.io/gh/executablebooks/mdformat-plugin/branch/master/graph/badge.svg
-[cov-link]: https://codecov.io/gh/executablebooks/mdformat-plugin
-[pypi-badge]: https://img.shields.io/pypi/v/mdformat-plugin.svg
-[pypi-link]: https://pypi.org/project/mdformat-plugin
+[ci-badge]: https://github.com/executablebooks/mdformat-mkdocs/workflows/CI/badge.svg?branch=main
+[ci-link]: https://github.com/executablebooks/mdformat/actions?query=workflow%3ACI+branch%3Amain+event%3Apush
+[pypi-badge]: https://img.shields.io/pypi/v/mdformat-mkdocs.svg
+[pypi-link]: https://pypi.org/project/mdformat-mkdocs

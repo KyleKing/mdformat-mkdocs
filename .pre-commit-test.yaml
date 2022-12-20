@@ -1,9 +1,12 @@
+---
+# A pre-commit hook for testing unreleased changes
+# Run from tox with: tox -e py310-hook
 repos:
   - repo: local
     hooks:
-    - id: mdformat
-      name: mdformat
-      entry: mdformat
-      files: "tests/pre-commit-test.md"
-      types: [markdown]
-      language: system
+      - id: mdformat
+        name: mdformat-from-tox
+        entry: mdformat
+        files: tests/pre-commit-test.md
+        types: [markdown]
+        language: system

@@ -1,29 +1,70 @@
+---
 repos:
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.4.0
-  hooks:
-  - id: end-of-file-fixer
-  - id: mixed-line-ending
-  - id: trailing-whitespace
-  - id: check-yaml
-  - id: check-toml
-- repo: https://github.com/pre-commit/pygrep-hooks
-  rev: v1.8.0
-  hooks:
-  - id: python-check-blanket-noqa
-- repo: https://github.com/timothycrosley/isort
-  rev: 5.8.0
-  hooks:
-  - id: isort
-- repo: https://github.com/psf/black
-  rev: 20.8b1
-  hooks:
-  - id: black
-- repo: https://gitlab.com/pycqa/flake8
-  rev: 3.9.0
-  hooks:
-  - id: flake8
-    additional_dependencies:
-    - flake8-bugbear==21.3.2
-    - flake8-builtins==1.5.3
-    - flake8-comprehensions==3.4.0
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: check-vcs-permalinks
+      - id: check-yaml
+        args: [--unsafe]
+      - id: debug-statements
+      - id: destroyed-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
+      - id: fix-encoding-pragma
+        args: [--remove]
+      - id: forbid-new-submodules
+      - id: mixed-line-ending
+        args: [--fix=auto]
+      - id: pretty-format-json
+        args: [--autofix, --indent=4]
+      - id: trailing-whitespace
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.9.0
+    hooks:
+      - id: python-check-blanket-noqa
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-bugbear>=21.3.2
+          - flake8-builtins>=1.5.3
+          - flake8-comprehensions>=3.4.0
+        args: [--ignore=E501]
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.16
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-admon
+          - mdformat-beautysh
+          - mdformat-black
+          - mdformat-config
+          - mdformat-frontmatter
+          - mdformat-gfm
+          - mdformat-tables
+          - mdformat-toc
+          - mdformat-web
+        exclude: tests/.+\.md
+        args: [--wrap=no]
+  - repo: https://github.com/lyz-code/yamlfix/
+    rev: 1.1.1
+    hooks:
+      - id: yamlfix
+        types_or: []
+        types: [file, yaml]

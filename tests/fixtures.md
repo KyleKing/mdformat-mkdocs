@@ -1,24 +1,49 @@
-a test
+
+Dashed list
 .
-This is the input Markdown test,
-then below add the expected output.
+- item 1
+    - item 2
 .
-This is the input Markdown test,
-then below add the expected output.
+- item 1
+    - item 2
 .
 
-another test
+
+Corrected Indentation from 3x
 .
-Some *markdown*
-
-- a
-- b
-* c
+- item 1
+   - item 2
+      - item 3
+         - item 4
 .
-Some *markdown*
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
 
-- a
-- b
+Corrected Indentation from 5x
+.
+- item 1
+     - item 2
+          - item 3
+               - item 4
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
 
-* c
+List with code block
+.
+- item 1
+    
+    code block
+.
+- item 1
+    
+    ```
+    code block
+    ```
 .
