@@ -9,6 +9,10 @@
 
 An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
+> *Warning*
+>
+> This is an initial proof of concept. Non-list items nested within a list are not properly handled (i.e. nested code blocks, quotes, etc.). Please [open an issue](https://github.com/KyleKing/mdformat-mkdocs/issues/new) and share examples that aren't properly supported!
+
 ## Usage
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
@@ -34,9 +38,8 @@ pipx inject mdformat mdformat-mkdocs
 
 ## Caveats
 
-> *Warning*
->
-> This is an initial proof of concept and non-list items nested within a list are not properly handled
+- All indents are converted to 4-spaces
+- This plugin converts all bulleted items to dashes and numerals to `1.`
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
 

@@ -1,6 +1,5 @@
-import textwrap
-from typing import Mapping
 from functools import partial
+from typing import Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode

@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "mdformat_mkdocs"
 authors = [
-    { name = "Chris Sewell", email = "executablebooks@gmail.com" },
+    { name = "Kyle King", email = "dev.act.kyle@gmail.com" },
 ]
 readme = "README.md"
 classifiers = [
@@ -22,7 +22,18 @@ dependencies = [
 ]
 dynamic = ["version", "description"]
 
-[project.optional-dependencies]
+[project.metadata.requires-extra]
+recommended = [
+    "mdformat-admon",
+    "mdformat-beautysh",
+    "mdformat-black",
+    "mdformat-config",
+    "mdformat-frontmatter",
+    "mdformat-gfm",
+    "mdformat-tables",
+    "mdformat-toc",
+    "mdformat-web",
+]
 test = [
     "pytest>=6.0",
     "pytest-cov",
@@ -30,7 +41,7 @@ test = [
 dev = ["pre-commit"]
 
 [project.urls]
-Homepage = "https://github.com/executablebooks/mdformat-mkdocs"
+Homepage = "https://github.com/KyleKing/mdformat-mkdocs"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
