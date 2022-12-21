@@ -11,11 +11,23 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
 > *Warning*
 >
-> This is an initial proof of concept. Non-list items nested within a list are not properly handled (i.e. nested code blocks, quotes, etc.). Please [open an issue](https://github.com/KyleKing/mdformat-mkdocs/issues/new) and share examples that aren't properly supported!
+> This is an initial proof of concept. Non-list items nested within a list are not properly handled (i.e. nested code blocks, quotes, etc.). Please [open an issue](https://github.com/KyleKing/mdformat-mkdocs/issues/new) and share examples of any code that isn't properly formatted!
 
 ## Usage
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
+
+Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs:
+
+- mdformat-admon
+- mdformat-beautysh
+- mdformat-black
+- mdformat-config
+- mdformat-frontmatter
+- mdformat-gfm
+- mdformat-tables
+- mdformat-toc
+- mdformat-web
 
 ### Pre-commit
 
@@ -27,6 +39,8 @@ repos:
       - id: mdformat
         additional_dependencies:
           - mdformat-mkdocs
+          # Or
+          # - "mdformat-mkdocs[recommended]"
 ```
 
 ### pipx
@@ -34,12 +48,14 @@ repos:
 ```sh
 pipx install mdformat
 pipx inject mdformat mdformat-mkdocs
+# Or
+# pipx inject mdformat-gfm "mdformat-mkdocs[recommended]"
 ```
 
 ## Caveats
 
 - All indents are converted to 4-spaces
-- This plugin converts all bulleted items to dashes and numerals to `1.`
+- This plugin converts all bulleted items to dashes (`-`) and numerals to `1.`
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
 
