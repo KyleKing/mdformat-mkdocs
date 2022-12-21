@@ -22,7 +22,7 @@ dependencies = [
 ]
 dynamic = ["version", "description"]
 
-[project.metadata.requires-extra]
+[project.optional-dependencies]
 recommended = [
     "mdformat-admon",
     "mdformat-beautysh",
