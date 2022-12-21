@@ -14,21 +14,13 @@ def update_mdit(mdit: MarkdownIt) -> None:
 
 def _render_list(node: RenderTreeNode, context: RenderContext, bullet: str) -> str:
     """Render a `RenderTreeNode` consistent with `mkdocs`."""
-    indent = " " * 4  # MkDocs requires four spaces
     rendered = ""
+    indent = " " * 4
     with context.indented(len(indent)):  # Modifies context.env['indent_width']
         inner_indent = indent * (context.env["indent_width"] // len(indent) - 1)
         for child in node.children:
             content = child.render(context)
-            # inner_items = content.split("\n")
             rendered += f"{inner_indent}{bullet} {content}\n"
-            # # Process nested code blocks
-            # if len(inner_items) > 1:
-            #     nested_conent = textwrap.indent(
-            #         "\n".join(inner_items[1:]),
-            #         inner_indent + indent,
-            #     )
-            #     rendered += f"\n{nested_conent}\n"
     return rendered
 
 

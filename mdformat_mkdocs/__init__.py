@@ -1,4 +1,4 @@
-"""An mdformat plugin for mkdocss."""
+"""An mdformat plugin for mkdocs."""
 
 __version__ = "0.0.1"
 

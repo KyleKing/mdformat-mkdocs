@@ -7,7 +7,7 @@
 [cov-link]: https://codecov.io/gh/executablebooks/mdformat-mkdocs
  -->
 
-An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocss.
+An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
 ## Usage
 
@@ -34,21 +34,11 @@ pipx inject mdformat mdformat-mkdocs
 
 ## Caveats
 
-This plugin currently only supports mkdocss that start with `!!! ...` and won't modify mkdocss for Github, which should cover most use cases. Future work is planned for other types.
+> *Warning*
+>
+> This is an initial proof of concept and non-list items nested within a list are not properly handled
 
-See the example test file: [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md)
-
-As a quick summary:
-
-- [python-markdown](https://python-markdown.github.io/extensions/mkdocs/): is fully supported by `mdformat-mkdocs` and tested extensively in [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
-- [MKdocs](https://squidfunk.github.io/mkdocs-material/reference/mkdocss): Is fully supported
-- Unsupported, but won't modify:
-  - [Github](https://github.com/orgs/community/discussions/16925): Unsupported and will not modify
-  - [MyST](https://myst-parser.readthedocs.io/en/latest/syntax/roles-and-directives.html): Unsupported and will not modify
-  - [Remark-Admonitions](https://github.com/elviswolcott/remark-mkdocss): Unsupported and will not modify
-- `mdformat` will break mkdocss by:
-  - [reStructuredText](https://docutils.sourceforge.io/docs/ref/rst/directives.html#specific-mkdocss): Unsupported and *will break* by removing or modifying indentation
-  - [Obsidian Callouts](https://help.obsidian.md/How+to/Use+callouts): Unsupported and *will break* because `mdformat` adds extra characters
+See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
 
 ## Contributing
 
