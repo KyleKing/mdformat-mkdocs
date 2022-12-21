@@ -24,7 +24,6 @@ Tip: this package has a pip extra, `recommended`, of plugins that work well with
 - mdformat-black
 - mdformat-config
 - mdformat-frontmatter
-- mdformat-gfm
 - mdformat-tables
 - mdformat-toc
 - mdformat-web
