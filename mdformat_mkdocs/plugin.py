@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Mapping
 
 from markdown_it import MarkdownIt
@@ -26,7 +27,6 @@ def _render_list(node: RenderTreeNode, context: RenderContext, bullet: str) -> s
 # This can be used to overwrite renderer functions of existing syntax
 # or add support for new syntax.
 RENDERERS: Mapping[str, Render] = {
-    # from functools import partial
-    # "bullet_list": partial(_render_list, bullet="-"),
-    # "ordered_list": partial(_render_list, bullet="1."),
+    "bullet_list": partial(_render_list, bullet="-"),
+    "ordered_list": partial(_render_list, bullet="1."),
 }
