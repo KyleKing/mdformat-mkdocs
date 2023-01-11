@@ -43,7 +43,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             indent_depth -= 1
         new_indent = indent * indent_depth
         rendered += f"{new_indent}{new_line.strip()}{eol}"
-    return rendered
+    return rendered.rstrip()
 
 
 # # A mapping from syntax tree node type to a function that renders it.

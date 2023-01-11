@@ -188,14 +188,12 @@ ______________________________________________________________________
 - The tasks that you use to compile, minimize and concatenate files may produce **different results**: it's enough that developers on your team use different versions of Node.js. Committing such files to the repository will incite constant conflicts that need to be solved manually. This makes branch merges very troublesome.
 - An application compiled in version X of Node.js may **not work properly** in version Y – yet another human factor issue which makes it difficult to be 100% sure that the generated artifacts are compatible with the Node version on the Production server.
 
-
 ### Deploy has more steps
 
 Okay, so now that we know keeping artifacts and dependencies in the repository is not a good idea, the question is: how *should* we deploy our application to the server? Without a Continuous Deployment tool, it usually looked like this:
 
 1. The application is uploaded to the server via SFTP/SCP or Git and built with a script that will download the dependencies and run the tasks directly on the server
 1. In case the SSH access is not available (eg. the server is FTP) the application must be built in a compatible environment before the deployment
-
 
 ______________________________________________________________________
 
