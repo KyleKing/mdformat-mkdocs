@@ -69,7 +69,7 @@ Corrected Indentation from 5x
             - item 4
 .
 
-FIXME: List with (what should be converted to a) code block
+List with (what should be converted to a) code block
 .
 - item 1
     
@@ -80,7 +80,7 @@ FIXME: List with (what should be converted to a) code block
     code block
 .
 
-FIXME: List with explicit code block (that should keep indentation)
+List with explicit code block (that should keep indentation)
 .
 - item 1
         
@@ -93,4 +93,77 @@ FIXME: List with explicit code block (that should keep indentation)
     ```txt
     code block
     ```
+.
+
+Table
+.
+| Label          |   Rating | Comment              |
+|:---------------|---------:|:---------------------|
+| Name           |         2| <!-- Comment -->     |
+.
+| Label          |   Rating | Comment              |
+|:---------------|---------:|:---------------------|
+| Name           |         2| <!-- Comment -->     |
+.
+
+Floating Link
+.
+> Based on [External Link]
+.
+> Based on [External Link]
+.
+
+Headings
+.
+# [h1] The largest heading
+
+## [h2] heading
+
+### [h3] heading
+
+#### [h4] heading
+
+##### [h5] heading
+
+###### [h6] The smallest heading
+.
+# [h1] The largest heading
+
+## [h2] heading
+
+### [h3] heading
+
+#### [h4] heading
+
+##### [h5] heading
+
+###### [h6] The smallest heading
+.
+
+Check List
+.
+- [x] #739
+- [ ] Add delight to the experience when all tasks are complete :tada:
+.
+- [x] #739
+- [ ] Add delight to the experience when all tasks are complete :tada:
+.
+
+Footnotes
+.
+Here is a simple footnote[^1].
+
+You can also use words, to fit your writing style more closely[^note].
+
+  [^1]: My reference.
+  [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+    This footnote also has been made with a different syntax using 4 spaces for new lines.
+.
+Here is a simple footnote[^1].
+
+You can also use words, to fit your writing style more closely[^note].
+
+  [^1]: My reference.
+  [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+    This footnote also has been made with a different syntax using 4 spaces for new lines.
 .

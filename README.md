@@ -17,16 +17,7 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs:
-
-- mdformat-admon
-- mdformat-beautysh
-- mdformat-black
-- mdformat-config
-- mdformat-frontmatter
-- mdformat-tables
-- mdformat-toc
-- mdformat-web
+Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs
 
 ### Pre-commit
 
@@ -48,7 +39,7 @@ repos:
 pipx install mdformat
 pipx inject mdformat mdformat-mkdocs
 # Or
-# pipx inject mdformat-gfm "mdformat-mkdocs[recommended]"
+# pipx inject mdformat "mdformat-mkdocs[recommended]"
 ```
 
 ## Caveats
