@@ -109,8 +109,12 @@ Table
 Floating Link
 .
 > Based on [External Link]
+ 
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
 .
 > Based on [External Link]
+
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
 .
 
 Headings
@@ -127,43 +131,15 @@ Headings
 
 ###### [h6] The smallest heading
 .
-# [h1] The largest heading
+# \[h1\] The largest heading
 
-## [h2] heading
+## \[h2\] heading
 
-### [h3] heading
+### \[h3\] heading
 
-#### [h4] heading
+#### \[h4\] heading
 
-##### [h5] heading
+##### \[h5\] heading
 
-###### [h6] The smallest heading
-.
-
-Check List
-.
-- [x] #739
-- [ ] Add delight to the experience when all tasks are complete :tada:
-.
-- [x] #739
-- [ ] Add delight to the experience when all tasks are complete :tada:
-.
-
-Footnotes
-.
-Here is a simple footnote[^1].
-
-You can also use words, to fit your writing style more closely[^note].
-
-  [^1]: My reference.
-  [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
-    This footnote also has been made with a different syntax using 4 spaces for new lines.
-.
-Here is a simple footnote[^1].
-
-You can also use words, to fit your writing style more closely[^note].
-
-  [^1]: My reference.
-  [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
-    This footnote also has been made with a different syntax using 4 spaces for new lines.
+###### \[h6\] The smallest heading
 .
