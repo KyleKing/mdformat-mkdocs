@@ -18,8 +18,6 @@ keywords = ["mdformat", "markdown", "markdown-it"]
 requires-python = ">=3.7.2"
 dependencies = [
     "mdformat >= 0.7.16",
-    "mdformat-admon >= 0.0.1",
-    "mdformat-footnote >= 0.1.1",
     "mdformat-gfm >= 0.3.5",
     "mdit-py-plugins[linkify] >= 0.3.3",
 ]
@@ -28,9 +26,11 @@ dynamic = ["version", "description"]
 [project.optional-dependencies]
 recommended = [
     # Keep in-sync with README
+    "mdformat-admon",
     "mdformat-beautysh",
     "mdformat-black",
     "mdformat-config",
+    "mdformat-footnote",
     "mdformat-frontmatter",
     "mdformat-simple-breaks",
     "mdformat-tables",
