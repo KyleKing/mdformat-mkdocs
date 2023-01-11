@@ -77,20 +77,20 @@ FIXME: List with (what should be converted to a) code block
 .
 - item 1
 
-code block
+    code block
 .
 
 FIXME: List with explicit code block (that should keep indentation)
 .
 - item 1
         
-    ```
+    ```txt
     code block
     ```
 .
 - item 1
 
-```
-code block
-```
+    ```txt
+    code block
+    ```
 .

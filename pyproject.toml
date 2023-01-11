@@ -17,22 +17,30 @@ classifiers = [
 keywords = ["mdformat", "markdown", "markdown-it"]
 requires-python = ">=3.7.2"
 dependencies = [
-    "mdformat >=0.7.0,<0.8.0",
-    "mdformat-gfm >=0.3.5",
-    "mdit-py-plugins >=0.3.2",
+    "mdformat >=0.7.0",
+    # "mdformat-gfm >=0.3.5",
+    # "mdit-py-plugins >=0.3.2",
+    # "mdformat-admon",
+    # "mdformat-beautysh",
+    # "mdformat-black",
+    # "mdformat-config",
+    # "mdformat-frontmatter",
+    # "mdformat-tables",
+    # "mdformat-toc",
+    # "mdformat-web",
 ]
 dynamic = ["version", "description"]
 
 [project.optional-dependencies]
 recommended = [
-    "mdformat-admon",
-    "mdformat-beautysh",
-    "mdformat-black",
-    "mdformat-config",
-    "mdformat-frontmatter",
-    "mdformat-tables",
-    "mdformat-toc",
-    "mdformat-web",
+    # "mdformat-admon",
+    # "mdformat-beautysh",
+    # "mdformat-black",
+    # "mdformat-config",
+    # "mdformat-frontmatter",
+    # "mdformat-tables",
+    # "mdformat-toc",
+    # "mdformat-web",
 ]
 test = [
     "pytest>=6.0",
