@@ -17,7 +17,16 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs
+Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs:
+
+- [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
+- [mdformat-black](https://pypi.org/project/mdformat-black)
+- [mdformat-config](https://pypi.org/project/mdformat-config)
+- [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter)
+- [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
+- [mdformat-tables](https://pypi.org/project/mdformat-tables)
+- [mdformat-toc](https://pypi.org/project/mdformat-toc)
+- [mdformat-web](https://pypi.org/project/mdformat-web)
 
 ### Pre-commit
 

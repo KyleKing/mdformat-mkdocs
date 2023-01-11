@@ -27,10 +27,12 @@ dynamic = ["version", "description"]
 
 [project.optional-dependencies]
 recommended = [
+    # Keep in-sync with README
     "mdformat-beautysh",
     "mdformat-black",
     "mdformat-config",
     "mdformat-frontmatter",
+    "mdformat-simple-breaks",
     "mdformat-tables",
     "mdformat-toc",
     "mdformat-web",
