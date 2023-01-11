@@ -23,12 +23,12 @@ dynamic = ["version", "description"]
 
 [project.optional-dependencies]
 recommended = [
-    "mdformat-gfm >=0.3.5",
     "mdformat-admon",
     "mdformat-beautysh",
     "mdformat-black",
     "mdformat-config",
     "mdformat-frontmatter",
+    "mdformat-gfm >=0.3.5",
     "mdformat-tables",
     "mdformat-toc",
     "mdformat-web",

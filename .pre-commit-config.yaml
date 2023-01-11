@@ -57,6 +57,7 @@ repos:
           - mdformat-black
           - mdformat-config
           - mdformat-frontmatter
+          - mdformat-gfm
           - mdformat-tables
           - mdformat-toc
           - mdformat-web

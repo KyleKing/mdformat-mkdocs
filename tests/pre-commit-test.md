@@ -4,20 +4,20 @@ Testing `mdformat-mkdocs` as a `pre-commit` hook (`tox -e py#-hook`)
 
 ## TODO List
 
-- \[ \] Task item
-  - \[x\] Completed Task item
-    - \[x\] Another Completed Task item
-- \[ \] Task item
-  - \[ \] Task item
-- \[ \] Task item with code snippet `echo "hello world"`
+- [ ] Task item
+  - [x] Completed Task item
+    - [x] Another Completed Task item
+- [ ] Task item
+  - [ ] Task item
+- [ ] Task item with code snippet `echo "hello world"`
 
 ## Mixed List
 
 1. Prepare
    - Indented item
      - Further indented
-       - \[ \] Task
-       - \[ \] [Linked File](./fixtures.md)
+       - [ ] Task
+       - [ ] [Linked File](./fixtures.md)
 1. Done
 
 # Table
@@ -36,17 +36,17 @@ ______________________________________________________________________
 
 ### **Typo**
 
-# \[h1\] The largest heading
+# [h1] The largest heading
 
-## \[h2\] heading
+## [h2] heading
 
-### \[h3\] heading
+### [h3] heading
 
-#### \[h4\] heading
+#### [h4] heading
 
-##### \[h5\] heading
+##### [h5] heading
 
-###### \[h6\] The smallest heading
+###### [h6] The smallest heading
 
 ______________________________________________________________________
 
@@ -281,10 +281,10 @@ ______________________________________________________________________
 
 ### Task lists
 
-- \[x\] #739
-- \[ \] https://github.com/octo-org/octo-repo/issues/740
-- \[ \] Add delight to the experience when all tasks are complete :tada:
-- \[ \] (Optional) Open a followup issue
+- [x] #739
+- [ ] https://github.com/octo-org/octo-repo/issues/740
+- [ ] Add delight to the experience when all tasks are complete :tada:
+- [ ] (Optional) Open a followup issue
 
 @github/support What do you think about these updates?
 
