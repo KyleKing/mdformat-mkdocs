@@ -60,7 +60,7 @@ See the example test files, [./tests/pre-commit-test.md](https://raw.githubuserc
 
 See [CONTRIBUTING.md](https://github.com/KyleKing/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
 
-[ci-badge]: https://github.com/executablebooks/mdformat-mkdocs/workflows/CI/badge.svg?branch=main
-[ci-link]: https://github.com/executablebooks/mdformat/actions?query=workflow%3ACI+branch%3Amain+event%3Apush
+[ci-badge]: https://github.com/kyleking/mdformat-mkdocs/workflows/CI/badge.svg?branch=main
+[ci-link]: https://github.com/kyleking/mdformat-mkdocs/actions?query=workflow%3ACI+branch%3Amain+event%3Apush
 [pypi-badge]: https://img.shields.io/pypi/v/mdformat-mkdocs.svg
 [pypi-link]: https://pypi.org/project/mdformat-mkdocs
