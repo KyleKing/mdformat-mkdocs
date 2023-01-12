@@ -158,6 +158,32 @@ List with explicit code block (that should keep indentation)
     ```
 .
 
+
+Hanging List (https://github.com/executablebooks/mdformat/issues/371)
+.
+1. Here indent width is
+   three.
+
+      2. Here indent width is
+       three.
+
+123. Here indent width is
+     five. It needs to be so, because
+
+     Otherwise this next paragraph doesn't belong in the same list item.
+.
+1. Here indent width is
+    three.
+
+    1. Here indent width is
+        three.
+
+1. Here indent width is
+    five. It needs to be so, because
+
+    Otherwise this next paragraph doesn't belong in the same list item.
+.
+
 Table
 .
 | Label          |   Rating | Comment              |
