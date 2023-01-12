@@ -69,7 +69,70 @@ Corrected Indentation from 5x
             - item 4
 .
 
-FIXME: List with (what should be converted to a) code block
+Handle Jagged Indents 2x
+.
+- item 1
+  - item 2
+    - item 3
+      - item 4
+        - item 5
+    - item 6
+    - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Jagged Indents 5x
+.
+- item 1
+     - item 2
+          - item 3
+               - item 4
+                    - item 5
+          - item 6
+          - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Mixed Indents
+.
+- item 1
+   - item 2
+       - item 3
+            - item 4
+            - item 5
+          - item 6
+  - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+            - item 5
+            - item 6
+    - item 7
+- item 8
+.
+
+List with (what should be converted to a) code block
 .
 - item 1
     
@@ -77,20 +140,97 @@ FIXME: List with (what should be converted to a) code block
 .
 - item 1
 
-code block
+    code block
 .
 
-FIXME: List with explicit code block (that should keep indentation)
+List with explicit code block (that should keep indentation)
 .
 - item 1
         
-    ```
+    ```txt
     code block
     ```
 .
 - item 1
 
-```
-code block
-```
+    ```txt
+    code block
+    ```
+.
+
+Table
+.
+| Label          |   Rating | Comment              |
+|:---------------|---------:|:---------------------|
+| Name           |         2| <!-- Comment -->     |
+.
+| Label          |   Rating | Comment              |
+|:---------------|---------:|:---------------------|
+| Name           |         2| <!-- Comment -->     |
+.
+
+Floating Link
+.
+> Based on [External Link]
+ 
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
+.
+> Based on [External Link]
+
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
+.
+
+Headings
+.
+# [h1] The largest heading
+
+## [h2] heading
+
+### [h3] heading
+
+#### [h4] heading
+
+##### [h5] heading
+
+###### [h6] The smallest heading
+.
+# \[h1\] The largest heading
+
+## \[h2\] heading
+
+### \[h3\] heading
+
+#### \[h4\] heading
+
+##### \[h5\] heading
+
+###### \[h6\] The smallest heading
+.
+
+Task List / Check List (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
+.
+- [x] #739
+  - [ ] Add delight to the experience when all tasks are complete :tada:
+.
+- \[x\] #739
+    - \[ \] Add delight to the experience when all tasks are complete :tada:
+.
+
+Footnotes (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
+.
+Here is a simple footnote[^1].
+
+You can also use words, to fit your writing style more closely[^note].
+
+  [^1]: My reference.
+  [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+    This footnote also has been made with a different syntax using 4 spaces for new lines.
+.
+Here is a simple footnote\[^1\].
+
+You can also use words, to fit your writing style more closely\[^note\].
+
+\[^1\]: My reference.
+\[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+This footnote also has been made with a different syntax using 4 spaces for new lines.
 .

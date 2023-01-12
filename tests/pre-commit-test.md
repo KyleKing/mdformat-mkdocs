@@ -2,87 +2,78 @@
 
 Testing `mdformat-mkdocs` as a `pre-commit` hook (`tox -e py#-hook`)
 
-## TODO List
-
-- [ ] Task item
-    - [x] Completed Task item
-        - [x] Another Completed Task item
-- [ ] Task item
-    - [ ] Task item
-- [ ] Task item with code snippet `echo "hello world"`
-
-## Mixed List
-
-1. Prepare
-    - Indented item
-        - Further indented
-            - [ ] Task
-            - [ ] [Linked File](./fixtures.md)
-1. Done
-
 # Table
 
-| Label          |   Rating | Comment              |
-|:---------------|---------:|:---------------------|
-| Name           |         2| <!-- Comment -->     |
+| Label | Rating | Comment          |
+| :---- | -----: | :--------------- |
+| Name  |      2 | <!-- Comment --> |
 
 ## Floating Link
 
 > Based on [External Link]
 
-  [External Link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
-
----
+______________________________________________________________________
 
 ## Arbitrary Markdown thanks to `czuli/github-markdown-example`
 
 ### **Typo**
 
-# [h1] The largest heading
-## [h2] heading
-### [h3] heading
-#### [h4] heading
-##### [h5] heading
-###### [h6] The smallest heading
+# \[h1\] The largest heading
 
------ 
+## \[h2\] heading
+
+### \[h3\] heading
+
+#### \[h4\] heading
+
+##### \[h5\] heading
+
+###### \[h6\] The smallest heading
+
+______________________________________________________________________
 
 ### Bold
 
 **This is bold text**
 
------ 
+______________________________________________________________________
 
 ### Italic
 
-*This text is italicized*   
+*This text is italicized*
 
------ 
+______________________________________________________________________
+
 ### Strikethrough
 
-~~This was mistaken text~~  
+~~This was mistaken text~~
 
------ 
+______________________________________________________________________
+
 ### Bold and nested italic
 
-**This text is _extremely_ important**  
+**This text is _extremely_ important**
 
------ 
+______________________________________________________________________
+
 ### All bold and italic
 
-***All this text is important***    
+***All this text is important***
 
------ 
+______________________________________________________________________
+
 ### Subscript
 
-<sub>This is a subscript text</sub> 
+<sub>This is a subscript text</sub>
 
------ 
+______________________________________________________________________
+
 ### Superscript
 
-<sup>This is a superscript text</sup>   
+<sup>This is a superscript text</sup>
 
------ 
+______________________________________________________________________
+
 ### Quote
 
 Text that is not a quote
@@ -91,7 +82,8 @@ Text that is not a quote
 > Text that is a quote
 > Text that is a quote
 
------ 
+______________________________________________________________________
+
 ### Quoting code
 
 Use `git status` to list all new or modified files that haven't yet been committed.
@@ -99,7 +91,8 @@ Use `git status` to list all new or modified files that haven't yet been committ
 #### Code without highlighting
 
 Some basic Git commands are:
-```
+
+```sh
 git status
 git add
 git commit
@@ -108,11 +101,13 @@ git commit
 #### Syntax highlighting
 
 #### ruby code
+
 ```ruby
 require 'redcarpet'
 markdown = Redcarpet.new("Hello World!")
 puts markdown.to_html
 ```
+
 #### bash code
 
 ```bash
@@ -182,7 +177,8 @@ USER root
 CMD [ "sh", "-c", "cron && apache2-foreground" ]
 ```
 
------ 
+______________________________________________________________________
+
 ### Paragraphs
 
 ### Never store dependencies and compiled artifacts in the repository
@@ -197,30 +193,34 @@ CMD [ "sh", "-c", "cron && apache2-foreground" ]
 Okay, so now that we know keeping artifacts and dependencies in the repository is not a good idea, the question is: how *should* we deploy our application to the server? Without a Continuous Deployment tool, it usually looked like this:
 
 1. The application is uploaded to the server via SFTP/SCP or Git and built with a script that will download the dependencies and run the tasks directly on the server
-2. In case the SSH access is not available (eg. the server is FTP) the application must be built in a compatible environment before the deployment
+1. In case the SSH access is not available (eg. the server is FTP) the application must be built in a compatible environment before the deployment
 
+______________________________________________________________________
 
------ 
 ### Links
 
 This site was built using [GitHub Pages](https://pages.github.com/).
 
------ 
-### Section links
+______________________________________________________________________
 
+### Section links
 
 [Contribution guidelines for this project](#table)
 
------ 
+______________________________________________________________________
+
 ### Image
 
 #### image from internet
+
 ![This is an image](https://buddy.works/assets/svg/brands/buddy.svg)
 
 #### image from repo with link
+
 [![](assets/buddy-podcast.png)](https://buddy.works)
 
------ 
+______________________________________________________________________
+
 ### Specifying the theme an image is shown to
 
 <picture>
@@ -229,8 +229,8 @@ This site was built using [GitHub Pages](https://pages.github.com/).
   <img alt="Shows an illustrated sun in light color mode and a moon with stars in dark color mode." src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
 </picture>
 
+______________________________________________________________________
 
------ 
 ### List
 
 ### Normal list
@@ -239,78 +239,86 @@ This site was built using [GitHub Pages](https://pages.github.com/).
 - John Adams
 - Thomas Jefferson
 
-### Order list
+### Ordered list
 
 1. James Madison
-2. James Monroe
-3. John Quincy Adams
+1. James Monroe
+1. John Quincy Adams
 
+______________________________________________________________________
+
+## TODO List
+
+- [ ] Task item
+    - [x] Completed Task item
+        - [x] Another Completed Task item
+- [ ] Task item
+    - [ ] Task item
+- [ ] Task item with code snippet `echo "hello world"`
+
+## Mixed List
+
+1. Prepare
+    - Indented item
+        - Further indented
+            - [ ] Task
+            - [ ] [Linked File](./fixtures.md)
+1. Done
 
 ### Nested Lists
 
 1. First list item
-   - First nested list item
-     - list item
-     - list item
-   - Second nested list item
-     - list item
-     - list item
-2. Second list item
-   - list item
-   - list item
-      - list item
+    - First nested list item
+        - list item
+        - list item
+    - Second nested list item
+        - list item
+        - list item
+1. Second list item
+    - list item
+    - list item
+        - list item
 
------ 
+______________________________________________________________________
+
 ### Task lists
 
 - [x] #739
 - [ ] https://github.com/octo-org/octo-repo/issues/740
 - [ ] Add delight to the experience when all tasks are complete :tada:
-- [ ] \(Optional) Open a followup issue
+- [ ] (Optional) Open a followup issue
 
 @github/support What do you think about these updates?
 
------ 
+______________________________________________________________________
+
 ### emoji
 
 @octocat :+1: This PR looks great - it's ready to merge! :shipit:
 
------ 
-### Footnotes
+______________________________________________________________________
 
-Here is a simple footnote[^1].
-
-A footnote can also have multiple lines[^2].  
-
-You can also use words, to fit your writing style more closely[^note].
-
-[^1]: My reference.
-[^2]: Every new line should be prefixed with 2 spaces.  
-  This allows you to have a footnote with multiple lines.
-[^note]:
-    Named footnotes will still render with numbers instead of the text but allow easier identification and linking.  
-    This footnote also has been made with a different syntax using 4 spaces for new lines.
-    
------ 
 ### Hiding content with comments
 
 <!-- This content will not appear in the rendered Markdown -->
 
------ 
+______________________________________________________________________
+
 ### Ignoring Markdown formatting
 
 Let's rename \*our-new-project\* to \*our-old-project\*.
 
------ 
+______________________________________________________________________
+
 ### Table
 
 | Left-aligned | Center-aligned | Right-aligned |
-| :---         |     :---:      |          ---: |
-| git status   | git status     | git status    |
-| git diff     | git diff       | git diff      |
+| :----------- | :------------: | ------------: |
+| git status   |   git status   |    git status |
+| git diff     |    git diff    |      git diff |
 
+______________________________________________________________________
 
------ 
 ### Diagrams
 
 Here is a simple flow chart:
@@ -322,3 +330,5 @@ graph TD;
     B-->D;
     C-->D;
 ```
+
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
