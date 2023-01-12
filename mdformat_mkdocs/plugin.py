@@ -5,9 +5,12 @@ from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Render
 
+_MKDOCS_INDENT = 4
+"""Use 4-spaces for mkdocs."""
+
 
 def update_mdit(mdit: MarkdownIt) -> None:
-    """No changes to markdown parsing are necessary."""
+    """Ensure that 4-spaces are converted to HTML correctly."""
     ...
 
 
@@ -21,7 +24,7 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """No changes to markdown parsing are necessary."""
     eol = "\n"  # PLANNED: What about carriage returns?
-    indent = " " * 4
+    indent = " " * _MKDOCS_INDENT
 
     rendered = ""
     last_indent = ""
@@ -35,12 +38,16 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             new_bullet = "-" if list_match["bullet"] in {"-", "*"} else "1."
             new_line = f'{new_bullet} {list_match["item"]}'
 
-        indent_diff = len(match["indent"]) - len(last_indent)
+        this_indent = match["indent"]
+        if this_indent:
+            indent_diff = len(this_indent) - len(last_indent)
+            if indent_diff > 0:
+                indent_depth += 1
+            elif indent_diff < 0:
+                indent_depth -= 1
+        else:
+            indent_depth = 0
         last_indent = match["indent"]
-        if indent_diff > 0:
-            indent_depth += 1
-        elif indent_diff < 0:
-            indent_depth -= 1
         new_indent = indent * indent_depth
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
