@@ -250,36 +250,34 @@ ______________________________________________________________________
 ## TODO List
 
 - [ ] Task item
-  - [x] Completed Task item
-    - [x] Another Completed Task item
+    - [x] Completed Task item
+        - [x] Another Completed Task item
 - [ ] Task item
-  - [ ] Task item
+    - [ ] Task item
 - [ ] Task item with code snippet `echo "hello world"`
-
 
 ## Mixed List
 
 1. Prepare
-   - Indented item
-     - Further indented
-       - [ ] Task
-       - [ ] [Linked File](./fixtures.md)
+    - Indented item
+        - Further indented
+            - [ ] Task
+            - [ ] [Linked File](./fixtures.md)
 1. Done
-
 
 ### Nested Lists
 
 1. First list item
-   - First nested list item
-     - list item
-     - list item
-   - Second nested list item
-     - list item
-     - list item
+    - First nested list item
+        - list item
+        - list item
+    - Second nested list item
+        - list item
+        - list item
 1. Second list item
-   - list item
-   - list item
-     - list item
+    - list item
+    - list item
+        - list item
 
 ______________________________________________________________________
 
