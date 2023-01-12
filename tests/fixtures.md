@@ -49,13 +49,11 @@ Corrected Indentation from 3x
    - item 2
       - item 3
          - item 4
-- item 5
 .
 - item 1
     - item 2
         - item 3
             - item 4
-- item 5
 .
 
 Corrected Indentation from 5x
@@ -69,6 +67,69 @@ Corrected Indentation from 5x
     - item 2
         - item 3
             - item 4
+.
+
+Handle Jagged Indents 2x
+.
+- item 1
+  - item 2
+    - item 3
+      - item 4
+        - item 5
+    - item 6
+    - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Jagged Indents 5x
+.
+- item 1
+     - item 2
+          - item 3
+               - item 4
+                    - item 5
+          - item 6
+          - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Mixed Indents
+.
+- item 1
+   - item 2
+       - item 3
+            - item 4
+            - item 5
+          - item 6
+  - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+            - item 5
+            - item 6
+    - item 7
+- item 8
 .
 
 List with (what should be converted to a) code block

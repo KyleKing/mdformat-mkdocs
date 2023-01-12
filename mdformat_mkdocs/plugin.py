@@ -1,11 +1,11 @@
 import re
-from typing import Mapping
+from typing import Dict, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Render
 
-_MKDOCS_INDENT = 4
+_MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
 
@@ -24,11 +24,13 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """No changes to markdown parsing are necessary."""
     eol = "\n"  # PLANNED: What about carriage returns?
-    indent = " " * _MKDOCS_INDENT
+    indent = " " * _MKDOCS_INDENT_COUNT
 
     rendered = ""
     last_indent = ""
-    indent_depth = 0
+    indent_counter = 0
+
+    indent_lookup: Dict[str, int] = {}
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
@@ -41,14 +43,19 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         this_indent = match["indent"]
         if this_indent:
             indent_diff = len(this_indent) - len(last_indent)
-            if indent_diff > 0:
-                indent_depth += 1
-            elif indent_diff < 0:
-                indent_depth -= 1
+            if indent_diff == 0:
+                ...
+            elif this_indent in indent_lookup:
+                indent_counter = indent_lookup[this_indent]
+            elif indent_diff > 0:
+                indent_counter += 1
+                indent_lookup[this_indent] = indent_counter
+            else:
+                raise NotImplementedError(f"Error in indentation of: `{line}`")
         else:
-            indent_depth = 0
+            indent_counter = 0
         last_indent = match["indent"]
-        new_indent = indent * indent_depth
+        new_indent = indent * indent_counter
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
 
