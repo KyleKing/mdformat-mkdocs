@@ -3,14 +3,14 @@ from typing import Dict, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Render
+from mdformat.renderer.typing import Postprocess, Render
 
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
-    """Ensure that 4-spaces are converted to HTML correctly."""
+    """No changes to markdown parsing are necessary."""
     ...
 
 
@@ -22,14 +22,13 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 
 
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
-    """No changes to markdown parsing are necessary."""
-    eol = "\n"  # PLANNED: What about carriage returns?
+    """Post-processor to normalize lists."""
+    eol = "\n"  # PLANNED: Does this need to support carriage returns?
     indent = " " * _MKDOCS_INDENT_COUNT
 
     rendered = ""
     last_indent = ""
     indent_counter = 0
-
     indent_lookup: Dict[str, int] = {}
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
@@ -45,11 +44,11 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             indent_diff = len(this_indent) - len(last_indent)
             if indent_diff == 0:
                 ...
-            elif this_indent in indent_lookup:
-                indent_counter = indent_lookup[this_indent]
             elif indent_diff > 0:
                 indent_counter += 1
                 indent_lookup[this_indent] = indent_counter
+            elif this_indent in indent_lookup:
+                indent_counter = indent_lookup[this_indent]
             else:
                 raise NotImplementedError(f"Error in indentation of: `{line}`")
         else:
@@ -60,11 +59,19 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     return rendered.rstrip()
 
 
-# # A mapping from syntax tree node type to a function that renders it.
-# # This can be used to overwrite renderer functions of existing syntax
-# # or add support for new syntax.
+# A mapping from `RenderTreeNode.type` to a `Render` function that can
+# render the given `RenderTreeNode` type. These override the default
+# `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
 RENDERERS: Mapping[str, Render] = {}
-POSTPROCESSORS = {
+
+# A mapping from `RenderTreeNode.type` to a `Postprocess` that does
+# postprocessing for the output of the `Render` function. Unlike
+# `Render` funcs, `Postprocess` funcs are collaborative: any number of
+# plugins can define a postprocessor for a syntax type and all of them
+# will run in series.
+POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": _normalize_list,
     "ordered_list": _normalize_list,
 }
+
+# See: https://github.com/executablebooks/mdformat/blob/5d9b573ce33bae219087984dd148894c774f41d4/src/mdformat/plugins.py
