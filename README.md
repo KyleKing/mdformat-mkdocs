@@ -9,15 +9,11 @@
 
 An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
 
-> *Warning*
->
-> This is an initial proof of concept. Non-list items nested within a list are not properly handled (i.e. nested code blocks, quotes, etc.). Please [open an issue](https://github.com/KyleKing/mdformat-mkdocs/issues/new) and share examples of any code that isn't properly formatted!
-
 ## Usage
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Tip: this package has a pip extra, `recommended`, of plugins that work well with mkdocs:
+Tip: this package specifies an "extra" (`recommended`) for plugins that work well with mkdocs:
 
 - [mdformat-admon](https://pypi.org/project/mdformat-admon)
 - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
