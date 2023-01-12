@@ -31,11 +31,11 @@ repos:
     hooks:
       - id: python-check-blanket-noqa
   - repo: https://github.com/timothycrosley/isort
-    rev: 5.10.1
+    rev: 5.11.4
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 22.10.0
+    rev: 22.12.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
@@ -52,16 +52,7 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-admon
-          - mdformat-beautysh
-          - mdformat-black
-          - mdformat-config
-          - mdformat-footnote
-          - mdformat-frontmatter
-          - mdformat-gfm
-          - mdformat-tables
-          - mdformat-toc
-          - mdformat-web
+          - mdformat-mkdocs[recommended]
         exclude: tests/.+\.md
         args: [--wrap=no]
   - repo: https://github.com/lyz-code/yamlfix/

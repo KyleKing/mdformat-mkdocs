@@ -9,7 +9,6 @@ on:
   pull_request:
 
 jobs:
-
   pre-commit:
     runs-on: ubuntu-latest
 
@@ -37,8 +36,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Installation (deps and package)
-      # we install with flit --pth-file,
-      # so that coverage will be recorded for the module
+        # we install with flit --pth-file,
+        # so that coverage will be recorded for the module
         run: |
           pip install flit
           flit install --deps=production --extras=test --pth-file
