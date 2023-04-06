@@ -51,8 +51,7 @@ repos:
     rev: 0.7.16
     hooks:
       - id: mdformat
-        additional_dependencies:
-          - mdformat-mkdocs[recommended]
+        additional_dependencies: ['mdformat-mkdocs[recommended]']
         exclude: tests/.+\.md
         args: [--wrap=no]
   - repo: https://github.com/lyz-code/yamlfix/
