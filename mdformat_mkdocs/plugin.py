@@ -1,12 +1,13 @@
 import re
+from os import environ
 from typing import Dict, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 
-_MKDOCS_INDENT_COUNT = 4
-"""Use 4-spaces for mkdocs."""
+_MKDOCS_INDENT_COUNT = int(environ.get("MDFORMAT_MKDOCS_INDENT_COUNT", "2"))
+"""Use 2-spaces for mkdocs or whichever environment variable is configured."""
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
