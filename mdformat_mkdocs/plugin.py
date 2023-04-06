@@ -14,7 +14,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     ...
 
 
-_RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>.*)")
+_RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
 """Match `indent` and `content` against line`."""
 
 _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
@@ -23,7 +23,7 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Post-processor to normalize lists."""
-    eol = "\n"  # PLANNED: Does this need to support carriage returns?
+    eol = "\n"
     indent = " " * _MKDOCS_INDENT_COUNT
 
     rendered = ""
@@ -53,7 +53,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
                 raise NotImplementedError(f"Error in indentation of: `{line}`")
         else:
             indent_counter = 0
-        last_indent = match["indent"]
+        last_indent = this_indent
         new_indent = indent * indent_counter
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
