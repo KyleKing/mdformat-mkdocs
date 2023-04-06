@@ -27,15 +27,15 @@ repos:
       - id: trailing-whitespace
         exclude: tests/fixtures.*\.md
   - repo: https://github.com/pre-commit/pygrep-hooks
-    rev: v1.9.0
+    rev: v1.10.0
     hooks:
       - id: python-check-blanket-noqa
   - repo: https://github.com/timothycrosley/isort
-    rev: 5.11.4
+    rev: 5.12.0
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.3.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
@@ -56,7 +56,7 @@ repos:
         exclude: tests/.+\.md
         args: [--wrap=no]
   - repo: https://github.com/lyz-code/yamlfix/
-    rev: 1.1.1
+    rev: 1.9.0
     hooks:
       - id: yamlfix
         types_or: []
