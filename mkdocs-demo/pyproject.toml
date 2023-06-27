@@ -1,0 +1,15 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]
+
+[tool.poetry]
+authors = ["Kyle King <dev.act.kyle@gmail.com>"]
+description = "Minimum example code to test MkDocs behavior"
+name = "mkdocs-demo"
+packages = [{include = "mkdocs_demo"}]
+readme = "README.md"
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+mkdocs = ">=1.4.3"
