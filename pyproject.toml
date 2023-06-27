@@ -19,7 +19,7 @@ requires-python = ">=3.7.2"
 dependencies = [
     "mdformat >= 0.7.16",
     "mdformat-gfm >= 0.3.5",
-    "mdit-py-plugins[linkify] >= 0.3.3",
+    "mdit-py-plugins >= 0.3.3",
 ]
 dynamic = ["version", "description"]
 
