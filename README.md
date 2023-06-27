@@ -7,7 +7,7 @@
 [cov-link]: https://codecov.io/gh/executablebooks/mdformat-mkdocs
  -->
 
-An [mdformat](https://github.com/executablebooks/mdformat) plugin for mkdocs.
+An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](https://github.com/mkdocs/mkdocs).
 
 ## Usage
 

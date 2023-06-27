@@ -8,10 +8,17 @@ from mdformat.renderer.typing import Postprocess, Render
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
+_ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
+"""use 3-space on subsequent lines in semantic lists."""
+
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    ...
+    global _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
+    # FIXME: How do I add this configuration option?
+    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options.get(
+        "align_semantic_breaks_in_numbered_lists", True
+    )
 
 
 _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
@@ -30,13 +37,15 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     last_indent = ""
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
+    is_numbered = False
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
         list_match = _RE_LIST_ITEM.match(match["content"])
         new_line = line
         if list_match:
-            new_bullet = "-" if list_match["bullet"] in {"-", "*"} else "1."
+            is_numbered = list_match["bullet"] not in {"-", "*"}
+            new_bullet = "1." if is_numbered else "-"
             new_line = f'{new_bullet} {list_match["item"]}'
 
         this_indent = match["indent"]
@@ -55,6 +64,8 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             indent_counter = 0
         last_indent = this_indent
         new_indent = indent * indent_counter
+        if _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS and not list_match and is_numbered:
+            new_indent = new_indent[:-1]
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
 
