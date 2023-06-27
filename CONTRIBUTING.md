@@ -50,6 +50,6 @@ pip install flit
 flit publish
 ```
 
-or trigger the GitHub Action job, by creating a release with a tag equal to the version, e.g. `v0.0.1`.
+or trigger the GitHub Action job, by creating a release with a tag equal to the version, e.g. `v0.0.1` and updating the version in `mdformat_mkdocs/__init__.py`.
 
 Note, this requires generating an API key on PyPi and adding it to the repository `Settings/Secrets`, under the name `PYPI_KEY`.

@@ -56,6 +56,20 @@ pipx inject mdformat mdformat-mkdocs
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
 
+## Configuration
+
+`mdformat-mkdocs` adds the CLI argument `--align-semantic-breaks-in-numbered-lists` to optionally align line breaks in numbered lists to 3-spaces. If not specified, the default of 4-indents is followed universally.
+
+```txt
+# with: mdformat
+1. Semantic line feed where the following line is
+    three spaces deep
+
+# vs. with: mdformat --align-semantic-breaks-in-numbered-lists
+1. Semantic line feed where the following line is
+   three spaces deep
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/KyleKing/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
