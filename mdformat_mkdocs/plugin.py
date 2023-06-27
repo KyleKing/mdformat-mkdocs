@@ -15,9 +15,8 @@ _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     global _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
-    # FIXME: How do I add this configuration option?
-    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options.get(
-        "align_semantic_breaks_in_numbered_lists", True
+    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options.get("mdformat", {}).get(
+        "align_semantic_breaks_in_numbered_lists", False
     )
 
 
