@@ -2,4 +2,9 @@
 
 __version__ = "1.0.1"
 
-from .plugin import POSTPROCESSORS, RENDERERS, update_mdit  # noqa: F401
+from .plugin import (  # noqa: F401
+    POSTPROCESSORS,
+    RENDERERS,
+    add_cli_options,
+    update_mdit,
+)

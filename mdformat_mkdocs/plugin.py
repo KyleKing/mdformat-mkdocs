@@ -1,3 +1,4 @@
+import argparse
 import re
 from typing import Dict, Mapping
 
@@ -12,10 +13,19 @@ _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
 """use 3-space on subsequent lines in semantic lists."""
 
 
+def add_cli_options(parser: argparse.ArgumentParser) -> None:
+    """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
+    parser.add_argument(
+        "--align-semantic-breaks-in-numbered-lists",
+        action="store_true",
+        help="If specified, align semantic indents in numbered lists to the text",
+    )
+
+
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     global _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
-    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options.get("mdformat", {}).get(
+    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_numbered_lists", False
     )
 
