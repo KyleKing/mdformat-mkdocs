@@ -10,8 +10,8 @@ repos:
         files: tests/pre-commit-test.md
         types: [markdown]
         language: system
-      - id: mdformat-with-args
-        name: mdformat-with-args
+      - id: mdformat-with-semantic-arg
+        name: mdformat-with-semantic-arg
         entry: mdformat
         args: [--align-semantic-breaks-in-numbered-lists]
         files: tests/pre-commit-test-align_semantic_breaks_in_numbered_lists.md

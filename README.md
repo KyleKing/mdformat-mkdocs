@@ -11,9 +11,9 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](h
 
 ## Usage
 
-Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. See [additional information on `mdformat` plugins here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
+Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Tip: this package specifies an "extra" (`recommended`) for plugins that work well with mkdocs:
+Tip: this package specifies an "extra" (`'recommended'`) for plugins that work well with mkdocs:
 
 - [mdformat-admon](https://pypi.org/project/mdformat-admon)
 - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
@@ -49,14 +49,7 @@ pipx inject mdformat mdformat-mkdocs
 # pipx inject mdformat "mdformat-mkdocs[recommended]"
 ```
 
-## Caveats
-
-- All indents are converted to 4-spaces
-- This plugin converts all bulleted items to dashes (`-`) and numerals to `1.`
-
-See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
-
-## Configuration
+## CLI Options
 
 `mdformat-mkdocs` adds the CLI argument `--align-semantic-breaks-in-numbered-lists` to optionally align line breaks in numbered lists to 3-spaces. If not specified, the default of 4-indents is followed universally.
 
@@ -69,6 +62,15 @@ See the example test files, [./tests/pre-commit-test.md](https://raw.githubuserc
 1. Semantic line feed where the following line is
    three spaces deep
 ```
+
+Note: the `align-semantic-breaks-in-numbered-lists` setting is not supported in the configuration file yet (https://github.com/executablebooks/mdformat/issues/378)
+
+## Caveats
+
+- All indents are converted to 4-spaces
+- This plugin converts all bulleted items to dashes (`-`) and numerals to `1.`
+
+See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
 
 ## Contributing
 
