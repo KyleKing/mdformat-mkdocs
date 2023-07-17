@@ -173,15 +173,15 @@ Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https:/
      Otherwise this next paragraph doesn't belong in the same list item.
 .
 1. Here indent width is
-    three.
+   three.
 
     1. Here indent width is
-        three.
+       three.
 
 1. Here indent width is
-    five. It needs to be so, because
+   five. It needs to be so, because
 
-    Otherwise this next paragraph doesn't belong in the same list item.
+   Otherwise this next paragraph doesn't belong in the same list item.
 .
 
 
@@ -198,11 +198,11 @@ Code block in semantic indent (https://github.com/KyleKing/mdformat-mkdocs/issue
 1. Item 3
 .
 1. Item 1
-    with a semantic line feed
+   with a semantic line feed
 
-    ```bash
-    echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
-    ```
+   ```bash
+   echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
+   ```
 
 1. Item 2
 
@@ -218,9 +218,9 @@ Nested semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
       semantic line 2 (6 spaces deep)
 .
 1. Line
-    semantic line 1 (3 spaces deep)
+   semantic line 1 (3 spaces deep)
     - Bullet (4 spaces deep)
-        semantic line 2 (6 spaces deep)
+      semantic line 2 (6 spaces deep)
 .
 
 
