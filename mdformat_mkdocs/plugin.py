@@ -10,7 +10,12 @@ _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
 _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
-"""use 3-space on subsequent lines in semantic lists."""
+"""user-specified flag for toggling semantic breaks.
+
+- 3-spaces on subsequent lines in semantic numbered lists
+- and 2-spaces on subsequent bulleted items within a numbered list
+
+"""
 
 
 def add_cli_options(parser: argparse.ArgumentParser) -> None:
@@ -47,6 +52,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
     is_numbered = False
+    use_semantic_breaks = _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
@@ -60,7 +66,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         this_indent = match["indent"]
         if this_indent:
             indent_diff = len(this_indent) - len(last_indent)
-            if indent_diff == 0:
+            if not indent_diff:
                 ...
             elif indent_diff > 0:
                 indent_counter += 1
@@ -71,10 +77,13 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
                 raise NotImplementedError(f"Error in indentation of: `{line}`")
         else:
             indent_counter = 0
+            # Handle bulleted items within a numbered list
+            use_semantic_breaks = use_semantic_breaks and is_numbered
         last_indent = this_indent
         new_indent = indent * indent_counter
-        if _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS and not list_match and is_numbered:
-            new_indent = new_indent[:-1]
+        if use_semantic_breaks and not list_match:
+            removed_indents = -1 if is_numbered else -2
+            new_indent = new_indent[:removed_indents]
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
 
