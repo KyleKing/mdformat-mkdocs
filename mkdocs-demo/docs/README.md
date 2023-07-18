@@ -15,7 +15,7 @@ See discussion on: https://github.com/KyleKing/mdformat-mkdocs/issues/4
        three.
 
 1. Here indent width is
-   five (three). It needs to be so, because
+   five (three). The following indent needs to be four (but it is 3 with semantic change).
 
    Otherwise this next paragraph doesn't belong in the same list item.
 
@@ -30,6 +30,24 @@ See discussion on: https://github.com/KyleKing/mdformat-mkdocs/issues/4
         three (four).
 
 1. Here indent width is
-    five (four). It needs to be so, because
+    five (four). The following indent needs to be four.
 
     Otherwise this next paragraph doesn't belong in the same list item.
+
+---
+
+### With proposed change for bullets
+
+1. Line
+   semantic line 1 (3 spaces deep)
+    - Bullet (4 spaces deep)
+      semantic line 2 (6 spaces deep)
+
+---
+
+### With proposed change for bullets nested in a numbered list
+
+- Line
+  semantic line 1 (2 spaces deep)
+    - Bullet (4 spaces deep)
+      semantic line 2 (6 spaces deep)
