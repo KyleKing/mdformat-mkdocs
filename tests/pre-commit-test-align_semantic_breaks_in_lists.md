@@ -1,4 +1,4 @@
-# Testing `--align-semantic-breaks-in-numbered-lists`
+# Testing `--align-semantic-breaks-in-lists`
 
 ## Semantic Line Indents
 

@@ -11,10 +11,10 @@ fixtures = read_fixture_file(FIXTURE_PATH)
 @pytest.mark.parametrize(
     "line,title,text,expected", fixtures, ids=[f[1] for f in fixtures]
 )
-def test_fixtures(line, title, text, expected):
+def test_align_semantic_breaks_in_lists(line, title, text, expected):
     output = mdformat.text(
         text,
-        options={"align_semantic_breaks_in_numbered_lists": True},
+        options={"align_semantic_breaks_in_lists": True},
         extensions={"mkdocs"},
     )
     assert output.rstrip() == expected.rstrip()

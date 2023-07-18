@@ -9,11 +9,11 @@ from mdformat.renderer.typing import Postprocess, Render
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
-_ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
+_ALIGN_SEMANTIC_BREAKS_IN_LISTS = False
 """user-specified flag for toggling semantic breaks.
 
 - 3-spaces on subsequent lines in semantic numbered lists
-- and 2-spaces on subsequent bulleted items within a numbered list
+- and 2-spaces on subsequent bulleted items
 
 """
 
@@ -21,17 +21,17 @@ _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = False
 def add_cli_options(parser: argparse.ArgumentParser) -> None:
     """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
     parser.add_argument(
-        "--align-semantic-breaks-in-numbered-lists",
+        "--align-semantic-breaks-in-lists",
         action="store_true",
-        help="If specified, align semantic indents in numbered lists to the text",
+        help="If specified, align semantic indents in numbered and bulleted lists to the text",
     )
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    global _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
-    _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS = mdit.options["mdformat"].get(
-        "align_semantic_breaks_in_numbered_lists", False
+    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS
+    _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
+        "align_semantic_breaks_in_lists", False
     )
 
 
@@ -52,7 +52,6 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
     is_numbered = False
-    use_semantic_breaks = _ALIGN_SEMANTIC_BREAKS_IN_NUMBERED_LISTS
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
@@ -77,11 +76,9 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
                 raise NotImplementedError(f"Error in indentation of: `{line}`")
         else:
             indent_counter = 0
-            # Handle bulleted items within a numbered list
-            use_semantic_breaks = use_semantic_breaks and is_numbered
         last_indent = this_indent
         new_indent = indent * indent_counter
-        if use_semantic_breaks and not list_match:
+        if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match:
             removed_indents = -1 if is_numbered else -2
             new_indent = new_indent[:removed_indents]
         rendered += f"{new_indent}{new_line.strip()}{eol}"
