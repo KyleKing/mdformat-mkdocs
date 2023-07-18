@@ -224,6 +224,34 @@ Nested semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
 .
 
 
+Bulleted semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
+.
+- Line
+  semantic line 1 (2 spaces deep)
+    - Bullet (4 spaces deep)
+      semantic line 2 (6 spaces deep)
+.
+- Line
+  semantic line 1 (2 spaces deep)
+    - Bullet (4 spaces deep)
+      semantic line 2 (6 spaces deep)
+.
+
+
+Nested semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
+.
+- Line
+    semantic line 1 (2 spaces deep)
+    1. Bullet (4 spaces deep)
+        semantic line 2 (7 spaces deep)
+.
+- Line
+  semantic line 1 (2 spaces deep)
+    1. Bullet (4 spaces deep)
+       semantic line 2 (7 spaces deep)
+.
+
+
 Table
 .
 | Label          |   Rating | Comment              |
