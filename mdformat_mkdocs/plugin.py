@@ -52,6 +52,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
     is_numbered = False
+    is_semantic_indent = False
     for line in text.split(eol):
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
@@ -61,6 +62,9 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             is_numbered = list_match["bullet"] not in {"-", "*"}
             new_bullet = "1." if is_numbered else "-"
             new_line = f'{new_bullet} {list_match["item"]}'
+            is_semantic_indent = True
+        elif not line:
+            is_semantic_indent = False  # on line break, use non-semantic indents
 
         this_indent = match["indent"]
         if this_indent:
@@ -78,7 +82,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             indent_counter = 0
         last_indent = this_indent
         new_indent = indent * indent_counter
-        if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match:
+        if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match and is_semantic_indent:
             removed_indents = -1 if is_numbered else -2
             new_indent = new_indent[:removed_indents]
         rendered += f"{new_indent}{new_line.strip()}{eol}"
