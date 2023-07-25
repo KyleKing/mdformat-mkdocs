@@ -1,6 +1,8 @@
 import argparse
+from contextlib import suppress
 import re
-from typing import Dict, Mapping
+import textwrap
+from typing import Dict, Mapping, Optional
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -17,6 +19,9 @@ _ALIGN_SEMANTIC_BREAKS_IN_LISTS = False
 
 """
 
+_MDFORMAT_WRAP: Optional[int] = None
+"""Paragraph word wrap mode (`{keep,no,INTEGER}`, default: `keep`)."""
+
 
 def add_cli_options(parser: argparse.ArgumentParser) -> None:
     """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
@@ -29,10 +34,15 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS
+    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS, _MDFORMAT_WRAP
+
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_lists", False
     )
+
+    _wrap = mdit.options["mdformat"].get("wrap") or ""
+    with suppress(ValueError):
+        _MDFORMAT_WRAP = int(_wrap)
 
 
 _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
@@ -42,6 +52,22 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
 
+def _wrap_text(text: str, *, width: int) -> str:
+    """Wrap text.
+
+    Adapted from: https://github.com/executablebooks/mdformat/blob/0cbd2054dedf98ec8366001c8a16eacfa85cebc1/src/mdformat/renderer/_context.py#L320C1-L340C62
+
+    """
+    wrapper = textwrap.TextWrapper(
+        break_long_words=False,
+        break_on_hyphens=False,
+        width=width,
+        expand_tabs=False,
+        replace_whitespace=False,
+    )
+    return wrapper.fill(text)
+
+
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Post-processor to normalize lists."""
     eol = "\n"
@@ -49,6 +75,8 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
 
     rendered = ""
     last_indent = ""
+    new_indent = ""
+    last_wrapped_text = ""
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
     is_numbered = False
@@ -81,7 +109,18 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match:
             removed_indents = -1 if is_numbered else -2
             new_indent = new_indent[:removed_indents]
-        rendered += f"{new_indent}{new_line.strip()}{eol}"
+
+        new_text = f"{new_indent}{new_line.strip()}"
+        if _MDFORMAT_WRAP and len(new_text) > _MDFORMAT_WRAP:
+            wrapped_text = _wrap_text(text=new_text, width=_MDFORMAT_WRAP)
+            new_text, *extra = wrapped_text.split("\n")
+            last_wrapped_text = "".join(extra)
+        rendered += f"{new_text}{eol}"
+        if last_wrapped_text:
+            rendered += f"{new_indent}{last_wrapped_text}{eol}"
+            last_wrapped_text = ""
+    if last_wrapped_text:
+        rendered += f"{new_indent}{last_wrapped_text}{eol}"
     return rendered.rstrip()
 
 

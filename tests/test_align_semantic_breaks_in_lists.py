@@ -14,7 +14,7 @@ fixtures = read_fixture_file(FIXTURE_PATH)
 def test_align_semantic_breaks_in_lists(line, title, text, expected):
     output = mdformat.text(
         text,
-        options={"align_semantic_breaks_in_lists": True},
+        options={"align_semantic_breaks_in_lists": True, "wrap": "keep"},
         extensions={"mkdocs"},
     )
     assert output.rstrip() == expected.rstrip()
