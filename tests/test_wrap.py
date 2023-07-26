@@ -26,19 +26,19 @@ CASE_1_FALSE_40 = """
     Test Testing Test Testing Test
     Testing
     - Test Testing Test Testing Test
-        Testing Test Testing Test
         Testing Test Testing Test Testing
         Test Testing Test Testing Test
-        Testing Test Testing
+        Testing Test Testing Test Testing
+        Test Testing
 
-1. Test Testing Test Testing Test Testing
-    Test Testing Test Testing Test
-    Testing
-1. Test Testing Test Testing Test Testing
-    Test Testing Test Testing Test
+1. Test Testing Test Testing Test
+    Testing Test Testing Test Testing
+    Test Testing
+1. Test Testing Test Testing Test
     Testing Test Testing Test Testing
     Test Testing Test Testing Test
-    Testing
+    Testing Test Testing Test Testing
+    Test Testing
 """
 
 CASE_1_FALSE_80 = """
@@ -57,19 +57,22 @@ CASE_1_TRUE_40 = """
 # Content
 
 - Test Testing Test Testing Test Testing
-  Test Testing Test Testing Test Testing
+  Test Testing Test Testing Test
+  Testing
     - Test Testing Test Testing Test
       Testing Test Testing Test Testing
       Test Testing Test Testing Test
       Testing Test Testing Test Testing
       Test Testing
 
-1. Test Testing Test Testing Test Testing
-   Test Testing Test Testing Test Testing
-1. Test Testing Test Testing Test Testing
-   Test Testing Test Testing Test Testing
-   Test Testing Test Testing Test Testing
-   Test Testing Test Testing
+1. Test Testing Test Testing Test
+   Testing Test Testing Test Testing
+   Test Testing
+1. Test Testing Test Testing Test
+   Testing Test Testing Test Testing
+   Test Testing Test Testing Test
+   Testing Test Testing Test Testing
+   Test Testing
 """
 
 CASE_1_TRUE_80 = """
@@ -106,4 +109,8 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
         options={"align_semantic_breaks_in_lists": align_lists, "wrap": wrap},
         extensions={"mkdocs"},
     )
+
+    print(output.strip())
+    print("-- Expected --")
+    print(expected.strip())
     assert output.strip() == expected.strip()

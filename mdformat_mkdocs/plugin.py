@@ -17,7 +17,10 @@ _ALIGN_SEMANTIC_BREAKS_IN_LISTS = False
 
 """
 
-FILLER = "𝕏" * (_MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two spaces
+FILLER_CHAR = "𝕏"
+"""A spacer that is inserted and then removed to ensure proper word wrap."""
+
+FILLER = FILLER_CHAR * (_MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two spaces
 """A spacer that is inserted and then removed to ensure proper word wrap."""
 
 
@@ -84,7 +87,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match:
             removed_indents = -1 if is_numbered else -2
             new_indent = new_indent[:removed_indents]
-        # new_line = new_line.replace(f"{FILLER} ", '').replace(FILLER, '')
+        new_line = new_line.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
 
@@ -104,7 +107,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     wrap_mode = context.options["mdformat"]["wrap"]
     if (
         not isinstance(wrap_mode, int)
-        or text.startswith(FILLER)  # noqa: W503
+        or FILLER_CHAR in text  # noqa: W503
         or (node.parent and node.parent.type != "paragraph")  # noqa: W503
         or (node.parent.parent and node.parent.parent.type != "list_item")  # noqa: W503
     ):
@@ -120,6 +123,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     soft_break = "\x00"
     text = text.lstrip(soft_break).lstrip()
     filler = (FILLER * indent_count)[:-1] if indent_count else ""
+    newline_filler = filler + FILLER if indent_count else FILLER[:-1]
     if len(text) > wrap_mode:
         indent_length = _MKDOCS_INDENT_COUNT * indent_count
         wrapped_length = -123
@@ -130,7 +134,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
                 words = [filler, word]
                 wrapped_length = indent_length + len(word)
             elif next_length > wrap_mode:
-                words += [word, filler]
+                words += [word, newline_filler]
                 wrapped_length = indent_length + len(word)
             else:
                 words.append(word)
