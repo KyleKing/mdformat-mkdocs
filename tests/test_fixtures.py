@@ -12,5 +12,5 @@ fixtures = read_fixture_file(FIXTURE_PATH)
     "line,title,text,expected", fixtures, ids=[f[1] for f in fixtures]
 )
 def test_fixtures(line, title, text, expected):
-    output = mdformat.text(text, extensions={"mkdocs"})
+    output = mdformat.text(text, extensions={"mkdocs"}, options={"wrap": "keep"})
     assert output.rstrip() == expected.rstrip()
