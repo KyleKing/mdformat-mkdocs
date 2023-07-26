@@ -46,7 +46,12 @@ tox -e py37-hook
 Either use flit directly:
 
 ```bash
-pip install flit
+pipx install flit
+
+# envchain --set FLIT FLIT_PASSWORD
+export FLIT_USERNAME=__token__
+export eval $(envchain FLIT env | grep FLIT_PASSWORD=)
+
 flit publish
 ```
 

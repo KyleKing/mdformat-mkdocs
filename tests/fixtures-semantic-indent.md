@@ -140,7 +140,7 @@ List with (what should be converted to a) code block
 .
 - item 1
 
-  code block
+    code block
 .
 
 List with explicit code block (that should keep indentation)
@@ -153,9 +153,9 @@ List with explicit code block (that should keep indentation)
 .
 - item 1
 
-  ```txt
-  code block
-  ```
+    ```txt
+    code block
+    ```
 .
 
 
@@ -181,7 +181,7 @@ Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https:/
 1. Here indent width is
    five. It needs to be so, because
 
-   Otherwise this next paragraph doesn't belong in the same list item.
+    Otherwise this next paragraph doesn't belong in the same list item.
 .
 
 
@@ -200,9 +200,9 @@ Code block in semantic indent (https://github.com/KyleKing/mdformat-mkdocs/issue
 1. Item 1
    with a semantic line feed
 
-   ```bash
-   echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
-   ```
+    ```bash
+    echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
+    ```
 
 1. Item 2
 
