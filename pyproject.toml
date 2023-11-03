@@ -36,6 +36,8 @@ recommended = [
     "mdformat-tables",
     "mdformat-toc",
     "mdformat-web",
+    # Patches https://github.com/lovesegfault/beautysh/issues/248 for Python 3.12
+    "virtualenv",
 ]
 test = [
     "pytest >= 7.0",
