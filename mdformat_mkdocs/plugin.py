@@ -47,11 +47,14 @@ _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
 _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
+_DEFAULT_INDENT = " " * _MKDOCS_INDENT_COUNT
+"""Default indent."""
 
-class MarkdownList:
+
+class _MarkdownList:
     """Markdown list."""
 
-    indent = ""
+    this_indent = ""
     is_numbered = False
     is_semantic_indent = False
     is_list_match = False
@@ -61,6 +64,7 @@ class MarkdownList:
         self.increment_number_mode = increment_number_mode
 
     def _number(self) -> int:
+        """Return the number."""
         return 1
 
     def add_bullet(self, line: str) -> str:
@@ -70,7 +74,7 @@ class MarkdownList:
         list_match = _RE_LIST_ITEM.match(match["content"])
         assert list_match is not None  # for pylint
 
-        self.indent = match["indent"]
+        self.this_indent = match["indent"]
         self.is_numbered = list_match["bullet"] not in {"-", "*"}
         self.is_semantic_indent = True
         self.is_list_match = bool(list_match)
@@ -79,35 +83,47 @@ class MarkdownList:
         return f'{new_bullet} {list_match["item"]}'
 
 
+class _MarkdownIndent:
+    """Track Markdown Indent."""
+
+    last_indent = ""
+    counter = 0
+    lookup: Dict[str, int] = {}
+
+    def calculate(self, this_indent: str) -> str:
+        """Calculate the new indent."""
+        if this_indent:
+            diff = len(this_indent) - len(self.last_indent)
+            if not diff:
+                ...
+            elif diff > 0:
+                self.counter += 1
+                self.lookup[this_indent] = self.counter
+            elif this_indent in self.lookup:
+                self.counter = self.lookup[this_indent]
+            else:
+                raise NotImplementedError("No indentation")
+        else:
+            self.counter = 0
+        self.last_indent = this_indent
+        return _DEFAULT_INDENT * self.counter
+
+
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Post-processor to normalize lists."""
     eol = "\n"
-    indent = " " * _MKDOCS_INDENT_COUNT
 
     rendered = ""
-    last_indent = ""
-    indent_counter = 0
-    indent_lookup: Dict[str, int] = {}
-    md_list = MarkdownList(increment_number_mode=context.options["mdformat"]["number"])
+    md_list = _MarkdownList(increment_number_mode=context.options["mdformat"]["number"])
+    md_indent = _MarkdownIndent()
     for line in text.split(eol):
         new_line = md_list.add_bullet(line)
 
-        this_indent = md_list.indent
-        if this_indent:
-            indent_diff = len(this_indent) - len(last_indent)
-            if not indent_diff:
-                ...
-            elif indent_diff > 0:
-                indent_counter += 1
-                indent_lookup[this_indent] = indent_counter
-            elif this_indent in indent_lookup:
-                indent_counter = indent_lookup[this_indent]
-            else:
-                raise NotImplementedError(f"Error in indentation of: `{line}`")
-        else:
-            indent_counter = 0
-        last_indent = this_indent
-        new_indent = indent * indent_counter
+        try:
+            new_indent = md_indent.calculate(this_indent=md_list.this_indent)
+        except NotImplementedError:
+            raise NotImplementedError(f"Error in indentation of: `{line}`") from None
+
         if (
             _ALIGN_SEMANTIC_BREAKS_IN_LISTS
             and not md_list.is_list_match
