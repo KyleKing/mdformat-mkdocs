@@ -10,6 +10,13 @@ repos:
         files: tests/pre-commit-test.md
         types: [markdown]
         language: system
+      - id: mdformat-with-args
+        name: mdformat-with-args
+        entry: mdformat
+        args: [--wrap=40, --number]
+        files: tests/pre-commit-test-numbered.md
+        types: [markdown]
+        language: system
       - id: mdformat-with-semantic-arg
         name: mdformat-with-semantic-arg
         entry: mdformat
