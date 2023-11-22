@@ -66,3 +66,10 @@ known_first_party = ["mdformat_mkdocs", "tests"]
 
 # Settings for Black compatibility
 profile = "black"
+
+[tool.pytest-watcher]
+now = true
+runner = "tox"
+runner_args = ["-e", "py37-recommended"]
+patterns = ["*.py"]
+ignore_patterns = []

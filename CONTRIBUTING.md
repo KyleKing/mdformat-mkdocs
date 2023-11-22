@@ -41,6 +41,16 @@ To run the pre-commit hook test:
 tox -e py37-hook
 ```
 
+## `ptw` testing
+
+See configuration in `pyproject.toml` for `[tool.pytest-watcher]`
+
+```sh
+pipx install pytest-watcher
+
+ptw .
+```
+
 ## Publish to PyPi
 
 Either use flit directly:

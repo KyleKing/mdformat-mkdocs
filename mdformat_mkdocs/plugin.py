@@ -71,42 +71,47 @@ class _MarkdownList:
         """Add bullet to the line."""
         match = _RE_INDENT.match(line)
         assert match is not None  # for pylint
-        list_match = _RE_LIST_ITEM.match(match["content"])
-        assert list_match is not None  # for pylint
-
         self.this_indent = match["indent"]
-        self.is_numbered = list_match["bullet"] not in {"-", "*"}
-        self.is_semantic_indent = True
+        list_match = _RE_LIST_ITEM.match(match["content"])
         self.is_list_match = bool(list_match)
-
-        new_bullet = f"{self._number()}." if self.is_numbered else "-"
-        return f'{new_bullet} {list_match["item"]}'
+        new_line = line
+        if list_match:
+            self.is_numbered = list_match["bullet"] not in {"-", "*"}
+            new_bullet = f"{self._number()}." if self.is_numbered else "-"
+            new_line = f'{new_bullet} {list_match["item"]}'
+            self.is_semantic_indent = True
+        elif not new_line:
+            self.is_semantic_indent = False  # on line break, use non-semantic indents
+        return new_line
 
 
 class _MarkdownIndent:
     """Track Markdown Indent."""
 
-    last_indent = ""
-    counter = 0
-    lookup: Dict[str, int] = {}
+    _last_indent = ""
+    _counter = 0
+    _lookup: Dict[str, int] = {}
+
+    def __init__(self) -> None:
+        self._lookup = {}
 
     def calculate(self, this_indent: str) -> str:
         """Calculate the new indent."""
         if this_indent:
-            diff = len(this_indent) - len(self.last_indent)
+            diff = len(this_indent) - len(self._last_indent)
             if not diff:
                 ...
             elif diff > 0:
-                self.counter += 1
-                self.lookup[this_indent] = self.counter
-            elif this_indent in self.lookup:
-                self.counter = self.lookup[this_indent]
+                self._counter += 1
+                self._lookup[this_indent] = self._counter
+            elif this_indent in self._lookup:
+                self._counter = self._lookup[this_indent]
             else:
                 raise NotImplementedError("No indentation")
         else:
-            self.counter = 0
-        self.last_indent = this_indent
-        return _DEFAULT_INDENT * self.counter
+            self._counter = 0
+        self._last_indent = this_indent
+        return _DEFAULT_INDENT * self._counter
 
 
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
@@ -114,7 +119,8 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     eol = "\n"
 
     rendered = ""
-    md_list = _MarkdownList(increment_number_mode=context.options["mdformat"]["number"])
+    number_mode = bool(context.options["mdformat"].get("number"))
+    md_list = _MarkdownList(increment_number_mode=number_mode)
     md_indent = _MarkdownIndent()
     for line in text.split(eol):
         new_line = md_list.add_bullet(line)
@@ -131,6 +137,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         ):
             removed_indents = -1 if md_list.is_numbered else -2
             new_indent = new_indent[:removed_indents]
+
         new_line = new_line.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
         rendered += f"{new_indent}{new_line.strip()}{eol}"
     return rendered.rstrip()
