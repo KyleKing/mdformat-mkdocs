@@ -48,6 +48,37 @@ _RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
 
+class MarkdownList:
+    """Markdown list."""
+
+    indent = ""
+    is_numbered = False
+    is_semantic_indent = False
+    is_list_match = False
+
+    def __init__(self, increment_number_mode: bool) -> None:
+        """Store relevant 'mdformat' context."""
+        self.increment_number_mode = increment_number_mode
+
+    def _number(self) -> int:
+        return 1
+
+    def add_bullet(self, line: str) -> str:
+        """Add bullet to the line."""
+        match = _RE_INDENT.match(line)
+        assert match is not None  # for pylint
+        list_match = _RE_LIST_ITEM.match(match["content"])
+        assert list_match is not None  # for pylint
+
+        self.indent = match["indent"]
+        self.is_numbered = list_match["bullet"] not in {"-", "*"}
+        self.is_semantic_indent = True
+        self.is_list_match = bool(list_match)
+
+        new_bullet = f"{self._number()}." if self.is_numbered else "-"
+        return f'{new_bullet} {list_match["item"]}'
+
+
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Post-processor to normalize lists."""
     eol = "\n"
@@ -57,22 +88,11 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     last_indent = ""
     indent_counter = 0
     indent_lookup: Dict[str, int] = {}
-    is_numbered = False
-    is_semantic_indent = False
+    md_list = MarkdownList(increment_number_mode=context.options["mdformat"]["number"])
     for line in text.split(eol):
-        match = _RE_INDENT.match(line)
-        assert match is not None  # for pylint
-        list_match = _RE_LIST_ITEM.match(match["content"])
-        new_line = line
-        if list_match:
-            is_numbered = list_match["bullet"] not in {"-", "*"}
-            new_bullet = "1." if is_numbered else "-"
-            new_line = f'{new_bullet} {list_match["item"]}'
-            is_semantic_indent = True
-        elif not line:
-            is_semantic_indent = False  # on line break, use non-semantic indents
+        new_line = md_list.add_bullet(line)
 
-        this_indent = match["indent"]
+        this_indent = md_list.indent
         if this_indent:
             indent_diff = len(this_indent) - len(last_indent)
             if not indent_diff:
@@ -88,8 +108,12 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
             indent_counter = 0
         last_indent = this_indent
         new_indent = indent * indent_counter
-        if _ALIGN_SEMANTIC_BREAKS_IN_LISTS and not list_match and is_semantic_indent:
-            removed_indents = -1 if is_numbered else -2
+        if (
+            _ALIGN_SEMANTIC_BREAKS_IN_LISTS
+            and not md_list.is_list_match
+            and md_list.is_semantic_indent
+        ):
+            removed_indents = -1 if md_list.is_numbered else -2
             new_indent = new_indent[:removed_indents]
         new_line = new_line.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
         rendered += f"{new_indent}{new_line.strip()}{eol}"

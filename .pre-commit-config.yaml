@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-added-large-files
       - id: check-executables-have-shebangs
@@ -35,27 +35,27 @@ repos:
     hooks:
       - id: isort
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.11.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
+    rev: 6.1.0
     hooks:
       - id: flake8
         additional_dependencies:
           - flake8-bugbear>=21.3.2
           - flake8-builtins>=1.5.3
           - flake8-comprehensions>=3.4.0
-        args: [--ignore=E501]
+        args: ['--ignore=E501,W503']
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.16
+    rev: 0.7.17
     hooks:
       - id: mdformat
-        additional_dependencies: ['mdformat-mkdocs[recommended]']
+        additional_dependencies: ['mdformat-mkdocs[recommended]>=1.0.6']
         exclude: tests/.+\.md|mkdocs-demo/docs/README.md
         args: [--wrap=no]
   - repo: https://github.com/lyz-code/yamlfix/
-    rev: 1.9.0
+    rev: 1.15.0
     hooks:
       - id: yamlfix
         types_or: []
