@@ -59,12 +59,21 @@ class _MarkdownList:
     is_semantic_indent = False
     is_list_match = False
 
+    _numbered = None
+
     def __init__(self, increment_number_mode: bool) -> None:
         """Store relevant 'mdformat' context."""
         self.increment_number_mode = increment_number_mode
 
     def _number(self) -> int:
         """Return the number."""
+        if self.increment_number_mode:
+            idx = len(self.this_indent)
+            pad = [0] * (idx + 1)
+            # FYI: on de-dent, clip previously saved _numbered
+            self._numbered = [*(self._numbered or []), *pad][: (idx + 1)]
+            self._numbered[idx] += 1
+            return self._numbered[idx]
         return 1
 
     def add_bullet(self, line: str) -> str:
