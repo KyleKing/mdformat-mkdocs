@@ -328,3 +328,54 @@ You can also use words, to fit your writing style more closely\[^note\].
 \[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
 This footnote also has been made with a different syntax using 4 spaces for new lines.
 .
+
+Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13
+.
+1. Add a serializer class
+
+    ```python
+    class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!
+        """Used to retrieve recurring_event info"""
+
+        class Meta:
+            model = RecurringEvent  # (2)!
+            fields = (
+                "uuid",
+                "name",
+                "start_time",
+                "duration_in_min",
+                "video_conference_url",
+                "additional_info",
+                "project",
+            )
+            read_only_fields = (
+                "uuid",  # (3)!
+                "created_at",
+                "updated_at",
+            )
+    ```
+.
+1. Add a serializer class
+
+    ```python
+    class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!
+        """Used to retrieve recurring_event info"""
+
+        class Meta:
+            model = RecurringEvent  # (2)!
+            fields = (
+                "uuid",
+                "name",
+                "start_time",
+                "duration_in_min",
+                "video_conference_url",
+                "additional_info",
+                "project",
+            )
+            read_only_fields = (
+                "uuid",  # (3)!
+                "created_at",
+                "updated_at",
+            )
+    ```
+.
