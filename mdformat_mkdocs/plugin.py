@@ -100,12 +100,23 @@ class _MarkdownIndent:
     _last_indent = ""
     _counter = 0
     _lookup: Dict[str, int] = {}
+    _code_block_indent: str = ""
 
     def __init__(self) -> None:
         self._lookup = {}
 
-    def calculate(self, this_indent: str) -> str:
+    def _get_code_indent(self, line: str) -> str:
+        if line.strip().startswith("```"):
+            if self._code_block_indent:  # End of code block
+                self._code_block_indent = ""
+            else:
+                self._code_block_indent = line.split("`")[0]
+                print(f"indent: `{self._code_block_indent}`")
+        return self._code_block_indent
+
+    def calculate(self, this_indent: str, line: str) -> str:
         """Calculate the new indent."""
+        self._get_code_indent(line)  # FIXME: How to handle?
         if this_indent:
             diff = len(this_indent) - len(self._last_indent)
             if not diff:
@@ -135,7 +146,9 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
         new_line = md_list.add_bullet(line)
 
         try:
-            new_indent = md_indent.calculate(this_indent=md_list.this_indent)
+            new_indent = md_indent.calculate(
+                this_indent=md_list.this_indent, line=new_line
+            )
         except NotImplementedError:
             raise NotImplementedError(f"Error in indentation of: `{line}`") from None
 

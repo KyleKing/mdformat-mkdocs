@@ -339,20 +339,6 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
 
         class Meta:
             model = RecurringEvent  # (2)!
-            fields = (
-                "uuid",
-                "name",
-                "start_time",
-                "duration_in_min",
-                "video_conference_url",
-                "additional_info",
-                "project",
-            )
-            read_only_fields = (
-                "uuid",  # (3)!
-                "created_at",
-                "updated_at",
-            )
     ```
 .
 1. Add a serializer class
@@ -363,19 +349,5 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
 
         class Meta:
             model = RecurringEvent  # (2)!
-            fields = (
-                "uuid",
-                "name",
-                "start_time",
-                "duration_in_min",
-                "video_conference_url",
-                "additional_info",
-                "project",
-            )
-            read_only_fields = (
-                "uuid",  # (3)!
-                "created_at",
-                "updated_at",
-            )
     ```
 .
