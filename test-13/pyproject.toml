@@ -7,8 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-mdformat-black = "^0.1.1"
-
+mdformat-mkdocs = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core"]
