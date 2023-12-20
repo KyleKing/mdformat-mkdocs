@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "test-13"
+version = "0.1.0"
+description = ""
+authors = ["Kyle King <KyleKing@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+mdformat-black = "^0.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
