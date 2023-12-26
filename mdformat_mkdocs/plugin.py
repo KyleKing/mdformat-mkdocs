@@ -116,11 +116,17 @@ class _MarkdownIndent:
 
     def calculate(self, this_indent: str, line: str) -> str:
         """Calculate the new indent."""
-        self._get_code_indent(line)  # FIXME: How to handle?
+        code_indent = self._get_code_indent(line)
+        extra_indent = ""
         if this_indent:
             diff = len(this_indent) - len(self._last_indent)
             if not diff:
                 ...
+            elif line.strip().startswith("```"):  # start or end of code block
+                self._counter += 1
+            elif code_indent:
+                extra_indent = " " * (len(this_indent) + 1)
+                # extra_indent = ' '  * (len(this_indent) - len(code_indent))
             elif diff > 0:
                 self._counter += 1
                 self._lookup[this_indent] = self._counter
@@ -131,6 +137,9 @@ class _MarkdownIndent:
         else:
             self._counter = 0
         self._last_indent = this_indent
+
+        if extra_indent:
+            return extra_indent
         return _DEFAULT_INDENT * self._counter
 
 
