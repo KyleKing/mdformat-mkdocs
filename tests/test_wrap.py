@@ -109,8 +109,4 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
         options={"align_semantic_breaks_in_lists": align_lists, "wrap": wrap},
         extensions={"mkdocs"},
     )
-
-    print(output.strip())
-    print("-- Expected --")
-    print(expected.strip())
     assert output.strip() == expected.strip()

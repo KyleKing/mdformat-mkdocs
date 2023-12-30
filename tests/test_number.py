@@ -64,8 +64,4 @@ def test_number(text: str, expected: str):
         options={"number": True},
         extensions={"mkdocs"},
     )
-
-    print(output.strip())
-    print("-- Expected --")
-    print(expected.strip())
     assert output.strip() == expected.strip()

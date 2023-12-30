@@ -122,6 +122,7 @@ class _MarkdownIndent:
             diff = len(this_indent) - len(self._last_indent)
             if not diff:
                 ...
+            # This is a totally separate means of determining indentation, so possibly break this out into its own class?
             elif line.strip().startswith("```"):  # start or end of code block
                 self._counter += 1
             elif code_indent:
