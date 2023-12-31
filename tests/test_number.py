@@ -1,6 +1,8 @@
 import mdformat
 import pytest
 
+from .helpers import print_text
+
 CASE_1 = """
 1. One
     1. AAA
@@ -64,4 +66,5 @@ def test_number(text: str, expected: str):
         options={"number": True},
         extensions={"mkdocs"},
     )
+    print_text(output, expected)
     assert output.strip() == expected.strip()
