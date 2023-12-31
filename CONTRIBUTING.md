@@ -51,6 +51,14 @@ pipx install pytest-watcher
 ptw .
 ```
 
+## Local pipx testing
+
+Run the latest local code anywhere with pipx.
+
+```sh
+pipx install . --include-deps --force --editable
+```
+
 ## Publish to PyPi
 
 Either use flit directly:

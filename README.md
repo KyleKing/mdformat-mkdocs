@@ -35,9 +35,9 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs
+          - mdformat-mkdocs>=1.1.1
           # Or
-          # - "mdformat-mkdocs[recommended]"
+          # - "mdformat-mkdocs[recommended]>=1.1.1"
 ```
 
 ### pipx

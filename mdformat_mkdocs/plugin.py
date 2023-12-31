@@ -126,10 +126,6 @@ class _MarkdownIndent:
 
         if working_indent:
             diff = len(working_indent) - len(self._last_indent)
-            print(  # FIXME: Remove all print debugging before merge!
-                f"diff={diff} // indent={len(working_indent)} //_lookup={self._lookup}"
-            )
-
             if not diff:
                 ...
             elif diff > 0:
