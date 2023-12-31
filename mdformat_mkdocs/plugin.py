@@ -44,7 +44,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
 _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
 """Match `indent` and `content` against line`."""
 
-_RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-\*\d\.]+)\s+(?P<item>.+)")
+_RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
 _DEFAULT_INDENT = " " * _MKDOCS_INDENT_COUNT
@@ -87,7 +87,7 @@ class _MarkdownList:
         """Add bullet to the line."""
         indent, content = _separate_indent(line)
         self._this_indent_depth = len(indent)
-        list_match = _RE_LIST_ITEM.match(content)
+        list_match = _RE_LIST_ITEM.fullmatch(content)
         self.is_list_match = bool(list_match)
         new_line = line
         if list_match:
