@@ -117,7 +117,7 @@ class _MarkdownIndent:
             self._code_block_indent = "" if self._code_block_indent else indent
         return self._code_block_indent
 
-    def calculate(self, line: str, _debug: int) -> str:
+    def calculate(self, line: str) -> str:
         """Calculate the new indent."""
         raw_indent, content = _separate_indent(line)
         code_indent = self._get_code_indent(raw_indent, content)
@@ -127,7 +127,7 @@ class _MarkdownIndent:
         if working_indent:
             diff = len(working_indent) - len(self._last_indent)
             print(  # FIXME: Remove all print debugging before merge!
-                f"diff={diff} // indent={len(working_indent)} vs. {_debug}//_lookup={self._lookup}"
+                f"diff={diff} // indent={len(working_indent)} //_lookup={self._lookup}"
             )
 
             if not diff:
@@ -158,9 +158,9 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     md_list = _MarkdownList(increment_number_mode=number_mode)
     md_indent = _MarkdownIndent()
     for line in text.split(eol):
-        new_line = md_list.add_bullet(line)
-        new_indent = md_indent.calculate(line=line, _debug=md_list._this_indent_depth)
+        new_indent = md_indent.calculate(line=line)
 
+        new_line = md_list.add_bullet(line)
         if (
             _ALIGN_SEMANTIC_BREAKS_IN_LISTS
             and not md_list.is_list_match
