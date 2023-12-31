@@ -52,6 +52,7 @@ _DEFAULT_INDENT = " " * _MKDOCS_INDENT_COUNT
 
 
 def _separate_indent(line: str) -> Tuple[str, str]:
+    """Separate leading indent from content. Also used by the test suite."""
     match = _RE_INDENT.match(line)
     assert match is not None  # for pylint
     return (match["indent"], match["content"])
@@ -116,36 +117,42 @@ class _MarkdownIndent:
                 self._code_block_indent = ""
             else:
                 self._code_block_indent = indent
-                print(f"indent: `{self._code_block_indent}` from {indent}")
+                # print(f"_code_block_indent=`{self._code_block_indent}` from '{content}'")
         return self._code_block_indent
 
     def calculate(self, line: str) -> str:
         """Calculate the new indent."""
-        indent, content = _separate_indent(line)
-        code_indent = self._get_code_indent(indent, content)
+        raw_indent, content = _separate_indent(line)
+        code_indent = self._get_code_indent(raw_indent, content)
+        working_indent = code_indent or raw_indent
         extra_indent = ""
-        if indent:
-            diff = len(indent) - len(self._last_indent)
+
+        if working_indent:
+            diff = len(working_indent) - len(self._last_indent)
+            print(
+                f"diff={diff} // indent={len(working_indent)} //_lookup={self._lookup}"
+            )
+
+            # Then resolve indentation based on the counter
             if not diff:
                 ...
-            # This is a totally separate means of determining indentation, so possibly break this out into its own class?
-            elif line.strip().startswith("```"):  # start or end of code block
-                self._counter += 1
-            elif code_indent:
-                extra_indent = " " * len(indent) + "".join(indent[len(code_indent) :])
-                print(f"Found extra_indent={extra_indent} from {line}")
             elif diff > 0:
                 self._counter += 1
-                self._lookup[indent] = self._counter
-            elif indent in self._lookup:
-                self._counter = self._lookup[indent]
+                self._lookup[working_indent] = self._counter
+            elif working_indent in self._lookup:
+                self._counter = self._lookup[working_indent]
             else:
-                raise NotImplementedError("No indentation")
+                raise NotImplementedError(f"Error in indentation for '{line}'")
+
+            # # FIXME: This is a totally separate means of determining indentation, so possibly break this out into its own class?
+            # if content.startswith("```"):  # start or end of code block
+            if code_indent:
+                extra_indent = "".join(raw_indent[len(code_indent) :])
         else:
             self._counter = 0
-        self._last_indent = indent
+        self._last_indent = working_indent
 
-        return extra_indent or _DEFAULT_INDENT * self._counter
+        return _DEFAULT_INDENT * self._counter + extra_indent if content else ""
 
 
 def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
@@ -157,10 +164,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     md_list = _MarkdownList(increment_number_mode=number_mode)
     md_indent = _MarkdownIndent()
     for line in text.split(eol):
-        try:
-            new_indent = md_indent.calculate(line=line)
-        except NotImplementedError:
-            raise NotImplementedError(f"Error in indentation of: `{line}`") from None
+        new_indent = md_indent.calculate(line=line)
 
         if (
             _ALIGN_SEMANTIC_BREAKS_IN_LISTS
