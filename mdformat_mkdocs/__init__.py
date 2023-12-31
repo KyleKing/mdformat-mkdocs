@@ -1,6 +1,6 @@
 """An mdformat plugin for mkdocs."""
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 from .plugin import (  # noqa: F401
     POSTPROCESSORS,
