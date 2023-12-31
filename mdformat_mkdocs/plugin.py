@@ -113,11 +113,8 @@ class _MarkdownIndent:
 
     def _get_code_indent(self, indent: str, content: str) -> str:
         if content.startswith("```"):
-            if self._code_block_indent:  # End of code block
-                self._code_block_indent = ""
-            else:
-                self._code_block_indent = indent
-                # print(f"_code_block_indent=`{self._code_block_indent}` from '{content}'")
+            # Remove tracked indent on end of code block
+            self._code_block_indent = "" if self._code_block_indent else indent
         return self._code_block_indent
 
     def calculate(self, line: str) -> str:
@@ -129,11 +126,10 @@ class _MarkdownIndent:
 
         if working_indent:
             diff = len(working_indent) - len(self._last_indent)
-            print(
+            print(  # FIXME: Remove all print debugging before merge!
                 f"diff={diff} // indent={len(working_indent)} //_lookup={self._lookup}"
             )
 
-            # Then resolve indentation based on the counter
             if not diff:
                 ...
             elif diff > 0:
@@ -142,12 +138,11 @@ class _MarkdownIndent:
             elif working_indent in self._lookup:
                 self._counter = self._lookup[working_indent]
             else:
-                raise NotImplementedError(f"Error in indentation for '{line}'")
+                raise ValueError(f"Error in list indentation at '{line}'")
 
-            # # FIXME: This is a totally separate means of determining indentation, so possibly break this out into its own class?
-            # if content.startswith("```"):  # start or end of code block
-            if code_indent:
-                extra_indent = "".join(raw_indent[len(code_indent) :])
+            # FIXME: Restore
+            # if code_indent:
+            #     extra_indent = "".join(raw_indent[len(code_indent) :])
         else:
             self._counter = 0
         self._last_indent = working_indent
