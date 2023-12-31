@@ -1,6 +1,8 @@
 import mdformat
 import pytest
 
+from .helpers import print_text
+
 # Note: indented text that starts with a number is parsed as the start of a numbered list
 
 CASE_1 = """
@@ -109,8 +111,5 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
         options={"align_semantic_breaks_in_lists": align_lists, "wrap": wrap},
         extensions={"mkdocs"},
     )
-
-    print(output.strip())
-    print("-- Expected --")
-    print(expected.strip())
+    print_text(output, expected)
     assert output.strip() == expected.strip()
