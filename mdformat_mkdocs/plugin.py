@@ -1,6 +1,6 @@
 import argparse
 import re
-from typing import Dict, Mapping
+from typing import Dict, Mapping, Tuple
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -51,6 +51,13 @@ _DEFAULT_INDENT = " " * _MKDOCS_INDENT_COUNT
 """Default indent."""
 
 
+def _separate_indent(line: str) -> Tuple[str, str]:
+    """Separate leading indent from content. Also used by the test suite."""
+    match = _RE_INDENT.match(line)
+    assert match is not None  # for pylint
+    return (match["indent"], match["content"])
+
+
 class _MarkdownList:
     """Markdown list."""
 
@@ -78,10 +85,9 @@ class _MarkdownList:
 
     def add_bullet(self, line: str) -> str:
         """Add bullet to the line."""
-        match = _RE_INDENT.match(line)
-        assert match is not None  # for pylint
-        self.this_indent = match["indent"]
-        list_match = _RE_LIST_ITEM.match(match["content"])
+        indent, content = _separate_indent(line)
+        self.this_indent = indent
+        list_match = _RE_LIST_ITEM.match(content)
         self.is_list_match = bool(list_match)
         new_line = line
         if list_match:
@@ -106,20 +112,23 @@ class _MarkdownIndent:
 
     def calculate(self, this_indent: str) -> str:
         """Calculate the new indent."""
-        if this_indent:
-            diff = len(this_indent) - len(self._last_indent)
+        working_indent = this_indent
+
+        if working_indent:
+            diff = len(working_indent) - len(self._last_indent)
             if not diff:
                 ...
             elif diff > 0:
                 self._counter += 1
-                self._lookup[this_indent] = self._counter
-            elif this_indent in self._lookup:
-                self._counter = self._lookup[this_indent]
+                self._lookup[working_indent] = self._counter
+            elif working_indent in self._lookup:
+                self._counter = self._lookup[working_indent]
             else:
-                raise NotImplementedError("No indentation")
+                raise NotImplementedError()  # TODO: Restore better error message
         else:
             self._counter = 0
-        self._last_indent = this_indent
+        self._last_indent = working_indent
+
         return _DEFAULT_INDENT * self._counter
 
 
@@ -133,11 +142,7 @@ def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> 
     md_indent = _MarkdownIndent()
     for line in text.split(eol):
         new_line = md_list.add_bullet(line)
-
-        try:
-            new_indent = md_indent.calculate(this_indent=md_list.this_indent)
-        except NotImplementedError:
-            raise NotImplementedError(f"Error in indentation of: `{line}`") from None
+        new_indent = md_indent.calculate(this_indent=md_list.this_indent)
 
         if (
             _ALIGN_SEMANTIC_BREAKS_IN_LISTS
