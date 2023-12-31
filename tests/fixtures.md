@@ -356,25 +356,25 @@ Expanded example for #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13
 .
 1. First Item
 
-  ``` 
-
-       Arbitrary code block content (5 spaces)
-
-  ```
-
-  1. Next Item
+      ``` 
+    
+           Arbitrary code block content (5 spaces)
+    
+      ```
+    
+      1. Next Item
     
 1. Last Item
 .
 1. First Item
 
-    ``` 
+    ```
 
          Arbitrary code block content (5 spaces)
 
     ```
 
     1. Next Item
-    
+
 1. Last Item
 .
