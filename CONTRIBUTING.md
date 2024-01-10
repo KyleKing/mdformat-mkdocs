@@ -17,7 +17,7 @@ tox
 and with test coverage:
 
 ```bash
-tox -e py37-cov
+tox -e py38-cov
 ```
 
 The easiest way to write tests, is to edit `tests/fixtures.md`
@@ -25,7 +25,7 @@ The easiest way to write tests, is to edit `tests/fixtures.md`
 To run the code formatting and style checks:
 
 ```bash
-tox -e py37-pre-commit
+tox -e py38-pre-commit
 ```
 
 or directly
@@ -38,7 +38,7 @@ pre-commit run --all
 To run the pre-commit hook test:
 
 ```bash
-tox -e py37-hook
+tox -e py38-hook
 ```
 
 ## `ptw` testing
