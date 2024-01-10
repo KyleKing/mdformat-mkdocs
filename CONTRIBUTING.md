@@ -5,7 +5,7 @@ This package utilizes [flit](https://flit.readthedocs.io) as the build engine, a
 To install these development dependencies:
 
 ```bash
-pip install tox
+pipx install tox
 ```
 
 To run the tests:
