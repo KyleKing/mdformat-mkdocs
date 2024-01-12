@@ -13,7 +13,7 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](h
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-Tip: this package specifies an "extra" (`'recommended'`) for plugins that work well with mkdocs:
+**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with mkdocs:
 
 - [mdformat-admon](https://pypi.org/project/mdformat-admon)
 - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
@@ -35,9 +35,9 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs>=1.1.2
+          - mdformat-mkdocs>=1.2.0
           # Or
-          # - "mdformat-mkdocs[recommended]>=1.1.2"
+          # - "mdformat-mkdocs[recommended]>=1.2.0"
 ```
 
 ### pipx
