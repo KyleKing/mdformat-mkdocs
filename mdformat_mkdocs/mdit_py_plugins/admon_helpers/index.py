@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from contextlib import suppress
 import re
-from typing import TYPE_CHECKING, Callable, List, Sequence, Tuple
+from typing import TYPE_CHECKING, Callable, List, NamedTuple, Sequence, Tuple, Union
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
@@ -58,14 +58,32 @@ MARKER_CHARS = {_m[0] for _m in MARKERS}
 MAX_MARKER_LEN = max(len(_m) for _m in MARKERS)
 
 
-def admonition(  # noqa: C901
-    state: StateBlock, startLine: int, endLine: int, silent: bool
-) -> bool:
-    if is_code_block(state, startLine):
+class AdmonState(NamedTuple):
+    """Frozen state."""
+
+    parentType: str
+    lineMax: str
+    blkIndent: str
+
+
+class Admonition(NamedTuple):
+    """Admonition data for rendering."""
+
+    old_state: AdmonState
+    marker: str
+    markup: str
+    meta_text: str
+    next_line: int
+
+
+def parse_possible_admon(  # noqa: C901
+    state: StateBlock, start_line: int, end_line: int, silent: bool
+) -> Union[Admonition, bool]:
+    if is_code_block(state, start_line):
         return False
 
-    start = state.bMarks[startLine] + state.tShift[startLine]
-    maximum = state.eMarks[startLine]
+    start = state.bMarks[start_line] + state.tShift[start_line]
+    maximum = state.eMarks[start_line]
 
     # Check out the first character quickly, which should filter out most of non-containers
     if state.src[start] not in MARKER_CHARS:
@@ -85,17 +103,15 @@ def admonition(  # noqa: C901
         return False
 
     admon_meta_text = state.src[marker_pos:maximum]
-
     if not validate_admon_meta(admon_meta_text):
         return False
-
     # Since start is found, we can report success here in validation mode
     if silent:
         return True
 
-    old_parent = state.parentType
-    old_line_max = state.lineMax
-    old_indent = state.blkIndent
+    old_state = AdmonState(
+        parentType=state.parentType, lineMax=state.lineMax, blkIndent=state.blkIndent
+    )
 
     blk_start = marker_pos
     while blk_start < maximum and state.src[blk_start] == " ":
@@ -109,10 +125,10 @@ def admonition(  # noqa: C901
     was_empty = False
 
     # Search for the end of the block
-    next_line = startLine
+    next_line = start_line
     while True:
         next_line += 1
-        if next_line >= endLine:
+        if next_line >= end_line:
             # unclosed block should be autoclosed by end of document.
             # also block seems to be autoclosed by end of parent
             break
@@ -133,21 +149,30 @@ def admonition(  # noqa: C901
 
     # this will prevent lazy continuations from ever going past our end marker
     state.lineMax = next_line
+    return Admonition(
+        old_state=old_state,
+        marker=marker,
+        markup=markup,
+        meta_text=admon_meta_text,
+        next_line=next_line,
+    )
 
-    tags, title = parse_tag_and_title(admon_meta_text)
+
+def format_admon_markup(
+    state: StateBlock,
+    start_line: int,
+    admonition: Admonition,
+) -> None:
+    tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
-
-    # HACK: up to here us the same as ../admon/index.py
-
-    use_details = marker.startswith("???")
-
+    use_details = admonition.marker.startswith("???")
     is_open = None
     if use_details:
-        is_open = markup.endswith("+")
+        is_open = admonition.markup.endswith("+")
 
     outer_div = "details" if use_details else "div"
     token = state.push("admonition_mkdocs_open", outer_div, 1)
-    token.markup = markup
+    token.markup = admonition.markup
     token.block = True
     attrs = {"class": " ".join(tags)}
     if not use_details:
@@ -157,37 +182,43 @@ def admonition(  # noqa: C901
     token.attrs = attrs
     token.meta = {"tag": tag}
     token.content = title
-    token.info = admon_meta_text
-    token.map = [startLine, next_line]
+    token.info = admonition.meta_text
+    token.map = [start_line, admonition.next_line]
 
     if title:
-        title_markup = f"{markup} {tag}"
+        title_markup = f"{admonition.markup} {tag}"
         inner_div = "summary" if use_details else "p"
         token = state.push("admonition_mkdocs_title_open", inner_div, 1)
         token.markup = title_markup
         if not use_details:
             token.attrs = {"class": "admonition-title"}
-        token.map = [startLine, startLine + 1]
+        token.map = [start_line, start_line + 1]
 
         token = state.push("inline", "", 0)
         token.content = title
-        token.map = [startLine, startLine + 1]
+        token.map = [start_line, start_line + 1]
         token.children = []
 
         token = state.push("admonition_mkdocs_title_close", inner_div, -1)
 
-    state.md.block.tokenize(state, startLine + 1, next_line)
+    state.md.block.tokenize(state, start_line + 1, admonition.next_line)
 
     token = state.push("admonition_mkdocs_close", outer_div, -1)
-    token.markup = markup
+    token.markup = admonition.markup
     token.block = True
 
-    state.parentType = old_parent
-    state.lineMax = old_line_max
-    state.blkIndent = old_indent
-    state.line = next_line
+    state.parentType = admonition.old_state.parentType
+    state.lineMax = admonition.old_state.lineMax
+    state.blkIndent = admonition.old_state.blkIndent
+    state.line = admonition.next_line
 
-    return True
+
+def admonition(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool:
+    result = parse_possible_admon(state, startLine, endLine, silent)
+    if isinstance(result, Admonition):
+        format_admon_markup(state, startLine, admonition=result)
+        return True
+    return result
 
 
 def render_default(
