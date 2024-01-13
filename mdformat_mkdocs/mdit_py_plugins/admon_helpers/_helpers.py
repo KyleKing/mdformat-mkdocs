@@ -219,16 +219,6 @@ def format_admon_markup(
     state.line = admonition.next_line
 
 
-def admonition_logic(
-    state: StateBlock, startLine: int, endLine: int, silent: bool
-) -> bool:
-    result = parse_possible_admon(state, startLine, endLine, silent)
-    if isinstance(result, Admonition):
-        format_admon_markup(state, startLine, admonition=result)
-        return True
-    return result
-
-
 def default_render(
     self: RendererProtocol,
     tokens: Sequence[Token],
