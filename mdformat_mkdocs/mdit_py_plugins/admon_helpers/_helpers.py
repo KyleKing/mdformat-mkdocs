@@ -4,13 +4,12 @@ from contextlib import contextmanager, suppress
 import re
 from typing import (
     TYPE_CHECKING,
-    Any,
     Callable,
-    Dict,
     Generator,
     List,
     NamedTuple,
     Sequence,
+    Set,
     Tuple,
     Union,
 )
@@ -110,7 +109,8 @@ def search_admon_end(state: StateBlock, start_line: int, end_line: int) -> int:
 
 
 def parse_possible_admon_factory(
-    markers: Tuple[str], marker_len: int
+    markers: Set[str],
+    marker_len: int = 3,
 ) -> Callable[[StateBlock, int, int, bool], Union[Admonition, bool]]:
     def parse_possible_admon(
         state: StateBlock, start_line: int, end_line: int, silent: bool
@@ -182,36 +182,27 @@ def new_token(state: StateBlock, name: str, kind: str) -> Generator[Token, None,
     state.push(f"{name}_close", kind, -1)
 
 
-def format_admon_markup(
+def format_python_markdown_admon_markup(
     state: StateBlock,
     start_line: int,
     admonition: Admonition,
 ) -> None:
     tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
-    use_details = admonition.marker.startswith("???")
 
-    with new_token(state, "admonition", "details" if use_details else "div") as token:
+    with new_token(state, "admonition", "div") as token:
         token.markup = admonition.markup
         token.block = True
-        attrs: Dict[str, Any] = {"class": " ".join(tags)}
-        if use_details and admonition.markup.endswith("+"):
-            attrs["open"] = "open"
-        elif not use_details:
-            attrs["class"] = f'admonition {attrs["class"]}'
-        token.attrs = attrs
+        token.attrs = {"class": " ".join(*[admonition, *tags])}
         token.meta = {"tag": tag}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
 
         if title:
             title_markup = f"{admonition.markup} {tag}"
-            with new_token(
-                state, "admonition_title", "summary" if use_details else "p"
-            ) as token:
+            with new_token(state, "admonition_title", "p") as token:
                 token.markup = title_markup
-                if not use_details:
-                    token.attrs = {"class": "admonition-title"}
+                token.attrs = {"class": "admonition-title"}
                 token.map = [start_line, start_line + 1]
 
                 token = state.push("inline", "", 0)
