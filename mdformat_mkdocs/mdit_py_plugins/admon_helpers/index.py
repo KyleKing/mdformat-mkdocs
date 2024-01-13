@@ -16,26 +16,26 @@ if TYPE_CHECKING:
     from markdown_it.utils import EnvType, OptionsDict
 
 
-def _get_multiple_tags(params: str) -> Tuple[List[str], str]:
+def _get_multiple_tags(meta_text: str) -> Tuple[List[str], str]:
     """Check for multiple tags when the title is double quoted."""
     re_tags = re.compile(r'^\s*(?P<tokens>[^"]+)\s+"(?P<title>.*)"\S*$')
-    match = re_tags.match(params)
+    match = re_tags.match(meta_text)
     if match:
         tags = match["tokens"].strip().split(" ")
         return [tag.lower() for tag in tags], match["title"]
     raise ValueError("No match found for parameters")
 
 
-def _get_tag(_params: str) -> Tuple[List[str], str]:
+def parse_tag_and_title(admon_meta_text: str) -> Tuple[List[str], str]:
     """Separate the tag name from the admonition title."""
-    params = _params.strip()
-    if not params:
+    meta_text = admon_meta_text.strip()
+    if not meta_text:
         return [""], ""
 
     with suppress(ValueError):
-        return _get_multiple_tags(params)
+        return _get_multiple_tags(meta_text)
 
-    tag, *_title = params.split(" ")
+    tag, *_title = meta_text.split(" ")
     joined = " ".join(_title)
 
     title = ""
@@ -46,9 +46,9 @@ def _get_tag(_params: str) -> Tuple[List[str], str]:
     return [tag.lower()], title
 
 
-def _validate(params: str) -> bool:
+def validate_admon_meta(meta_text: str) -> bool:
     """Validate the presence of the tag name after the marker."""
-    tag = params.strip().split(" ", 1)[-1] or ""
+    tag = meta_text.strip().split(" ", 1)[-1] or ""
     return bool(tag)
 
 
@@ -56,15 +56,6 @@ MARKER_LEN = 3  # Regardless of extra characters, block indent stays the same
 MARKERS = ("!!!", "???", "???+")
 MARKER_CHARS = {_m[0] for _m in MARKERS}
 MAX_MARKER_LEN = max(len(_m) for _m in MARKERS)
-
-
-def _extra_classes(markup: str) -> list[str]:
-    """Return the list of additional classes based on the markup."""
-    if markup.startswith("?"):
-        if markup.endswith("+"):
-            return ["is-collapsible collapsible-open"]
-        return ["is-collapsible collapsible-closed"]
-    return []
 
 
 def admonition(  # noqa: C901
@@ -93,9 +84,9 @@ def admonition(  # noqa: C901
     else:
         return False
 
-    params = state.src[marker_pos:maximum]
+    admon_meta_text = state.src[marker_pos:maximum]
 
-    if not _validate(params):
+    if not validate_admon_meta(admon_meta_text):
         return False
 
     # Since start is found, we can report success here in validation mode
@@ -143,7 +134,7 @@ def admonition(  # noqa: C901
     # this will prevent lazy continuations from ever going past our end marker
     state.lineMax = next_line
 
-    tags, title = _get_tag(params)
+    tags, title = parse_tag_and_title(admon_meta_text)
     tag = tags[0]
 
     # HACK: up to here us the same as ../admon/index.py
@@ -166,7 +157,7 @@ def admonition(  # noqa: C901
     token.attrs = attrs
     token.meta = {"tag": tag}
     token.content = title
-    token.info = params
+    token.info = admon_meta_text
     token.map = [startLine, next_line]
 
     if title:
@@ -199,6 +190,17 @@ def admonition(  # noqa: C901
     return True
 
 
+def render_default(
+    self: RendererProtocol,
+    tokens: Sequence[Token],
+    idx: int,
+    _options: OptionsDict,
+    env: EnvType,
+) -> str:
+    """Default render if not specified."""
+    return self.renderToken(tokens, idx, _options, env)  # type: ignore
+
+
 def admon_plugin(md: MarkdownIt, render: None | Callable[..., str] = None) -> None:
     """Plugin to use
     `python-markdown style admonitions
@@ -221,17 +223,7 @@ def admon_plugin(md: MarkdownIt, render: None | Callable[..., str] = None) -> No
     `markdown-it-admon
     <https://github.com/commenthol/markdown-it-admon>`_.
     """
-
-    def renderDefault(
-        self: RendererProtocol,
-        tokens: Sequence[Token],
-        idx: int,
-        _options: OptionsDict,
-        env: EnvType,
-    ) -> str:
-        return self.renderToken(tokens, idx, _options, env)  # type: ignore
-
-    render = render or renderDefault
+    render = render or render_default
 
     md.add_render_rule("admonition_open", render)
     md.add_render_rule("admonition_close", render)
