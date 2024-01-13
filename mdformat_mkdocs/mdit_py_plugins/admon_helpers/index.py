@@ -2,9 +2,19 @@
 
 from __future__ import annotations
 
-from contextlib import suppress
+from contextlib import contextmanager, suppress
 import re
-from typing import TYPE_CHECKING, Callable, List, NamedTuple, Sequence, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generator,
+    List,
+    NamedTuple,
+    Sequence,
+    Tuple,
+    Union,
+)
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
@@ -158,6 +168,13 @@ def parse_possible_admon(  # noqa: C901
     )
 
 
+@contextmanager
+def new_token(state: StateBlock, name: str, kind: str) -> Generator[None, Any, None]:
+    token = state.push(f"{name}_open", kind, 1)
+    yield token
+    state.push(f"{name}_close", kind, -1)
+
+
 def format_admon_markup(
     state: StateBlock,
     start_line: int,
@@ -170,42 +187,35 @@ def format_admon_markup(
     if use_details:
         is_open = admonition.markup.endswith("+")
 
-    outer_div = "details" if use_details else "div"
-    token = state.push("admonition_mkdocs_open", outer_div, 1)
-    token.markup = admonition.markup
-    token.block = True
-    attrs = {"class": " ".join(tags)}
-    if not use_details:
-        attrs["class"] = f'admonition {attrs["class"]}'
-    if is_open is True:
-        attrs["open"] = "open"
-    token.attrs = attrs
-    token.meta = {"tag": tag}
-    token.content = title
-    token.info = admonition.meta_text
-    token.map = [start_line, admonition.next_line]
-
-    if title:
-        title_markup = f"{admonition.markup} {tag}"
-        inner_div = "summary" if use_details else "p"
-        token = state.push("admonition_mkdocs_title_open", inner_div, 1)
-        token.markup = title_markup
+    with new_token(state, "admonition", "details" if use_details else "div") as token:
+        token.markup = admonition.markup
+        token.block = True
+        attrs = {"class": " ".join(tags)}
         if not use_details:
-            token.attrs = {"class": "admonition-title"}
-        token.map = [start_line, start_line + 1]
+            attrs["class"] = f'admonition {attrs["class"]}'
+        if is_open is True:
+            attrs["open"] = "open"
+        token.attrs = attrs
+        token.meta = {"tag": tag}
+        token.info = admonition.meta_text
+        token.map = [start_line, admonition.next_line]
 
-        token = state.push("inline", "", 0)
-        token.content = title
-        token.map = [start_line, start_line + 1]
-        token.children = []
+        if title:
+            title_markup = f"{admonition.markup} {tag}"
+            with new_token(
+                state, "admonition_title", "summary" if use_details else "p"
+            ) as token:
+                token.markup = title_markup
+                if not use_details:
+                    token.attrs = {"class": "admonition-title"}
+                token.map = [start_line, start_line + 1]
 
-        token = state.push("admonition_mkdocs_title_close", inner_div, -1)
+                token = state.push("inline", "", 0)
+                token.content = title
+                token.map = [start_line, start_line + 1]
+                token.children = []
 
-    state.md.block.tokenize(state, start_line + 1, admonition.next_line)
-
-    token = state.push("admonition_mkdocs_close", outer_div, -1)
-    token.markup = admonition.markup
-    token.block = True
+        state.md.block.tokenize(state, start_line + 1, admonition.next_line)
 
     state.parentType = admonition.old_state.parentType
     state.lineMax = admonition.old_state.lineMax
@@ -213,7 +223,9 @@ def format_admon_markup(
     state.line = admonition.next_line
 
 
-def admonition(state: StateBlock, startLine: int, endLine: int, silent: bool) -> bool:
+def admonition_logic(
+    state: StateBlock, startLine: int, endLine: int, silent: bool
+) -> bool:
     result = parse_possible_admon(state, startLine, endLine, silent)
     if isinstance(result, Admonition):
         format_admon_markup(state, startLine, admonition=result)
@@ -264,6 +276,6 @@ def admon_plugin(md: MarkdownIt, render: None | Callable[..., str] = None) -> No
     md.block.ruler.before(
         "fence",
         "admonition",
-        admonition,
+        admonition_logic,
         {"alt": ["paragraph", "reference", "blockquote", "list"]},
     )
