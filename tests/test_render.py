@@ -5,11 +5,14 @@ from markdown_it.utils import read_fixture_file
 import pytest
 
 # from mdformat_mkdocs.mdit_py_plugins.admon_mkdocs import admon_mkdocs_plugin
-# PLANNED: used to test refactoring against regressions
 from mdformat_mkdocs.mdit_py_plugins.admon_helpers import (
-    admon_plugin as admon_mkdocs_plugin,
+    admon_plugin_wrapper,
+    admonition_logic,
 )
 from .helpers import print_text
+
+# HACK: used to test refactoring against regressions
+admon_mkdocs_plugin = admon_plugin_wrapper("admonition_mkdocs", admonition_logic)
 
 FIXTURE_PATH = Path(__file__).parent
 

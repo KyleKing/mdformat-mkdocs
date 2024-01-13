@@ -1,5 +1,3 @@
-# Process admonitions and pass to cb.
-
 from __future__ import annotations
 
 from contextlib import contextmanager, suppress
@@ -170,8 +168,7 @@ def parse_possible_admon(  # noqa: C901
 
 @contextmanager
 def new_token(state: StateBlock, name: str, kind: str) -> Generator[None, Any, None]:
-    token = state.push(f"{name}_open", kind, 1)
-    yield token
+    yield state.push(f"{name}_open", kind, 1)
     state.push(f"{name}_close", kind, -1)
 
 
@@ -183,18 +180,15 @@ def format_admon_markup(
     tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
     use_details = admonition.marker.startswith("???")
-    is_open = None
-    if use_details:
-        is_open = admonition.markup.endswith("+")
 
     with new_token(state, "admonition", "details" if use_details else "div") as token:
         token.markup = admonition.markup
         token.block = True
         attrs = {"class": " ".join(tags)}
-        if not use_details:
-            attrs["class"] = f'admonition {attrs["class"]}'
-        if is_open is True:
+        if use_details and admonition.markup.endswith("+"):
             attrs["open"] = "open"
+        elif not use_details:
+            attrs["class"] = f'admonition {attrs["class"]}'
         token.attrs = attrs
         token.meta = {"tag": tag}
         token.info = admonition.meta_text
@@ -233,7 +227,7 @@ def admonition_logic(
     return result
 
 
-def render_default(
+def default_render(
     self: RendererProtocol,
     tokens: Sequence[Token],
     idx: int,
@@ -244,38 +238,42 @@ def render_default(
     return self.renderToken(tokens, idx, _options, env)  # type: ignore
 
 
-def admon_plugin(md: MarkdownIt, render: None | Callable[..., str] = None) -> None:
-    """Plugin to use
-    `python-markdown style admonitions
-    <https://python-markdown.github.io/extensions/admonition>`_.
+RenderType = Callable[..., str]
 
-    .. code-block:: md
 
-        !!! note
-            *content*
+def admon_plugin_wrapper(
+    prefix: str, logic: Callable[[StateBlock, int, int, bool], bool]
+) -> Callable[[MarkdownIt, None | RenderType], None]:
+    def admon_plugin(md: MarkdownIt, render: None | RenderType = None) -> None:
+        """Plugin to use
+        `python-markdown style admonitions
+        <https://python-markdown.github.io/extensions/admonition>`_.
 
-    `And mkdocs-style collapsible blocks
-    <https://squidfunk.github.io/mkdocs-material/reference/admonitions/#collapsible-blocks>`_.
+        .. code-block:: md
 
-    .. code-block:: md
+            !!! note
+                *content*
 
-        ???+ note
-            *content*
+        `And mkdocs-style collapsible blocks
+        <https://squidfunk.github.io/mkdocs-material/reference/admonitions/#collapsible-blocks>`_.
 
-    Note, this is ported from
-    `markdown-it-admon
-    <https://github.com/commenthol/markdown-it-admon>`_.
-    """
-    render = render or render_default
+        .. code-block:: md
 
-    md.add_render_rule("admonition_open", render)
-    md.add_render_rule("admonition_close", render)
-    md.add_render_rule("admonition_title_open", render)
-    md.add_render_rule("admonition_title_close", render)
+            ???+ note
+                *content*
 
-    md.block.ruler.before(
-        "fence",
-        "admonition",
-        admonition_logic,
-        {"alt": ["paragraph", "reference", "blockquote", "list"]},
-    )
+        Note, this is ported from
+        `markdown-it-admon
+        <https://github.com/commenthol/markdown-it-admon>`_.
+        """
+        render = render or default_render
+
+        md.add_render_rule(f"{prefix}_open", render)
+        md.add_render_rule(f"{prefix}_close", render)
+        md.add_render_rule(f"{prefix}_title_open", render)
+        md.add_render_rule(f"{prefix}_title_close", render)
+
+        options = {"alt": ["paragraph", "reference", "blockquote", "list"]}
+        md.block.ruler.before("fence", prefix, logic, options)
+
+    return admon_plugin
