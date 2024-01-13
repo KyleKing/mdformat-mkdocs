@@ -76,7 +76,7 @@ def admonition(  # noqa: C901
     start = state.bMarks[startLine] + state.tShift[startLine]
     maximum = state.eMarks[startLine]
 
-    # Check out the first character quickly, which should filter out most of non-containers
+    # Exit quickly on a non-match for first char
     if state.src[start] not in MARKER_CHARS:
         return False
 

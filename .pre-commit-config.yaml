@@ -46,7 +46,6 @@ repos:
           - flake8-bugbear>=21.3.2
           - flake8-builtins>=1.5.3
           - flake8-comprehensions>=3.4.0
-        args: ['--ignore=E501,W503']
   - repo: https://github.com/executablebooks/mdformat
     rev: 0.7.17
     hooks:

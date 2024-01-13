@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, Sequence
+from typing import TYPE_CHECKING, Any, Callable, Dict, Sequence
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
@@ -30,7 +30,7 @@ def admonition_mkdocs(  # noqa: C901
     start = state.bMarks[startLine] + state.tShift[startLine]
     maximum = state.eMarks[startLine]
 
-    # Check out the first character quickly, which should filter out most of non-containers
+    # Exit quickly on a non-match for first char
     if state.src[start] not in MARKER_CHARS:
         return False
 
@@ -112,7 +112,7 @@ def admonition_mkdocs(  # noqa: C901
     token = state.push("admonition_mkdocs_open", outer_div, 1)
     token.markup = markup
     token.block = True
-    attrs = {"class": " ".join(tags)}
+    attrs: Dict[str, Any] = {"class": " ".join(tags)}
     if not use_details:
         attrs["class"] = f'admonition {attrs["class"]}'
     if is_open is True:

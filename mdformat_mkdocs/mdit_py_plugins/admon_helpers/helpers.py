@@ -6,6 +6,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    Dict,
     Generator,
     List,
     NamedTuple,
@@ -20,6 +21,7 @@ from mdit_py_plugins.utils import is_code_block
 
 if TYPE_CHECKING:
     from markdown_it.renderer import RendererProtocol
+    from markdown_it.ruler import RuleOptionsType
     from markdown_it.token import Token
     from markdown_it.utils import EnvType, OptionsDict
 
@@ -70,8 +72,8 @@ class AdmonState(NamedTuple):
     """Frozen state."""
 
     parentType: str
-    lineMax: str
-    blkIndent: str
+    lineMax: int
+    blkIndent: int
 
 
 class Admonition(NamedTuple):
@@ -93,7 +95,7 @@ def parse_possible_admon(  # noqa: C901
     start = state.bMarks[start_line] + state.tShift[start_line]
     maximum = state.eMarks[start_line]
 
-    # Check out the first character quickly, which should filter out most of non-containers
+    # Exit quickly on a non-match for first char
     if state.src[start] not in MARKER_CHARS:
         return False
 
@@ -167,7 +169,7 @@ def parse_possible_admon(  # noqa: C901
 
 
 @contextmanager
-def new_token(state: StateBlock, name: str, kind: str) -> Generator[None, Any, None]:
+def new_token(state: StateBlock, name: str, kind: str) -> Generator[Token, None, None]:
     yield state.push(f"{name}_open", kind, 1)
     state.push(f"{name}_close", kind, -1)
 
@@ -184,7 +186,7 @@ def format_admon_markup(
     with new_token(state, "admonition", "details" if use_details else "div") as token:
         token.markup = admonition.markup
         token.block = True
-        attrs = {"class": " ".join(tags)}
+        attrs: Dict[str, Any] = {"class": " ".join(tags)}
         if use_details and admonition.markup.endswith("+"):
             attrs["open"] = "open"
         elif not use_details:
@@ -273,7 +275,9 @@ def admon_plugin_wrapper(
         md.add_render_rule(f"{prefix}_title_open", render)
         md.add_render_rule(f"{prefix}_title_close", render)
 
-        options = {"alt": ["paragraph", "reference", "blockquote", "list"]}
+        options: RuleOptionsType = {
+            "alt": ["paragraph", "reference", "blockquote", "list"]
+        }
         md.block.ruler.before("fence", prefix, logic, options)
 
     return admon_plugin

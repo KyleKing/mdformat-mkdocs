@@ -1,6 +1,6 @@
 import argparse
 import re
-from typing import Dict, Mapping, Tuple
+from typing import Dict, List, Mapping, Tuple
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -185,9 +185,13 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     wrap_mode = context.options["mdformat"]["wrap"]
     if (
         not isinstance(wrap_mode, int)
-        or FILLER_CHAR in text  # noqa: W503
-        or (node.parent and node.parent.type != "paragraph")  # noqa: W503
-        or (node.parent.parent and node.parent.parent.type != "list_item")  # noqa: W503
+        or FILLER_CHAR in text
+        or (node.parent and node.parent.type != "paragraph")
+        or (
+            node.parent
+            and node.parent.parent
+            and node.parent.parent.type != "list_item"
+        )
     ):
         return text
 
@@ -205,7 +209,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     if len(text) > wrap_mode:
         indent_length = _MKDOCS_INDENT_COUNT * indent_count
         wrapped_length = -123
-        words = []
+        words: List[str] = []
         for word in text.split(soft_break):
             next_length = wrapped_length + len(word)
             if not words:
