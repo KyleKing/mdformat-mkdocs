@@ -80,7 +80,36 @@ class Admonition(NamedTuple):
     next_line: int
 
 
-def parse_possible_admon_factory(  # noqa: C901
+def search_admon_end(state: StateBlock, start_line: int, end_line: int) -> int:
+    was_empty = False
+
+    # Search for the end of the block
+    next_line = start_line
+    while True:
+        next_line += 1
+        if next_line >= end_line:
+            # unclosed block should be autoclosed by end of document.
+            # also block seems to be autoclosed by end of parent
+            break
+        pos = state.bMarks[next_line] + state.tShift[next_line]
+        maximum = state.eMarks[next_line]
+        is_empty = state.sCount[next_line] < state.blkIndent
+
+        # two consecutive empty lines autoclose the block
+        if is_empty and was_empty:
+            break
+        was_empty = is_empty
+
+        if pos < maximum and state.sCount[next_line] < state.blkIndent:
+            # non-empty line with negative indent should stop the block:
+            # - !!!
+            #  test
+            break
+
+    return next_line
+
+
+def parse_possible_admon_factory(
     markers: Tuple[str], marker_len: int
 ) -> Callable[[StateBlock, int, int, bool], Union[Admonition, bool]]:
     def parse_possible_admon(
@@ -122,40 +151,17 @@ def parse_possible_admon_factory(  # noqa: C901
             lineMax=state.lineMax,
             blkIndent=state.blkIndent,
         )
+        state.parentType = "admonition"
 
         blk_start = marker_pos
         while blk_start < maximum and state.src[blk_start] == " ":
             blk_start += 1
 
-        state.parentType = "admonition"
         # Correct block indentation when extra marker characters are present
         marker_alignment_correction = marker_len - len(marker)
         state.blkIndent += blk_start - start + marker_alignment_correction
 
-        was_empty = False
-
-        # Search for the end of the block
-        next_line = start_line
-        while True:
-            next_line += 1
-            if next_line >= end_line:
-                # unclosed block should be autoclosed by end of document.
-                # also block seems to be autoclosed by end of parent
-                break
-            pos = state.bMarks[next_line] + state.tShift[next_line]
-            maximum = state.eMarks[next_line]
-            is_empty = state.sCount[next_line] < state.blkIndent
-
-            # two consecutive empty lines autoclose the block
-            if is_empty and was_empty:
-                break
-            was_empty = is_empty
-
-            if pos < maximum and state.sCount[next_line] < state.blkIndent:
-                # non-empty line with negative indent should stop the block:
-                # - !!!
-                #  test
-                break
+        next_line = search_admon_end(state, start_line, end_line)
 
         # this will prevent lazy continuations from ever going past our end marker
         state.lineMax = next_line
