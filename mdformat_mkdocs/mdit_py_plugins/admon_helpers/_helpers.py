@@ -62,12 +62,6 @@ def validate_admon_meta(meta_text: str) -> bool:
     return bool(tag)
 
 
-MARKER_LEN = 3  # Regardless of extra characters, block indent stays the same
-MARKERS = ("!!!", "???", "???+")
-MARKER_CHARS = {_m[0] for _m in MARKERS}
-MAX_MARKER_LEN = max(len(_m) for _m in MARKERS)
-
-
 class AdmonState(NamedTuple):
     """Frozen state."""
 
@@ -86,86 +80,94 @@ class Admonition(NamedTuple):
     next_line: int
 
 
-def parse_possible_admon(  # noqa: C901
-    state: StateBlock, start_line: int, end_line: int, silent: bool
-) -> Union[Admonition, bool]:
-    if is_code_block(state, start_line):
-        return False
+def parse_possible_admon_factory(  # noqa: C901
+    markers: Tuple[str], marker_len: int
+) -> Callable[[StateBlock, int, int, bool], Union[Admonition, bool]]:
+    def parse_possible_admon(
+        state: StateBlock, start_line: int, end_line: int, silent: bool
+    ) -> Union[Admonition, bool]:
+        if is_code_block(state, start_line):
+            return False
 
-    start = state.bMarks[start_line] + state.tShift[start_line]
-    maximum = state.eMarks[start_line]
+        start = state.bMarks[start_line] + state.tShift[start_line]
+        maximum = state.eMarks[start_line]
 
-    # Exit quickly on a non-match for first char
-    if state.src[start] not in MARKER_CHARS:
-        return False
+        # Exit quickly on a non-match for first char
+        marker_chars = {_m[0] for _m in markers}
+        if state.src[start] not in marker_chars:
+            return False
 
-    # Check out the rest of the marker string
-    marker = ""
-    marker_len = MAX_MARKER_LEN
-    while marker_len > 0:
-        marker_pos = start + marker_len
-        markup = state.src[start:marker_pos]
-        if markup in MARKERS:
-            marker = markup
-            break
-        marker_len -= 1
-    else:
-        return False
+        # Check out the rest of the marker string
+        marker = ""
+        marker_len = max(len(_m) for _m in markers)
+        while marker_len > 0:
+            marker_pos = start + marker_len
+            markup = state.src[start:marker_pos]
+            if markup in markers:
+                marker = markup
+                break
+            marker_len -= 1
+        else:
+            return False
 
-    admon_meta_text = state.src[marker_pos:maximum]
-    if not validate_admon_meta(admon_meta_text):
-        return False
-    # Since start is found, we can report success here in validation mode
-    if silent:
-        return True
+        admon_meta_text = state.src[marker_pos:maximum]
+        if not validate_admon_meta(admon_meta_text):
+            return False
+        # Since start is found, we can report success here in validation mode
+        if silent:
+            return True
 
-    old_state = AdmonState(
-        parentType=state.parentType, lineMax=state.lineMax, blkIndent=state.blkIndent
-    )
+        old_state = AdmonState(
+            parentType=state.parentType,
+            lineMax=state.lineMax,
+            blkIndent=state.blkIndent,
+        )
 
-    blk_start = marker_pos
-    while blk_start < maximum and state.src[blk_start] == " ":
-        blk_start += 1
+        blk_start = marker_pos
+        while blk_start < maximum and state.src[blk_start] == " ":
+            blk_start += 1
 
-    state.parentType = "admonition"
-    # Correct block indentation when extra marker characters are present
-    marker_alignment_correction = MARKER_LEN - len(marker)
-    state.blkIndent += blk_start - start + marker_alignment_correction
+        state.parentType = "admonition"
+        # Correct block indentation when extra marker characters are present
+        marker_alignment_correction = marker_len - len(marker)
+        state.blkIndent += blk_start - start + marker_alignment_correction
 
-    was_empty = False
+        was_empty = False
 
-    # Search for the end of the block
-    next_line = start_line
-    while True:
-        next_line += 1
-        if next_line >= end_line:
-            # unclosed block should be autoclosed by end of document.
-            # also block seems to be autoclosed by end of parent
-            break
-        pos = state.bMarks[next_line] + state.tShift[next_line]
-        maximum = state.eMarks[next_line]
-        is_empty = state.sCount[next_line] < state.blkIndent
+        # Search for the end of the block
+        next_line = start_line
+        while True:
+            next_line += 1
+            if next_line >= end_line:
+                # unclosed block should be autoclosed by end of document.
+                # also block seems to be autoclosed by end of parent
+                break
+            pos = state.bMarks[next_line] + state.tShift[next_line]
+            maximum = state.eMarks[next_line]
+            is_empty = state.sCount[next_line] < state.blkIndent
 
-        # two consecutive empty lines autoclose the block
-        if is_empty and was_empty:
-            break
-        was_empty = is_empty
+            # two consecutive empty lines autoclose the block
+            if is_empty and was_empty:
+                break
+            was_empty = is_empty
 
-        if pos < maximum and state.sCount[next_line] < state.blkIndent:
-            # non-empty line with negative indent should stop the block:
-            # - !!!
-            #  test
-            break
+            if pos < maximum and state.sCount[next_line] < state.blkIndent:
+                # non-empty line with negative indent should stop the block:
+                # - !!!
+                #  test
+                break
 
-    # this will prevent lazy continuations from ever going past our end marker
-    state.lineMax = next_line
-    return Admonition(
-        old_state=old_state,
-        marker=marker,
-        markup=markup,
-        meta_text=admon_meta_text,
-        next_line=next_line,
-    )
+        # this will prevent lazy continuations from ever going past our end marker
+        state.lineMax = next_line
+        return Admonition(
+            old_state=old_state,
+            marker=marker,
+            markup=markup,
+            meta_text=admon_meta_text,
+            next_line=next_line,
+        )
+
+    return parse_possible_admon
 
 
 @contextmanager
@@ -233,7 +235,7 @@ def default_render(
 RenderType = Callable[..., str]
 
 
-def admon_plugin_wrapper(
+def admon_plugin_factory(
     prefix: str, logic: Callable[[StateBlock, int, int, bool], bool]
 ) -> Callable[[MarkdownIt, None | RenderType], None]:
     def admon_plugin(md: MarkdownIt, render: None | RenderType = None) -> None:
