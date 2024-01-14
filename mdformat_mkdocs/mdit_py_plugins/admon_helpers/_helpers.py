@@ -193,7 +193,7 @@ def format_python_markdown_admon_markup(
     with new_token(state, "admonition", "div") as token:
         token.markup = admonition.markup
         token.block = True
-        token.attrs = {"class": " ".join(*[admonition, *tags])}
+        token.attrs = {"class": " ".join("admonition", *tags)}
         token.meta = {"tag": tag}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
