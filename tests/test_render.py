@@ -11,22 +11,17 @@ from .helpers import print_text
 FIXTURE_PATH = Path(__file__).parent
 
 
+def with_plugin(filename, plugin):
+    return [(*fix, plugin) for fix in read_fixture_file(FIXTURE_PATH / filename)]
+
+
 @pytest.mark.parametrize(
     "line,title,text,expected,plugin",
-    (
-        [
-            *read_fixture_file(FIXTURE_PATH / "fixtures-admon.md"),
-            admon_plugin,
-        ],
-        [
-            *read_fixture_file(FIXTURE_PATH / "fixtures-admon.md"),
-            admon_mkdocs_plugin,
-        ],
-        [
-            *read_fixture_file(FIXTURE_PATH / "fixtures-admon-mkdocs.md"),
-            admon_mkdocs_plugin,
-        ],
-    ),
+    [
+        *with_plugin("fixtures-admon.md", admon_plugin),
+        *with_plugin("fixtures-admon.md", admon_mkdocs_plugin),
+        *with_plugin("fixtures-admon-mkdocs.md", admon_mkdocs_plugin),
+    ],
 )
 def test_render(line, title, text, expected, plugin):
     md = MarkdownIt("commonmark").use(plugin)

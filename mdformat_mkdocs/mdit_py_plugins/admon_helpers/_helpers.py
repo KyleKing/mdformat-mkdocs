@@ -110,8 +110,11 @@ def search_admon_end(state: StateBlock, start_line: int, end_line: int) -> int:
 
 def parse_possible_admon_factory(
     markers: Set[str],
-    marker_len: int = 3,
 ) -> Callable[[StateBlock, int, int, bool], Union[Admonition, bool]]:
+    expected_marker_len = 3  # Regardless of extra chars, block indent stays the same
+    marker_first_chars = {_m[0] for _m in markers}
+    max_marker_len = max(len(_m) for _m in markers)
+
     def parse_possible_admon(
         state: StateBlock, start_line: int, end_line: int, silent: bool
     ) -> Union[Admonition, bool]:
@@ -122,13 +125,12 @@ def parse_possible_admon_factory(
         maximum = state.eMarks[start_line]
 
         # Exit quickly on a non-match for first char
-        marker_chars = {_m[0] for _m in markers}
-        if state.src[start] not in marker_chars:
+        if state.src[start] not in marker_first_chars:
             return False
 
         # Check out the rest of the marker string
         marker = ""
-        marker_len = max(len(_m) for _m in markers)
+        marker_len = max_marker_len
         while marker_len > 0:
             marker_pos = start + marker_len
             markup = state.src[start:marker_pos]
@@ -158,7 +160,7 @@ def parse_possible_admon_factory(
             blk_start += 1
 
         # Correct block indentation when extra marker characters are present
-        marker_alignment_correction = marker_len - len(marker)
+        marker_alignment_correction = expected_marker_len - len(marker)
         state.blkIndent += blk_start - start + marker_alignment_correction
 
         next_line = search_admon_end(state, start_line, end_line)
@@ -193,7 +195,7 @@ def format_python_markdown_admon_markup(
     with new_token(state, "admonition", "div") as token:
         token.markup = admonition.markup
         token.block = True
-        token.attrs = {"class": " ".join("admonition", *tags)}
+        token.attrs = {"class": " ".join(["admonition", *tags])}
         token.meta = {"tag": tag}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
