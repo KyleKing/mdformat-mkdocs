@@ -72,5 +72,5 @@ profile = "black"
 now = true
 runner = "tox"
 runner_args = ["-e", "py38-recommended"]
-patterns = ["*.py"]
+patterns = ["*.py", "*.md"]
 ignore_patterns = []
