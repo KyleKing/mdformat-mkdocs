@@ -4,13 +4,12 @@ from contextlib import contextmanager, suppress
 import re
 from typing import (
     TYPE_CHECKING,
-    Any,
     Callable,
-    Dict,
     Generator,
     List,
     NamedTuple,
     Sequence,
+    Set,
     Tuple,
     Union,
 )
@@ -62,12 +61,6 @@ def validate_admon_meta(meta_text: str) -> bool:
     return bool(tag)
 
 
-MARKER_LEN = 3  # Regardless of extra characters, block indent stays the same
-MARKERS = ("!!!", "???", "???+")
-MARKER_CHARS = {_m[0] for _m in MARKERS}
-MAX_MARKER_LEN = max(len(_m) for _m in MARKERS)
-
-
 class AdmonState(NamedTuple):
     """Frozen state."""
 
@@ -86,52 +79,7 @@ class Admonition(NamedTuple):
     next_line: int
 
 
-def parse_possible_admon(  # noqa: C901
-    state: StateBlock, start_line: int, end_line: int, silent: bool
-) -> Union[Admonition, bool]:
-    if is_code_block(state, start_line):
-        return False
-
-    start = state.bMarks[start_line] + state.tShift[start_line]
-    maximum = state.eMarks[start_line]
-
-    # Exit quickly on a non-match for first char
-    if state.src[start] not in MARKER_CHARS:
-        return False
-
-    # Check out the rest of the marker string
-    marker = ""
-    marker_len = MAX_MARKER_LEN
-    while marker_len > 0:
-        marker_pos = start + marker_len
-        markup = state.src[start:marker_pos]
-        if markup in MARKERS:
-            marker = markup
-            break
-        marker_len -= 1
-    else:
-        return False
-
-    admon_meta_text = state.src[marker_pos:maximum]
-    if not validate_admon_meta(admon_meta_text):
-        return False
-    # Since start is found, we can report success here in validation mode
-    if silent:
-        return True
-
-    old_state = AdmonState(
-        parentType=state.parentType, lineMax=state.lineMax, blkIndent=state.blkIndent
-    )
-
-    blk_start = marker_pos
-    while blk_start < maximum and state.src[blk_start] == " ":
-        blk_start += 1
-
-    state.parentType = "admonition"
-    # Correct block indentation when extra marker characters are present
-    marker_alignment_correction = MARKER_LEN - len(marker)
-    state.blkIndent += blk_start - start + marker_alignment_correction
-
+def search_admon_end(state: StateBlock, start_line: int, end_line: int) -> int:
     was_empty = False
 
     # Search for the end of the block
@@ -157,15 +105,77 @@ def parse_possible_admon(  # noqa: C901
             #  test
             break
 
-    # this will prevent lazy continuations from ever going past our end marker
-    state.lineMax = next_line
-    return Admonition(
-        old_state=old_state,
-        marker=marker,
-        markup=markup,
-        meta_text=admon_meta_text,
-        next_line=next_line,
-    )
+    return next_line
+
+
+def parse_possible_admon_factory(
+    markers: Set[str],
+) -> Callable[[StateBlock, int, int, bool], Union[Admonition, bool]]:
+    expected_marker_len = 3  # Regardless of extra chars, block indent stays the same
+    marker_first_chars = {_m[0] for _m in markers}
+    max_marker_len = max(len(_m) for _m in markers)
+
+    def parse_possible_admon(
+        state: StateBlock, start_line: int, end_line: int, silent: bool
+    ) -> Union[Admonition, bool]:
+        if is_code_block(state, start_line):
+            return False
+
+        start = state.bMarks[start_line] + state.tShift[start_line]
+        maximum = state.eMarks[start_line]
+
+        # Exit quickly on a non-match for first char
+        if state.src[start] not in marker_first_chars:
+            return False
+
+        # Check out the rest of the marker string
+        marker = ""
+        marker_len = max_marker_len
+        while marker_len > 0:
+            marker_pos = start + marker_len
+            markup = state.src[start:marker_pos]
+            if markup in markers:
+                marker = markup
+                break
+            marker_len -= 1
+        else:
+            return False
+
+        admon_meta_text = state.src[marker_pos:maximum]
+        if not validate_admon_meta(admon_meta_text):
+            return False
+        # Since start is found, we can report success here in validation mode
+        if silent:
+            return True
+
+        old_state = AdmonState(
+            parentType=state.parentType,
+            lineMax=state.lineMax,
+            blkIndent=state.blkIndent,
+        )
+        state.parentType = "admonition"
+
+        blk_start = marker_pos
+        while blk_start < maximum and state.src[blk_start] == " ":
+            blk_start += 1
+
+        # Correct block indentation when extra marker characters are present
+        marker_alignment_correction = expected_marker_len - len(marker)
+        state.blkIndent += blk_start - start + marker_alignment_correction
+
+        next_line = search_admon_end(state, start_line, end_line)
+
+        # this will prevent lazy continuations from ever going past our end marker
+        state.lineMax = next_line
+        return Admonition(
+            old_state=old_state,
+            marker=marker,
+            markup=markup,
+            meta_text=admon_meta_text,
+            next_line=next_line,
+        )
+
+    return parse_possible_admon
 
 
 @contextmanager
@@ -174,36 +184,27 @@ def new_token(state: StateBlock, name: str, kind: str) -> Generator[Token, None,
     state.push(f"{name}_close", kind, -1)
 
 
-def format_admon_markup(
+def format_python_markdown_admon_markup(
     state: StateBlock,
     start_line: int,
     admonition: Admonition,
 ) -> None:
     tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
-    use_details = admonition.marker.startswith("???")
 
-    with new_token(state, "admonition", "details" if use_details else "div") as token:
+    with new_token(state, "admonition", "div") as token:
         token.markup = admonition.markup
         token.block = True
-        attrs: Dict[str, Any] = {"class": " ".join(tags)}
-        if use_details and admonition.markup.endswith("+"):
-            attrs["open"] = "open"
-        elif not use_details:
-            attrs["class"] = f'admonition {attrs["class"]}'
-        token.attrs = attrs
+        token.attrs = {"class": " ".join(["admonition", *tags])}
         token.meta = {"tag": tag}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
 
         if title:
             title_markup = f"{admonition.markup} {tag}"
-            with new_token(
-                state, "admonition_title", "summary" if use_details else "p"
-            ) as token:
+            with new_token(state, "admonition_title", "p") as token:
                 token.markup = title_markup
-                if not use_details:
-                    token.attrs = {"class": "admonition-title"}
+                token.attrs = {"class": "admonition-title"}
                 token.map = [start_line, start_line + 1]
 
                 token = state.push("inline", "", 0)
@@ -217,16 +218,6 @@ def format_admon_markup(
     state.lineMax = admonition.old_state.lineMax
     state.blkIndent = admonition.old_state.blkIndent
     state.line = admonition.next_line
-
-
-def admonition_logic(
-    state: StateBlock, startLine: int, endLine: int, silent: bool
-) -> bool:
-    result = parse_possible_admon(state, startLine, endLine, silent)
-    if isinstance(result, Admonition):
-        format_admon_markup(state, startLine, admonition=result)
-        return True
-    return result
 
 
 def default_render(
@@ -243,7 +234,7 @@ def default_render(
 RenderType = Callable[..., str]
 
 
-def admon_plugin_wrapper(
+def admon_plugin_factory(
     prefix: str, logic: Callable[[StateBlock, int, int, bool], bool]
 ) -> Callable[[MarkdownIt, None | RenderType], None]:
     def admon_plugin(md: MarkdownIt, render: None | RenderType = None) -> None:
