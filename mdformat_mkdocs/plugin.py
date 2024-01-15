@@ -6,6 +6,8 @@ from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 
+from .plugins import mkdocs_admon_plugin
+
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
@@ -39,6 +41,8 @@ def update_mdit(mdit: MarkdownIt) -> None:
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_lists", False
     )
+
+    mdit.use(mkdocs_admon_plugin)
 
 
 _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")

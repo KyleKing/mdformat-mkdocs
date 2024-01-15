@@ -1,4 +1,3 @@
-
 Dashed list
 .
 - item 1
@@ -350,4 +349,24 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
         class Meta:
             model = RecurringEvent  # (2)!
     ```
+.
+
+
+MKDocs Closed Collapsible Sections
+.
+??? note
+   content
+.
+??? note
+    content
+.
+
+
+MKDocs Open Collapsible Sections
+.
+???+ note
+     content
+.
+???+ note
+    content
 .

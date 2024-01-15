@@ -4,9 +4,7 @@ from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 import pytest
 
-from mdformat_mkdocs.mdit_py_plugins.admon import admon_plugin
-from mdformat_mkdocs.mdit_py_plugins.admon_mkdocs import admon_mkdocs_plugin
-from mdformat_mkdocs.mdit_py_plugins.content_tabs import content_tabs_plugin
+from mdformat_mkdocs.plugins import admon_mkdocs_plugin, content_tabs_plugin
 from .helpers import print_text
 
 FIXTURE_PATH = Path(__file__).parent
@@ -19,8 +17,6 @@ def with_plugin(filename, plugins):
 @pytest.mark.parametrize(
     "line,title,text,expected,plugins",
     [
-        *with_plugin("fixtures-admon.md", [admon_plugin]),
-        *with_plugin("fixtures-admon.md", [admon_mkdocs_plugin]),
         *with_plugin("fixtures-admon-mkdocs.md", [admon_mkdocs_plugin]),
         *with_plugin(
             "fixtures-mkdocs-content-tabs.md",
