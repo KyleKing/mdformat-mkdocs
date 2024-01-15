@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from markdown_it.utils import read_fixture_file
 import mdformat
 import pytest
+from markdown_it.utils import read_fixture_file
 
 from .helpers import print_text
 
@@ -11,7 +11,9 @@ fixtures = read_fixture_file(FIXTURE_PATH)
 
 
 @pytest.mark.parametrize(
-    "line,title,text,expected", fixtures, ids=[f[1] for f in fixtures]
+    "line,title,text,expected",
+    fixtures,
+    ids=[f[1] for f in fixtures],
 )
 def test_fixtures(line, title, text, expected):
     output = mdformat.text(text, extensions={"mkdocs"}, options={"wrap": "keep"})

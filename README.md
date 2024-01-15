@@ -1,4 +1,4 @@
-# `mdformat-mkdocs`
+# mdformat-mkdocs
 
 [![Build Status][ci-badge]][ci-link] [![PyPI version][pypi-badge]][pypi-link]
 

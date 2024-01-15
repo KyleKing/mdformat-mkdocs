@@ -40,7 +40,10 @@ def format_content_tab_markup(
 
 
 def content_tab_logic(
-    state: StateBlock, startLine: int, endLine: int, silent: bool
+    state: StateBlock,
+    startLine: int,
+    endLine: int,
+    silent: bool,
 ) -> bool:
     # Because content-tabs look like admonitions syntactically, we can
     #   reuse admonition parsing logic

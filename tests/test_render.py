@@ -1,10 +1,11 @@
 from pathlib import Path
 
+import pytest
 from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
-import pytest
 
 from mdformat_mkdocs.plugins import admon_mkdocs_plugin, content_tabs_plugin
+
 from .helpers import print_text
 
 FIXTURE_PATH = Path(__file__).parent

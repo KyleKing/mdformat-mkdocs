@@ -2,7 +2,7 @@
 
 __version__ = "1.2.0"
 
-from .plugin import (  # noqa: F401
+from .plugin import (
     POSTPROCESSORS,
     RENDERERS,
     add_cli_options,

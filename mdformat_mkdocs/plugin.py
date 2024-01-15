@@ -39,7 +39,8 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
-        "align_semantic_breaks_in_lists", False
+        "align_semantic_breaks_in_lists",
+        False,
     )
 
     mdit.use(mkdocs_admon_plugin)

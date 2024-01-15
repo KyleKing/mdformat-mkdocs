@@ -1,0 +1,67 @@
+# Docs: https://github.com/charliermarsh/ruff
+# Tip: run python -m ruff --explain RUF100
+
+ignore = [
+  'ANN002', # Missing type annotation for `*args`
+  'ANN003', # Missing type annotation for `**kwargs`
+  'ANN101', # Missing type annotation for `self` in method
+  'ANN102', # Missing type annotation for `cls` in classmethod
+  'ANN401', # Dynamically typed expressions (typing.Any) are disallowed in `**kwargs`
+  'BLE001', # Do not catch blind exception: `Exception`
+  'CPY001', # Missing copyright notice at top of file
+  'D203', # "1 blank line required before class docstring" (Conflicts with D211)
+  'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
+  'D4', # Numpy-Style Docstrings (e.g. "Section name should end with a newline ("Returns")")
+  'EM101', # Exception must not use a string literal, assign to variable first
+  'FBT001', # Boolean-typed positional argument in function definition
+  'FBT002', # Boolean default value in function definition
+  'FIX001', # Line contains FIXME
+  'FIX002', # Line contains TODO
+  'FIX004', # Line contains HACK
+  'N803', # Argument name `startLine` should be lowercase
+  'N815', # Variable `parentType` in class scope should not be mixedCase
+  'N999', # Invalid module name: '_noxfile'
+  'RUF013', # PEP 484 prohibits implicit `Optional`
+  'TCH001', # Move application import `{}` into a type-checking block
+  'TCH002', # Move third-party import `{}` into a type-checking block
+  'TCH003', # Move standard library import `pathlib.Path` into a type-checking block
+  'TD001', # Invalid TODO tag: `FIXME`
+  'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
+  'TD003', # Missing issue link on the line following this TODO
+  'TID252', # Relative imports from parent modules are banned
+  'TRY003', # Avoid specifying long messages outside the exception class
+]
+line-length = 88
+preview = true
+select = ['ALL']
+target-version = 'py38'
+unfixable = [
+  'ERA001', # Commented out code
+]
+
+[flake8-quotes]
+inline-quotes = 'double'
+
+[isort]
+known-first-party = ['mdformat_mkdocs']
+
+[per-file-ignores]
+'__init__.py' = [
+  'D104', # Missing docstring in public package
+  'F401', # imported but unused; consider adding to __all__ or using a redundant alias
+]
+'tests/*.py' = [
+  'ANN001', # Missing type annotation for function argument
+  'ANN201', # Missing return type annotation for public function
+  'ANN202', # Missing return type annotation for private function `test_make_diffable`
+  'ARG001', # Unused function argument: `line`
+  'D100', # Missing docstring in public module
+  'D103', # Missing docstring in public function
+  'EM102', # Exception must not use an f-string literal, assign to variable first
+  'PT004', # flake8-pytest-style: fixture does not return
+  'S101', # Use of `assert` detected
+  'T201', # `print` found'
+]
+
+[pylint]
+max-args = 6
