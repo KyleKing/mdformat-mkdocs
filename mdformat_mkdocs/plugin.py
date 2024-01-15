@@ -1,6 +1,10 @@
+"""`mdformat` Plugin."""
+
+from __future__ import annotations
+
 import argparse
 import re
-from typing import Dict, List, Mapping, Tuple
+from typing import ClassVar, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -19,7 +23,7 @@ _ALIGN_SEMANTIC_BREAKS_IN_LISTS = False
 
 """
 
-FILLER_CHAR = "𝕏"
+FILLER_CHAR = "𝕏"  # noqa: RUF001
 """A spacer that is inserted and then removed to ensure proper word wrap."""
 
 FILLER = FILLER_CHAR * (_MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two spaces
@@ -31,13 +35,13 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--align-semantic-breaks-in-lists",
         action="store_true",
-        help="If specified, align semantic indents in numbered and bulleted lists to the text",
+        help="If specified, align semantic indents in numbered and bulleted lists to the text",  # noqa: E501
     )
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS
+    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_lists",
         False,
@@ -56,10 +60,10 @@ _DEFAULT_INDENT = " " * _MKDOCS_INDENT_COUNT
 """Default indent."""
 
 
-def _separate_indent(line: str) -> Tuple[str, str]:
+def _separate_indent(line: str) -> tuple[str, str]:
     """Separate leading indent from content. Also used by the test suite."""
     match = _RE_INDENT.match(line)
-    assert match is not None  # for pylint
+    assert match is not None  # for pylint # noqa: S101
     return (match["indent"], match["content"])
 
 
@@ -110,7 +114,7 @@ class _MarkdownIndent:
 
     _last_indent = ""
     _counter = 0
-    _lookup: Dict[str, int] = {}
+    _lookup: ClassVar[dict[str, int]] = {}
     _code_block_indent: str = ""
 
     def __init__(self) -> None:
@@ -139,7 +143,8 @@ class _MarkdownIndent:
             elif working_indent in self._lookup:
                 self._counter = self._lookup[working_indent]
             else:
-                raise ValueError(f"Error in list indentation at '{line}'")
+                msg = f"Error in list indentation at '{line}'"
+                raise ValueError(msg)
 
             if code_indent:
                 extra_indent = "".join(raw_indent[len(code_indent) :])
@@ -150,7 +155,11 @@ class _MarkdownIndent:
         return _DEFAULT_INDENT * self._counter + extra_indent if content else ""
 
 
-def _normalize_list(text: str, node: RenderTreeNode, context: RenderContext) -> str:
+def _normalize_list(
+    text: str,
+    node: RenderTreeNode,  # noqa: ARG001
+    context: RenderContext,
+) -> str:
     """Post-processor to normalize lists."""
     eol = "\n"
 
@@ -189,7 +198,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
         return text
     wrap_mode = context.options["mdformat"]["wrap"]
     if (
-        not isinstance(wrap_mode, int)
+        not isinstance(wrap_mode, int)  # noqa: PLR0916
         or FILLER_CHAR in text
         or (node.parent and node.parent.type != "paragraph")
         or (
@@ -214,7 +223,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     if len(text) > wrap_mode:
         indent_length = _MKDOCS_INDENT_COUNT * indent_count
         wrapped_length = -123
-        words: List[str] = []
+        words: list[str] = []
         for word in text.split(soft_break):
             next_length = wrapped_length + len(word)
             if not words:

@@ -3,7 +3,7 @@ import pytest
 
 from .helpers import print_text
 
-# Note: indented text that starts with a number is parsed as the start of a numbered list
+# FYI: indented text that starts with a number is parsed as the start of a numbered list
 
 CASE_1 = """
 # Content
@@ -91,7 +91,7 @@ CASE_1_TRUE_80 = """
 
 
 @pytest.mark.parametrize(
-    "text,expected,align_lists,wrap",
+    ("text", "expected", "align_lists", "wrap"),
     [
         (CASE_1, CASE_1_FALSE_40, False, 40),
         (CASE_1, CASE_1_FALSE_80, False, 80),

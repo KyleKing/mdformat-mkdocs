@@ -11,7 +11,7 @@ fixtures = read_fixture_file(FIXTURE_PATH)
 
 
 @pytest.mark.parametrize(
-    "line,title,text,expected",
+    ("line", "title", "text", "expected"),
     fixtures,
     ids=[f[1] for f in fixtures],
 )
@@ -35,7 +35,7 @@ TABBED_CODE_BLOCK = '''
 
 
 @pytest.mark.parametrize(
-    "text,expected",
+    ("text", "expected"),
     [
         (TABBED_CODE_BLOCK, TABBED_CODE_BLOCK),
     ],

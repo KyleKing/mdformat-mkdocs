@@ -52,7 +52,7 @@ CASE_1_NUMBERED = """
 
 
 @pytest.mark.parametrize(
-    "text,expected",
+    ("text", "expected"),
     [
         (CASE_1, CASE_1_NUMBERED),
     ],
