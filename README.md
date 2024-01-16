@@ -57,13 +57,13 @@ pipx inject mdformat mdformat-mkdocs
 
 ## HTML Rendering
 
-To generate HTML output, `mkdocs_admon_plugin` can be imported from `mdit_plugins`. More plugins can be added in the future as appropriate.
+To generate HTML output, `mkdocs_admon_plugin` can be imported from `mdit_plugins`. More plugins will be added in the future. For more guidance on `MarkdownIt`, see the docs: <https://markdown-it-py.readthedocs.io/en/latest/using.html#the-parser>
 
 ```py
 from markdown_it import MarkdownIt
 from mdformat_mkdocs.mdit_plugins import mkdocs_admon_plugin
 
-md = MarkdownIt("commonmark")
+md = MarkdownIt()
 md.use(mkdocs_admon_plugin)
 
 text = '??? note\n    content'
