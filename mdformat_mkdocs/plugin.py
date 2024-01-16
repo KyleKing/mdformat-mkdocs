@@ -246,8 +246,8 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
 RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs": ADMON_RENDERS["admonition"],
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
-    "content_tab": ADMON_RENDERS["admonition"],
-    "content_tab_title": ADMON_RENDERS["admonition_title"],
+    "content_tab_mkdocs": ADMON_RENDERS["admonition"],
+    "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
 }
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does

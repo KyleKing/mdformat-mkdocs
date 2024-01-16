@@ -819,6 +819,103 @@ If you use the Caltech-101 dataset in your research or development work, please 
         ```
 .
 
+
+Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/guides/isolating-segmentation-objects.md#L15)
+.
+## Recipe Walk Through
+
+1. Begin with the necessary imports
+
+    ```py
+    from pathlib import Path
+
+    import cv2 as cv
+    import numpy as np
+    from ultralytics import YOLO
+    ```
+    
+    ???+ tip "Ultralytics Install"
+
+        See the Ultralytics [Quickstart](../quickstart.md/#install-ultralytics) Installation section for a quick walkthrough on installing the required libraries.
+
+    ***
+
+2. Load a model and run `predict()` method on a source.
+
+    ```py
+    from ultralytics import YOLO
+
+    # Load a model
+    model = YOLO('yolov8n-seg.pt')
+    
+    # Run inference
+    result = model.predict()
+    ```
+
+    ??? question "No Prediction Arguments?"
+
+        Without specifying a source, the example images from the library will be used:
+
+        ```
+        'ultralytics/assets/bus.jpg'
+        'ultralytics/assets/zidane.jpg'
+        ```
+
+        This is helpful for rapid testing with the `predict()` method.
+
+    For additional information about Segmentation Models, visit the [Segment Task](../tasks/segment.md#models) page. To learn more about `predict()` method, see [Predict Mode](../modes/predict.md) section of the Documentation.
+    
+    ***
+
+3. Now iterate over the results and the contours. For workflows that want to save an image to file, the source image `base-name` and the detection `class-label` are retrieved for later use (optional).
+.
+## Recipe Walk Through
+
+1. Begin with the necessary imports
+
+    ```py
+    from pathlib import Path
+    
+    import cv2 as cv
+    import numpy as np
+    from ultralytics import YOLO
+    ```
+
+    ???+ tip "Ultralytics Install"
+        See the Ultralytics [Quickstart](../quickstart.md/#install-ultralytics) Installation section for a quick walkthrough on installing the required libraries.
+
+    ______________________________________________________________________
+
+1. Load a model and run `predict()` method on a source.
+
+    ```py
+    from ultralytics import YOLO
+
+    # Load a model
+    model = YOLO('yolov8n-seg.pt')
+
+    # Run inference
+    result = model.predict()
+    ```
+
+    ??? question "No Prediction Arguments?"
+        Without specifying a source, the example images from the library will be used:
+
+        ```
+        'ultralytics/assets/bus.jpg'
+        'ultralytics/assets/zidane.jpg'
+        ```
+
+        This is helpful for rapid testing with the `predict()` method.
+
+    For additional information about Segmentation Models, visit the [Segment Task](../tasks/segment.md#models) page. To learn more about `predict()` method, see [Predict Mode](../modes/predict.md) section of the Documentation.
+
+    ______________________________________________________________________
+
+1. Now iterate over the results and the contours. For workflows that want to save an image to file, the source image `base-name` and the detection `class-label` are retrieved for later use (optional).
+.
+
+
 Example of non-code content from Material-MKDocs documentation without admonitions
 .
 === "Unordered list"

@@ -7,12 +7,16 @@
 [cov-link]: https://codecov.io/gh/executablebooks/mdformat-mkdocs
  -->
 
-An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](https://github.com/mkdocs/mkdocs). Supports:
+An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](https://github.com/mkdocs/mkdocs) and [mkdocs-material](https://squidfunk.github.io/mkdocs-material) in particular.
+
+Supports:
 
 - Indents are converted to 4-spaces instead of 2
-    - *Note*: see caveats for Semantic Indents on bulleted lists which may not be a full multiple of 4
-- All bullets are converted to dashes instead of `*`
+    - *Note*: see caveats when using the optional Semantic Indents on numbered lists which may not be a full multiple of 4
+- List bullets are converted to dashes instead of `*`
 - Admonitions (extends [`mdformat-admon`](https://pypi.org/project/mdformat-admon))
+- MKDocs-Material Content Tabs (<https://squidfunk.github.io/mkdocs-material/reference/content-tabs>)
+    - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 

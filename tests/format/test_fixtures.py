@@ -16,11 +16,7 @@ fixtures = read_fixture_file(FIXTURE_PATH)
     ids=[f[1] for f in fixtures],
 )
 def test_fixtures(line, title, text, expected):
-    output = mdformat.text(
-        text,
-        extensions={"mkdocs", "admonition"},
-        options={"wrap": "keep"},
-    )
+    output = mdformat.text(text, extensions={"mkdocs", "admonition"})
     print_text(output, expected)
     assert output.rstrip() == expected.rstrip()
 
@@ -48,10 +44,6 @@ TABBED_CODE_BLOCK = '''
     ],
 )
 def test_tabbed_code_block(text: str, expected: str):
-    output = mdformat.text(
-        text,
-        extensions={"mkdocs", "admonition"},
-        options={"wrap": "keep"},
-    )
+    output = mdformat.text(text, extensions={"mkdocs", "admonition"})
     print_text(output, expected)
     assert output.strip() == expected.strip()

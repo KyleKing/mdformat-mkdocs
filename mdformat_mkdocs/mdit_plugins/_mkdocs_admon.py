@@ -16,6 +16,9 @@ from mdformat_admon.mdit_plugins import (  # type: ignore[import-untyped]
     format_python_markdown_admon_markup,
 )
 
+PREFIX = "admonition_mkdocs"
+"""Prefix used to differentiate the parsed output."""
+
 
 def format_admon_markup(
     state: StateBlock,
@@ -30,7 +33,7 @@ def format_admon_markup(
     tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
 
-    with new_token(state, "admonition_mkdocs", "details") as token:
+    with new_token(state, PREFIX, "details") as token:
         token.markup = admonition.markup
         token.block = True
         attrs: dict[str, Any] = {"class": " ".join(tags)}
@@ -43,7 +46,7 @@ def format_admon_markup(
 
         if title:
             title_markup = f"{admonition.markup} {tag}"
-            with new_token(state, "admonition_mkdocs_title", "summary") as tkn_title:
+            with new_token(state, f"{PREFIX}_title", "summary") as tkn_title:
                 tkn_title.markup = title_markup
                 tkn_title.map = [start_line, start_line + 1]
 
@@ -87,4 +90,4 @@ def admonition_logic(
     return result
 
 
-mkdocs_admon_plugin = admon_plugin_factory("admonition_mkdocs", admonition_logic)
+mkdocs_admon_plugin = admon_plugin_factory(PREFIX, admonition_logic)

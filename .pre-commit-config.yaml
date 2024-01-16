@@ -25,7 +25,7 @@ repos:
       - id: pretty-format-json
         args: [--autofix, --indent=4]
       - id: trailing-whitespace
-        exclude: tests/fixtures.*\.md
+        exclude: tests/.*fixtures.*\.md
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:
