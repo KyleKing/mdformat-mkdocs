@@ -8,7 +8,7 @@ from typing import Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Postprocess, Render
+from mdformat.renderer.typing import Postprocess
 
 from .mdit_plugins import mkdocs_admon_plugin
 
@@ -154,7 +154,7 @@ class _MarkdownIndent:
         return _DEFAULT_INDENT * self._counter + extra_indent if content else ""
 
 
-def _normalize_list(
+def normalize_list(
     text: str,
     node: RenderTreeNode,  # noqa: ARG001
     context: RenderContext,
@@ -183,7 +183,7 @@ def _normalize_list(
     return rendered.rstrip()
 
 
-def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) -> str:
+def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Postprocess inline tokens.
 
     Fix word wrap for lists to account for the change in indentation.
@@ -238,20 +238,15 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     return f"{filler}{soft_break}{text}" if filler else text
 
 
-# A mapping from `RenderTreeNode.type` to a `Render` function that can
-# render the given `RenderTreeNode` type. These override the default
-# `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
-RENDERERS: Mapping[str, Render] = {}
-
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike
 # `Render` funcs, `Postprocess` funcs are collaborative: any number of
 # plugins can define a postprocessor for a syntax type and all of them
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
-    "bullet_list": _normalize_list,
-    "ordered_list": _normalize_list,
-    "inline": _postprocess_inline,
+    "bullet_list": normalize_list,
+    "ordered_list": normalize_list,
+    "inline": postprocess_inline,
 }
 
 # See: https://github.com/executablebooks/mdformat/blob/5d9b573ce33bae219087984dd148894c774f41d4/src/mdformat/plugins.py
