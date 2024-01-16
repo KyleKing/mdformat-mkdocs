@@ -16,10 +16,6 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](h
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 
-## Warning
-
-The release of `mdformat-gfm` is pending, so you will need to add a git checkout until available on PyPi (https://github.com/hukkin/mdformat-gfm/issues/31). Variations of `pip install mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git` will install the latest version
-
 ## `mdformat` Usage
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
