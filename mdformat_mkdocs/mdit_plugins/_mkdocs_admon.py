@@ -5,14 +5,16 @@ from __future__ import annotations
 from typing import Any
 
 from markdown_it.rules_block import StateBlock
-from mdformat_admon.factories import (
+from mdformat_admon.factories import (  # type: ignore[import-untyped]
     AdmonitionData,
     admon_plugin_factory,
     new_token,
     parse_possible_whitespace_admon_factory,
     parse_tag_and_title,
 )
-from mdformat_admon.mdit_plugins import format_python_markdown_admon_markup
+from mdformat_admon.mdit_plugins import (  # type: ignore[import-untyped]
+    format_python_markdown_admon_markup,
+)
 
 
 def format_admon_markup(

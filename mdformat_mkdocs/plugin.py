@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import re
-from typing import ClassVar, Mapping
+from typing import Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -114,11 +114,10 @@ class _MarkdownIndent:
 
     _last_indent = ""
     _counter = 0
-    _lookup: ClassVar[dict[str, int]] = {}
     _code_block_indent: str = ""
 
     def __init__(self) -> None:
-        self._lookup = {}
+        self._lookup: dict[str, int] = {}
 
     def _get_code_indent(self, indent: str, content: str) -> str:
         if content.startswith("```"):
