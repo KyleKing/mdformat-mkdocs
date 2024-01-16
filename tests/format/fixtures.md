@@ -352,10 +352,269 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
 .
 
 
+Simple admonition
+.
+!!! note
+    *content*
+.
+!!! note
+    *content*
+.
+
+
+Could contain block elements too
+.
+!!! note
+    ### heading
+
+    -----------
+
+.
+!!! note
+    ### heading
+
+    ______________________________________________________________________
+
+.
+
+
+Shows custom title
+.
+!!! note Custom title
+
+    Some text
+
+.
+!!! note Custom title
+    Some text
+
+.
+
+
+Shows no title
+.
+!!! note ""
+    Some text
+
+.
+!!! note ""
+    Some text
+
+.
+
+
+Removes extra quotes from the title
+.
+!!! danger "Don't try this at home"
+    ...
+
+.
+!!! danger "Don't try this at home"
+    ...
+
+.
+
+
+Parse additional classes to support Python markdown (https://github.com/executablebooks/mdit-py-plugins/issues/93#issuecomment-1601822723)
+.
+!!! a b c d inline-classes   "Note: note about "foo""
+    ...
+
+.
+!!! a b c d inline-classes   "Note: note about "foo""
+    ...
+
+.
+
+
+Closes block after 2 empty lines
+.
+!!! note
+    Some text
+
+
+    A code block
+.
+!!! note
+    Some text
+
+```
+A code block
+```
+.
+
+
+Nested blocks
+.
+!!! note
+    !!! note
+        Some text
+
+            code block
+.
+!!! note
+    !!! note
+        Some text
+
+        ```
+        code block
+        ```
+.
+
+
+Consecutive admonitions
+.
+!!! note
+
+!!! warning
+.
+!!! note
+
+!!! warning
+.
+
+
+Marker may be indented up to 3 chars
+.
+   !!! note
+       content
+.
+!!! note
+    content
+.
+
+
+But that's a code block
+.
+    !!! note
+        content
+.
+```
+!!! note
+    content
+```
+.
+
+
+Some more indent checks
+.
+  !!! note
+   not a code block
+
+    code block
+.
+!!! note
+
+not a code block
+
+```
+code block
+```
+.
+
+
+Type could be adjacent to marker
+.
+!!!note
+   xxx
+
+.
+!!! note
+    xxx
+
+.
+
+
+Type could be adjacent to marker and content may be shifted up to 3 chars
+.
+!!!note
+      xxx
+
+.
+!!! note
+    xxx
+
+.
+
+
+Or several spaces apart
+.
+!!!     note
+        xxx
+.
+!!! note
+    xxx
+.
+
+
+Admonitions self-close at the end of the document
+.
+!!! note
+    xxx
+.
+!!! note
+    xxx
+.
+
+
+These are not admonitions
+.
+- !!! note
+      - a
+      - b
+- !!! warning
+      - c
+      - d
+.
+- !!! note
+    - a
+    - b
+- !!! warning
+    - c
+    - d
+.
+
+
+Or in blockquotes
+.
+> !!! note
+>     xxx
+>     > yyy
+>     zzz
+>
+.
+> !!! note
+>     xxx
+>
+>     > yyy
+>     > zzz
+.
+
+
+Renders unknown admonition type
+.
+!!! unknown title
+    content
+.
+!!! unknown title
+    content
+.
+
+
+Does not render
+.
+!!!
+    content
+.
+!!!
+content
+.
+
+
 MKDocs Closed Collapsible Sections
 .
 ??? note
-   content
+     content
 .
 ??? note
     content
@@ -369,4 +628,252 @@ MKDocs Open Collapsible Sections
 .
 ???+ note
     content
+.
+
+
+Support Content Tabs (https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#grouping-code-blocks). Resolves #17: https://github.com/KyleKing/mdformat-admon/issues/17
+.
+Ultralytics commands use the following syntax:
+
+!!! Example
+
+    === "CLI"
+
+        ```bash
+        yolo TASK MODE ARGS
+        ```
+
+    === "Python"
+
+        ```python
+        from ultralytics import YOLO
+
+        # Load a YOLOv8 model from a pre-trained weights file
+        model = YOLO('yolov8n.pt')
+
+        # Run MODE mode using the custom arguments ARGS (guess TASK)
+        model.MODE(ARGS)
+        ```
+.
+Ultralytics commands use the following syntax:
+
+!!! Example
+    === "CLI"
+        ```bash
+        yolo TASK MODE ARGS
+        ```
+
+    === "Python"
+        ```python
+        from ultralytics import YOLO
+
+        # Load a YOLOv8 model from a pre-trained weights file
+        model = YOLO('yolov8n.pt')
+
+        # Run MODE mode using the custom arguments ARGS (guess TASK)
+        model.MODE(ARGS)
+        ```
+.
+
+
+(1/2) Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/0e7221fb62191e18e5ec4f7a9fe6d8927a4446c2/docs/zh/datasets/index.md#L105-L127)
+.
+### 优化和压缩数据集的示例代码
+
+!!! Example "优化和压缩数据集"
+
+    === "Python"
+
+    ```python
+    from pathlib import Path
+    from ultralytics.data.utils import compress_one_image
+    from ultralytics.utils.downloads import zip_directory
+
+    # 定义数据集目录
+    path = Path('path/to/dataset')
+
+    # 优化数据集中的图像（可选）
+    for f in path.rglob('*.jpg'):
+        compress_one_image(f)
+
+    # 将数据集压缩成 'path/to/dataset.zip'
+    zip_directory(path)
+    ```
+
+通过遵循这些步骤，您可以贡献一个与 Ultralytics 现有结构良好融合的新数据集。
+.
+### 优化和压缩数据集的示例代码
+
+!!! Example "优化和压缩数据集"
+    === "Python"
+
+    ```python
+    from pathlib import Path
+    from ultralytics.data.utils import compress_one_image
+    from ultralytics.utils.downloads import zip_directory
+
+    # 定义数据集目录
+    path = Path('path/to/dataset')
+
+    # 优化数据集中的图像（可选）
+    for f in path.rglob('*.jpg'):
+        compress_one_image(f)
+
+    # 将数据集压缩成 'path/to/dataset.zip'
+    zip_directory(path)
+    ```
+
+通过遵循这些步骤，您可以贡献一个与 Ultralytics 现有结构良好融合的新数据集。
+.
+
+
+(2/2) FYI: the code block must be manually indented for the parser to identify the fenced block
+.
+### 优化和压缩数据集的示例代码
+
+!!! Example "优化和压缩数据集"
+
+    === "Python"
+
+        ```python
+        from pathlib import Path
+        from ultralytics.data.utils import compress_one_image
+        from ultralytics.utils.downloads import zip_directory
+
+        # 定义数据集目录
+        path = Path('path/to/dataset')
+
+        # 优化数据集中的图像（可选）
+        for f in path.rglob('*.jpg'):
+            compress_one_image(f)
+
+        # 将数据集压缩成 'path/to/dataset.zip'
+        zip_directory(path)
+        ```
+
+通过遵循这些步骤，您可以贡献一个与 Ultralytics 现有结构良好融合的新数据集。
+.
+### 优化和压缩数据集的示例代码
+
+!!! Example "优化和压缩数据集"
+    === "Python"
+        ```python
+        from pathlib import Path
+        from ultralytics.data.utils import compress_one_image
+        from ultralytics.utils.downloads import zip_directory
+
+        # 定义数据集目录
+        path = Path('path/to/dataset')
+
+        # 优化数据集中的图像（可选）
+        for f in path.rglob('*.jpg'):
+            compress_one_image(f)
+
+        # 将数据集压缩成 'path/to/dataset.zip'
+        zip_directory(path)
+        ```
+
+通过遵循这些步骤，您可以贡献一个与 Ultralytics 现有结构良好融合的新数据集。
+.
+
+
+Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/datasets/classify/caltech101.md#L60-L79)
+.
+## Citations and Acknowledgments
+
+If you use the Caltech-101 dataset in your research or development work, please cite the following paper:
+
+!!! Quote ""
+
+    === "BibTeX"
+        ```bibtex
+        @article{fei2007learning,
+          title={Learning generative visual models from few training examples: An incremental Bayesian approach tested on 101 object categories},
+          author={Fei-Fei, Li and Fergus, Rob and Perona, Pietro},
+          journal={Computer vision and Image understanding},
+          volume={106},
+          number={1},
+          pages={59--70},
+          year={2007},
+          publisher={Elsevier}
+        }
+        ```
+.
+## Citations and Acknowledgments
+
+If you use the Caltech-101 dataset in your research or development work, please cite the following paper:
+
+!!! Quote ""
+    === "BibTeX"
+        ```bibtex
+        @article{fei2007learning,
+          title={Learning generative visual models from few training examples: An incremental Bayesian approach tested on 101 object categories},
+          author={Fei-Fei, Li and Fergus, Rob and Perona, Pietro},
+          journal={Computer vision and Image understanding},
+          volume={106},
+          number={1},
+          pages={59--70},
+          year={2007},
+          publisher={Elsevier}
+        }
+        ```
+.
+
+Example of non-code content from Material-MKDocs documentation without admonitions
+.
+=== "Unordered list"
+
+    * Sed sagittis eleifend rutrum
+    * Donec vitae suscipit est
+    * Nulla tempor lobortis orci
+
+=== "Ordered list"
+
+    1. Sed sagittis eleifend rutrum
+    2. Donec vitae suscipit est
+    3. Nulla tempor lobortis orci
+.
+=== "Unordered list"
+    - Sed sagittis eleifend rutrum
+    - Donec vitae suscipit est
+    - Nulla tempor lobortis orci
+
+=== "Ordered list"
+    1. Sed sagittis eleifend rutrum
+    1. Donec vitae suscipit est
+    1. Nulla tempor lobortis orci
+.
+
+
+Example from Material-MKDocs documentation within an admonition
+.
+!!! example
+    === "Unordered List"
+        ```markdown
+        * Sed sagittis eleifend rutrum
+        * Donec vitae suscipit est
+        * Nulla tempor lobortis orci
+        ```
+
+    === "Ordered List"
+        ```markdown
+        1. Sed sagittis eleifend rutrum
+        2. Donec vitae suscipit est
+        3. Nulla tempor lobortis orci
+        ```
+.
+!!! example
+    === "Unordered List"
+        ```markdown
+        * Sed sagittis eleifend rutrum
+        * Donec vitae suscipit est
+        * Nulla tempor lobortis orci
+        ```
+
+    === "Ordered List"
+        ```markdown
+        1. Sed sagittis eleifend rutrum
+        2. Donec vitae suscipit est
+        3. Nulla tempor lobortis orci
+        ```
 .

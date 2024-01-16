@@ -8,9 +8,10 @@ from typing import Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Postprocess
+from mdformat.renderer.typing import Postprocess, Render
+from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
 
-from .mdit_plugins import mkdocs_admon_plugin
+from .mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin
 
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
@@ -41,13 +42,14 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
+    mdit.use(mkdocs_admon_plugin)
+    mdit.use(content_tabs_plugin)
+
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_lists",
         False,
     )
-
-    mdit.use(mkdocs_admon_plugin)
 
 
 _RE_INDENT = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
@@ -238,6 +240,16 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
     return f"{filler}{soft_break}{text}" if filler else text
 
 
+# A mapping from `RenderTreeNode.type` to a `Render` function that can
+# render the given `RenderTreeNode` type. These override the default
+# `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
+RENDERERS: Mapping[str, Render] = {
+    "admonition_mkdocs": ADMON_RENDERS["admonition"],
+    "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
+    "content_tab": ADMON_RENDERS["admonition"],
+    "content_tab_title": ADMON_RENDERS["admonition_title"],
+}
+
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike
 # `Render` funcs, `Postprocess` funcs are collaborative: any number of
@@ -245,8 +257,6 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "ordered_list": normalize_list,
     "inline": postprocess_inline,
+    "ordered_list": normalize_list,
 }
-
-# See: https://github.com/executablebooks/mdformat/blob/5d9b573ce33bae219087984dd148894c774f41d4/src/mdformat/plugins.py

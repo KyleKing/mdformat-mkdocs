@@ -10,7 +10,7 @@ def _print(content: str, show_whitespace: bool) -> None:
         print((visible_indents if show_whitespace else indent) + content)
 
 
-def print_text(output: str, expected: str, show_whitespace: bool = True) -> None:
+def print_text(output: str, expected: str, show_whitespace: bool = False) -> None:
     if _SHOW_TEXT:
         print("--  Output  --")
         _print(output.strip(), show_whitespace)

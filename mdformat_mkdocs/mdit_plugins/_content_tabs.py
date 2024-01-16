@@ -12,16 +12,17 @@ def format_content_tab_markup(
     start_line: int,
     admonition: AdmonitionData,
 ) -> None:
+    """WARNING: this is not the proper HTML and requires substantial work to replicate MKDocs."""
     title = admonition.meta_text.strip().strip("'\"")
 
-    with new_token(state, "content-tab", "div") as token:
+    with new_token(state, "content_tab", "div") as token:
         token.markup = admonition.markup
         token.block = True
         token.attrs = {"class": "content-tab"}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
 
-        with new_token(state, "content-tab-title", "p") as tkn_inner:
+        with new_token(state, "content_tab_title", "p") as tkn_inner:
             tkn_inner.attrs = {"class": "content-tab-title"}
             tkn_inner.map = [start_line, start_line + 1]
 

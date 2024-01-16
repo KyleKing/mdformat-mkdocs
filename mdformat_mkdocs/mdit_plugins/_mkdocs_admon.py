@@ -30,7 +30,7 @@ def format_admon_markup(
     tags, title = parse_tag_and_title(admonition.meta_text)
     tag = tags[0]
 
-    with new_token(state, "admonition", "details") as token:
+    with new_token(state, "admonition_mkdocs", "details") as token:
         token.markup = admonition.markup
         token.block = True
         attrs: dict[str, Any] = {"class": " ".join(tags)}
@@ -43,7 +43,7 @@ def format_admon_markup(
 
         if title:
             title_markup = f"{admonition.markup} {tag}"
-            with new_token(state, "admonition_title", "summary") as tkn_title:
+            with new_token(state, "admonition_mkdocs_title", "summary") as tkn_title:
                 tkn_title.markup = title_markup
                 tkn_title.map = [start_line, start_line + 1]
 
