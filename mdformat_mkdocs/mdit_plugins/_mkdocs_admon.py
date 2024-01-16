@@ -12,9 +12,7 @@ from mdformat_admon.factories import (
     parse_possible_whitespace_admon_factory,
     parse_tag_and_title,
 )
-from mdformat_admon.plugins._python_markdown_admon import (
-    format_python_markdown_admon_markup,
-)
+from mdformat_admon.mdit_plugins import format_python_markdown_admon_markup
 
 
 def format_admon_markup(

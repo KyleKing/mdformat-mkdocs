@@ -10,7 +10,7 @@ from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 
-from .plugins import mkdocs_admon_plugin
+from .mdit_plugins import mkdocs_admon_plugin
 
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
