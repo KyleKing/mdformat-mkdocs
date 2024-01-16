@@ -14,13 +14,13 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](h
 - All bullets are converted to dashes instead of `*`
 - Admonitions (extends [`mdformat-admon`](https://pypi.org/project/mdformat-admon))
 
-See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/fixtures.md)
+See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 
 ## `mdformat` Usage
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with mkdocs:
+**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with `mkdocs`:
 
 - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
 - [mdformat-black](https://pypi.org/project/mdformat-black)
@@ -41,9 +41,9 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs>=1.2.0
+          - mdformat-mkdocs>=2.0.0
           # Or
-          # - "mdformat-mkdocs[recommended]>=1.2.0"
+          # - "mdformat-mkdocs[recommended]>=2.0.0"
 ```
 
 ### pipx
