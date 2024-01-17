@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 import re
-from typing import Mapping
+from typing import Literal, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -116,22 +116,43 @@ class _MarkdownIndent:
 
     _last_indent = ""
     _counter = 0
-    _code_block_indent: str = ""
+    _block_type: Literal["code", "marked"] | None = None
+    _block_indent: str = ""
 
     def __init__(self) -> None:
         self._lookup: dict[str, int] = {}
 
-    def _get_code_indent(self, indent: str, content: str) -> str:
-        if content.startswith("```"):
+    def _get_block_indent(self, indent: str, content: str) -> str:
+        if self._block_type is None:
+            # Identify block type
+            markers = {"!!!", "???", "???+", "==="}
+            if content.startswith("```"):
+                self._block_type = "code"
+            elif any(content.startswith(f"{marker} ") for marker in markers):
+                self._block_type = "marked"
+            # And then store the indent
+            if self._block_type is not None:
+                self._block_indent = indent
+        elif self._block_type == "code" and content.startswith("```"):
             # Remove tracked indent on end of code block
-            self._code_block_indent = "" if self._code_block_indent else indent
-        return self._code_block_indent
+            self._block_type = None
+            self._block_indent = ""
+        elif (
+            self._block_type == "marked"
+            and content
+            and len(indent) <= len(self._block_indent)
+        ):
+            # Remove tracked indent on end of a marked (content tab or admonition) block
+            self._block_type = None
+            self._block_indent = ""
+
+        return self._block_indent
 
     def calculate(self, line: str) -> str:
         """Calculate the new indent."""
         raw_indent, content = _separate_indent(line)
-        code_indent = self._get_code_indent(raw_indent, content)
-        working_indent = code_indent or raw_indent
+        block_indent = self._get_block_indent(raw_indent, content)
+        working_indent = block_indent or raw_indent
         extra_indent = ""
 
         if working_indent:
@@ -147,8 +168,8 @@ class _MarkdownIndent:
                 msg = f"Error in list indentation at '{line}'"
                 raise ValueError(msg)
 
-            if code_indent:
-                extra_indent = "".join(raw_indent[len(code_indent) :])
+            if block_indent:
+                extra_indent = "".join(raw_indent[len(block_indent) :])
         else:
             self._counter = 0
         self._last_indent = working_indent

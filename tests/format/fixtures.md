@@ -828,7 +828,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
 
     ```py
     from pathlib import Path
-
+    
     import cv2 as cv
     import numpy as np
     from ultralytics import YOLO
@@ -875,7 +875,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
 
     ```py
     from pathlib import Path
-    
+
     import cv2 as cv
     import numpy as np
     from ultralytics import YOLO
