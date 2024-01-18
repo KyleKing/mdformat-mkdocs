@@ -1,5 +1,32 @@
 # mdformat-mkdocs
 
+---
+
+## "v2.0.0rc#" Warning
+
+To avoid unexpected formatting errors, you must install `mdformat-gfm` separately until this issue is resolved: <https://github.com/hukkin/mdformat-gfm/issues/31>
+
+For pre-commit, this would be something like:
+
+```yaml
+repos:
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.17
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-mkdocs[recommended]>=2.0.0rc1
+          - mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git
+```
+
+For any other usage with pip, you will need some variation of:
+
+```sh
+pip install mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git
+```
+
+---
+
 [![Build Status][ci-badge]][ci-link] [![PyPI version][pypi-badge]][pypi-link]
 
 <!-- [![codecov.io][cov-badge]][cov-link]
@@ -19,10 +46,6 @@ Supports:
     - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
-
-## Warning
-
-The release of `mdformat-gfm` is pending, so you will need to add a git checkout until available on PyPi (https://github.com/hukkin/mdformat-gfm/issues/31). Variations of `pip install mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git` will install the latest version
 
 ## `mdformat` Usage
 
