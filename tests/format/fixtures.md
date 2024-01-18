@@ -1269,3 +1269,73 @@ Example with '===+' (active) from <https://facelessuser.github.io/pymdown-extens
 === "Not Me Either"
     Another Tab
 .
+
+
+More complex example to validate formatting when nested
+.
+1. List Outer
+
+    ???+ Note
+    
+        === "First"
+    
+             Markdown **content**.
+    
+             Multiple paragraphs.
+        
+            ??? "Second"
+        
+                 Markdown **content**.
+        
+                 Multiple paragraphs.
+        
+                ===+ "Third"
+            
+                     - List Item
+            
+                     - Another Item
+        
+                        === "Fourth"
+                    
+                             - List Item
+                    
+                             - Another Item
+        
+                        ===! "Lastly a new item"
+    
+                            Markdown **content** for last item.
+    
+                            Very last indented paragraph.
+
+2. Next
+.
+1. List Outer
+
+    ???+ Note
+        === "First"
+            Markdown **content**.
+
+            Multiple paragraphs.
+
+            ??? "Second"
+                Markdown **content**.
+
+                Multiple paragraphs.
+
+                ===+ "Third"
+                    - List Item
+
+                    - Another Item
+
+                        === "Fourth"
+                            - List Item
+
+                            - Another Item
+
+                        ===! "Lastly a new item"
+                            Markdown **content** for last item.
+
+                            Very last indented paragraph.
+
+1. Next
+.

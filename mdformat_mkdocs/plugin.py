@@ -128,9 +128,19 @@ class _MarkdownIndent:
         self._lookup: dict[str, int] = {}
 
     def _get_block_indent(self, indent: str, content: str) -> str:
+        if (
+            self._block_type == "marked"
+            and content
+            and len(indent) <= len(self._block_indent)
+        ):
+            # Remove tracked indent on end of a marked (content tab or admonition) block
+            # `Which could be the start of a new block, so this must be first
+            self._block_type = None
+            self._block_indent = ""
+
         if self._block_type is None:
             # Identify block type
-            markers = CONTENT_TAB_MARKERS + MKDOCS_ADMON_MARKERS
+            markers = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
             if content.startswith("```"):
                 self._block_type = "code"
             elif any(content.startswith(f"{marker} ") for marker in markers):
@@ -140,14 +150,6 @@ class _MarkdownIndent:
                 self._block_indent = indent
         elif self._block_type == "code" and content.startswith("```"):
             # Remove tracked indent on end of code block
-            self._block_type = None
-            self._block_indent = ""
-        elif (
-            self._block_type == "marked"
-            and content
-            and len(indent) <= len(self._block_indent)
-        ):
-            # Remove tracked indent on end of a marked (content tab or admonition) block
             self._block_type = None
             self._block_indent = ""
 
