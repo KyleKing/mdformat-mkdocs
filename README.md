@@ -15,7 +15,7 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs[recommended]>=2.0.0rc1
+          - mdformat-mkdocs[recommended]>=2.0.0rc2
           - mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git
 ```
 
