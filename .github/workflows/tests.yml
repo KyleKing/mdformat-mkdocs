@@ -56,6 +56,7 @@ jobs:
         run: |
           pip install pre-commit
           pip install .
+          pip install 'mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git'
       - name: run pre-commit with plugin
         run: |
           pre-commit run --config .pre-commit-test.yaml --all-files --verbose --show-diff-on-failure

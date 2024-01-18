@@ -20,7 +20,6 @@ dependencies = [
     "mdformat >= 0.7.16",
     "mdformat-admon >= 2.0.1",
     # "mdformat-gfm >= 0.?.?",  # FIXME: PENDING RELEASE (https://github.com/hukkin/mdformat-gfm/issues/31)
-    "mdformat-gfm @ git+https://github.com/hukkin/mdformat-gfm.git",
 ]
 dynamic = ["version", "description"]
 
