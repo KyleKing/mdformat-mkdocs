@@ -55,8 +55,9 @@ def content_tab_logic(
 ) -> bool:
     # Because content-tabs look like admonitions syntactically, we can
     #   reuse admonition parsing logic
+    # Supported variations from: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
-        markers={"==="},
+        markers={"===", "===!", "===+"},
     )
     result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
     if isinstance(result, AdmonitionData):

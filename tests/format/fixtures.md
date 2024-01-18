@@ -1196,3 +1196,76 @@ Example from Material-MKDocs documentation within an admonition
         3. Nulla tempor lobortis orci
         ```
 .
+
+Example with '===!' (break) from <https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/#syntax>
+.
+=== "Tab 1"
+    Markdown **content**.
+
+    Multiple paragraphs.
+
+=== "Tab 2"
+    More Markdown **content**.
+
+    - list item a
+    - list item b
+
+===! "Tab A"
+     Different tab set.
+
+=== "Tab B"
+    ```
+    More content.
+    ```
+.
+=== "Tab 1"
+    Markdown **content**.
+
+    Multiple paragraphs.
+
+=== "Tab 2"
+    More Markdown **content**.
+
+    - list item a
+    - list item b
+
+===! "Tab A"
+    Different tab set.
+
+=== "Tab B"
+    ```
+    More content.
+    ```
+.
+
+
+Example with '===+' (active) from <https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/#syntax>
+.
+=== "Not Me"
+     Markdown **content**.
+
+     Multiple paragraphs.
+
+===+ "Select Me"
+     More Markdown **content**.
+
+     - list item a
+     - list item b
+
+=== "Not Me Either"
+     Another Tab
+.
+=== "Not Me"
+    Markdown **content**.
+
+    Multiple paragraphs.
+
+===+ "Select Me"
+    More Markdown **content**.
+
+    - list item a
+    - list item b
+
+=== "Not Me Either"
+    Another Tab
+.
