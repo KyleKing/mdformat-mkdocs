@@ -11,7 +11,12 @@ from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
 
-from .mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin
+from .mdit_plugins import (
+    CONTENT_TAB_MARKERS,
+    MKDOCS_ADMON_MARKERS,
+    content_tabs_plugin,
+    mkdocs_admon_plugin,
+)
 
 _MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
@@ -125,7 +130,7 @@ class _MarkdownIndent:
     def _get_block_indent(self, indent: str, content: str) -> str:
         if self._block_type is None:
             # Identify block type
-            markers = {"!!!", "???", "???+", "==="}
+            markers = CONTENT_TAB_MARKERS + MKDOCS_ADMON_MARKERS
             if content.startswith("```"):
                 self._block_type = "code"
             elif any(content.startswith(f"{marker} ") for marker in markers):

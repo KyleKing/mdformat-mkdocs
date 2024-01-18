@@ -9,6 +9,9 @@ from mdformat_admon.factories import (  # type: ignore[import-untyped]
 PREFIX = "content_tab_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
+CONTENT_TAB_MARKERS = {"===", "===!", "===+"}
+"""All supported content tab markers."""
+
 
 def format_content_tab_markup(
     state: StateBlock,
@@ -57,7 +60,7 @@ def content_tab_logic(
     #   reuse admonition parsing logic
     # Supported variations from: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
-        markers={"===", "===!", "===+"},
+        markers=CONTENT_TAB_MARKERS,
     )
     result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
     if isinstance(result, AdmonitionData):

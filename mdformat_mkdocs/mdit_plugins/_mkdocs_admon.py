@@ -19,6 +19,9 @@ from mdformat_admon.mdit_plugins import (  # type: ignore[import-untyped]
 PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
+MKDOCS_ADMON_MARKERS = {"!!!", "???", "???+"}
+"""All supported MKDocs Admonition markers."""
+
 
 def format_admon_markup(
     state: StateBlock,
@@ -81,7 +84,7 @@ def admonition_logic(
 
     """
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
-        markers={"!!!", "???", "???+"},
+        markers=MKDOCS_ADMON_MARKERS,
     )
     result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
     if isinstance(result, AdmonitionData):
