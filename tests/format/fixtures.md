@@ -1339,3 +1339,31 @@ More complex example to validate formatting when nested
 
 1. Next
 .
+
+
+Predictable indents for HTML
+.
+1. List Item
+
+    ### Object Isolation Options
+
+    ??? info "Full-size Image"
+        There are no additional steps required if keeping full size image.
+
+        <figure markdown>
+             ![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }
+             <figcaption>Example full-size output</figcaption>
+         </figure>
+.
+1. List Item
+
+    ### Object Isolation Options
+
+    ??? info "Full-size Image"
+        There are no additional steps required if keeping full size image.
+
+        <figure markdown>
+             ![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }
+             <figcaption>Example full-size output</figcaption>
+         </figure>
+.
