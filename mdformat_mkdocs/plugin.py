@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import re
+from functools import partial
 from typing import Literal, Mapping
 
 from markdown_it import MarkdownIt
@@ -11,6 +12,7 @@ from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
 
+from ._indent import normalize_list as unbounded_normalize_list
 from .mdit_plugins import (
     CONTENT_TAB_MARKERS,
     MKDOCS_ADMON_MARKERS,
@@ -184,7 +186,7 @@ class _MarkdownIndent:
         return _DEFAULT_INDENT * self._counter + extra_indent if content else ""
 
 
-def normalize_list(
+def oop_normalize_list(  # TODO: REMOVE
     text: str,
     node: RenderTreeNode,  # noqa: ARG001
     context: RenderContext,
@@ -277,6 +279,17 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
 }
+
+
+def check_if_align_semantic_breaks_in_lists() -> bool:
+    """Returns value of global variable."""
+    return _ALIGN_SEMANTIC_BREAKS_IN_LISTS
+
+
+normalize_list = partial(
+    unbounded_normalize_list,
+    check_if_align_semantic_breaks_in_lists=check_if_align_semantic_breaks_in_lists,
+)
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike
