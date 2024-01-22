@@ -55,6 +55,7 @@ class Syntax(Enum):
 class ParsedLine(NamedTuple):
     """Parsed Line of text."""
 
+    line_num: int
     indent: str
     content: str
     syntax: Syntax | None
@@ -87,10 +88,16 @@ def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     )
 
 
-def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
+def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineResult]:
+    line_num, content = arg
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
-    parsed = ParsedLine(indent=indent, content=content, syntax=syntax)
+    parsed = ParsedLine(
+        line_num=line_num,
+        indent=indent,
+        content=content,
+        syntax=syntax,
+    )
 
     parent_idx = 0
     parents = []
@@ -108,35 +115,63 @@ def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
             for line in acc[parent_idx:][::-1]
             if is_peer_list_line(line, parsed)
         ]
+
     result = LineResult(parsed=parsed, parents=parents, prev_list_peers=prev_list_peers)
     return [*acc, result]
 
 
-def acc_code_block_indents(acc: list[str | None], line: LineResult) -> list[str | None]:
+class CodeBlockIndent(NamedTuple):
+    """Track the parsed code block indentation."""
+
+    block_raw_indent: str
+    block_indent_depth: int
+    line_inner_indent: str
+
+    def new_inner_indent(self, raw_indent: str) -> CodeBlockIndent:
+        len_block_indent = len(self.block_raw_indent)
+        return CodeBlockIndent(
+            block_raw_indent=self.block_raw_indent,
+            block_indent_depth=self.block_indent_depth,
+            # Only field that differs from rest of block
+            line_inner_indent="".join(raw_indent[len_block_indent:]),
+        )
+
+
+def acc_code_block_indents(
+    acc: list[CodeBlockIndent | None],
+    line: LineResult,
+) -> list[CodeBlockIndent | None]:
     last = (acc or [None])[-1]
     result = last
+
     if line.parsed.syntax == Syntax.EDGE_CODE:
-        result = None if last else line.parsed.indent
+        if last:
+            result = None
+        else:  # On first edge, start tracking a code block
+            result = CodeBlockIndent(
+                block_raw_indent=line.parsed.indent,
+                block_indent_depth=len(line.parents),
+                line_inner_indent="",
+            )
+    elif last:
+        result = last.new_inner_indent(raw_indent=line.parsed.indent)
+
     return [*acc, result]
 
 
 def acc_new_indents(
     acc: list[str],
-    arg: tuple[LineResult, str | None],
-    use_sem_break: bool,  # Attach with partial
+    arg: tuple[LineResult, CodeBlockIndent | None],
 ) -> list[str]:
-    if use_sem_break:
-        raise NotImplementedError("Pending implementation!")
-
     line, code_block_indent = arg
 
-    raw_indent = line.parsed.indent
-    indent_depth = len(line.parents)
-    extra_indent = (
-        "".join(raw_indent[len(code_block_indent) :]) if code_block_indent else ""
-    )
-
-    result = DEFAULT_INDENT * indent_depth + extra_indent if line.parsed.content else ""
+    result = ""
+    if line.parsed.content:
+        result = DEFAULT_INDENT * len(line.parents)
+        if code_block_indent:  # PLANNED:  and line.parsed.syntax != Syntax.EDGE_CODE
+            depth = code_block_indent.block_indent_depth
+            extra_indent = code_block_indent.line_inner_indent
+            result = DEFAULT_INDENT * depth + extra_indent
 
     return [*acc, result]
 
@@ -148,10 +183,18 @@ class ParsedText(NamedTuple):
     new_contents: list[str]
     # Used only for debugging purposes
     lines: list[dict]
-    code_block_indents: list[str | None]
+    code_block_indents: list[CodeBlockIndent | None]
 
 
-def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> list[str]:
+def acc_new_contents(
+    acc: list[str],
+    line: LineResult,
+    inc_numbers: bool,
+    use_sem_break: bool,
+) -> list[str]:
+    if use_sem_break:
+        raise NotImplementedError("Pending text wrap implementation")
+
     new_content = line.parsed.content
     if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
         new_bullet = "-"
@@ -164,16 +207,16 @@ def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> lis
 
 def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    lines = reduce(acc_parsed_lines, text.strip().split(EOL), [])
+    lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
 
     code_block_indents = reduce(acc_code_block_indents, lines, [])
-    new_indents = reduce(
-        partial(acc_new_indents, use_sem_break=use_sem_break),
-        zip_equal(lines, code_block_indents),
+    new_indents = reduce(acc_new_indents, zip_equal(lines, code_block_indents), [])
+
+    new_contents = reduce(
+        partial(acc_new_contents, inc_numbers=inc_numbers, use_sem_break=use_sem_break),
+        lines,
         [],
     )
-
-    new_contents = reduce(partial(acc_new_contents, inc_numbers=inc_numbers), lines, [])
     return ParsedText(
         new_indents=new_indents,
         new_contents=new_contents,

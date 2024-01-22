@@ -13,6 +13,7 @@
         'parsed': ParsedLine(
           content='- item 1',
           indent='',
+          line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -23,12 +24,14 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='* item 2',
           indent='    ',
+          line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -39,17 +42,20 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='* item 2',
             indent='    ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='1. item 3',
           indent='        ',
+          line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -83,6 +89,7 @@
         'parsed': ParsedLine(
           content='- item 1',
           indent='',
+          line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -93,12 +100,14 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 2',
           indent='   ',
+          line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -109,17 +118,20 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='   ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 3',
           indent='      ',
+          line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -130,22 +142,26 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='   ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='      ',
+            line_num=2,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 4',
           indent='         ',
+          line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -179,6 +195,7 @@
         'parsed': ParsedLine(
           content='- item 1',
           indent='',
+          line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -189,12 +206,14 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 2',
           indent='    ',
+          line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -230,6 +249,7 @@
         'parsed': ParsedLine(
           content='- item 1',
           indent='',
+          line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -240,12 +260,14 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 2',
           indent='  ',
+          line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -256,17 +278,20 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 3',
           indent='    ',
+          line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -277,22 +302,26 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='    ',
+            line_num=2,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 4',
           indent='      ',
+          line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -303,27 +332,32 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='    ',
+            line_num=2,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 4',
             indent='      ',
+            line_num=3,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 5',
           indent='        ',
+          line_num=4,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -334,17 +368,20 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 6',
           indent='    ',
+          line_num=5,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -355,23 +392,27 @@
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='- item 7',
           indent='    ',
+          line_num=6,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
           ParsedLine(
             content='- item 6',
             indent='    ',
+            line_num=5,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
@@ -382,12 +423,14 @@
         'parsed': ParsedLine(
           content='- item 8',
           indent='',
+          line_num=7,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
           ParsedLine(
             content='- item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
@@ -415,6 +458,225 @@
     ]),
   )
 # ---
+# name: test_parsed_result[Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13]
+  ParsedText(
+    code_block_indents=list([
+      None,
+      None,
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='',
+      ),
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='',
+      ),
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='    ',
+      ),
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='',
+      ),
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='    ',
+      ),
+      CodeBlockIndent(
+        block_indent_depth=1,
+        block_raw_indent='    ',
+        line_inner_indent='        ',
+      ),
+      None,
+    ]),
+    lines=list([
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='1. Add a serializer class',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=1,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='```python',
+          indent='    ',
+          line_num=2,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+          indent='    ',
+          line_num=3,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=1,
+            syntax=None,
+          ),
+          ParsedLine(
+            content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+            indent='    ',
+            line_num=3,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='"""Used to retrieve recurring_event info"""',
+          indent='        ',
+          line_num=4,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=5,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=5,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='class Meta:',
+          indent='        ',
+          line_num=6,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=5,
+            syntax=None,
+          ),
+          ParsedLine(
+            content='class Meta:',
+            indent='        ',
+            line_num=6,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='model = RecurringEvent  # (2)!',
+          indent='            ',
+          line_num=7,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='',
+            indent='',
+            line_num=5,
+            syntax=None,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='```',
+          indent='    ',
+          line_num=8,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+    ]),
+    new_contents=list([
+      '1. Add a serializer class',
+      '',
+      '```python',
+      'class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+      '"""Used to retrieve recurring_event info"""',
+      '',
+      'class Meta:',
+      'model = RecurringEvent  # (2)!',
+      '```',
+    ]),
+    new_indents=list([
+      '',
+      '',
+      '    ',
+      '    ',
+      '        ',
+      '',
+      '        ',
+      '            ',
+      '    ',
+    ]),
+  )
+# ---
 # name: test_parsed_result[Numbered list]
   ParsedText(
     code_block_indents=list([
@@ -432,6 +694,7 @@
         'parsed': ParsedLine(
           content='1. item 1',
           indent='',
+          line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -442,12 +705,14 @@
           ParsedLine(
             content='1. item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='1. item 2-a',
           indent='    ',
+          line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -458,17 +723,20 @@
           ParsedLine(
             content='1. item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='1. item 2-a',
             indent='    ',
+            line_num=1,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='1. item 3-a',
           indent='        ',
+          line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -479,12 +747,14 @@
           ParsedLine(
             content='1. item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='2. item 2-b',
           indent='    ',
+          line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
@@ -495,23 +765,27 @@
           ParsedLine(
             content='1. item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='2. item 2-b',
             indent='    ',
+            line_num=3,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='1. item 3-b',
           indent='        ',
+          line_num=4,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
           ParsedLine(
             content='1. item 3-a',
             indent='        ',
+            line_num=2,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
@@ -521,28 +795,33 @@
           ParsedLine(
             content='1. item 1',
             indent='',
+            line_num=0,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='2. item 2-b',
             indent='    ',
+            line_num=3,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
           content='2. item 3-b',
           indent='        ',
+          line_num=5,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
           ParsedLine(
             content='1. item 3-b',
             indent='        ',
+            line_num=4,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='1. item 3-a',
             indent='        ',
+            line_num=2,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),

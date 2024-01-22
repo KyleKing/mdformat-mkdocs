@@ -61,5 +61,5 @@ exclude = [".github/", "tests/"]
 now = true
 runner = "tox"
 runner_args = ["-e", "py38-recommended"]
-patterns = ["*.py", "*.md"]
+patterns = ["*.py", "*.md", "*.ambr"]
 ignore_patterns = []

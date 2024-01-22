@@ -48,3 +48,18 @@ Handle Jagged Indents 2x
 - item 8
 .
 .
+
+
+Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13
+.
+1. Add a serializer class
+
+    ```python
+    class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!
+        """Used to retrieve recurring_event info"""
+
+        class Meta:
+            model = RecurringEvent  # (2)!
+    ```
+.
+.
