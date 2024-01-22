@@ -17,6 +17,9 @@ MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
 RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
+EOL = "\n"
+"""Line delimiter."""
+
 FILLER_CHAR = "𝕏"  # noqa: RUF001
 """A spacer that is inserted and then removed to ensure proper word wrap."""
 
@@ -62,7 +65,7 @@ class LineResult(NamedTuple):
 
     parsed: ParsedLine
     parents: list[ParsedLine]
-    prev_peers: list[ParsedLine]
+    prev_list_peers: list[ParsedLine]  # Only applicable for lists
 
 
 def separate_indent(line: str) -> tuple[str, str]:
@@ -77,8 +80,11 @@ def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     return len(parsed.indent) > len(prev_line.parsed.indent)
 
 
-def is_peer_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
-    return len(parsed.indent) == len(prev_line.parsed.indent)
+def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+    return (
+        len(parsed.indent) == len(prev_line.parsed.indent)
+        and prev_line.parsed.syntax == Syntax.LIST
+    )
 
 
 def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
@@ -95,9 +101,14 @@ def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
             if is_parent_line(line, parsed)
         )
         parents = [*parent.parents, parent.parsed]
-    prev_peers = [line for line in acc[parent_idx:][::-1] if is_peer_line(line, parsed)]
-
-    result = LineResult(parsed=parsed, parents=parents, prev_peers=prev_peers)
+    prev_list_peers = []
+    if parsed.syntax == Syntax.LIST:
+        prev_list_peers += [
+            line.parsed
+            for line in acc[parent_idx:][::-1]
+            if is_peer_list_line(line, parsed)
+        ]
+    result = LineResult(parsed=parsed, parents=parents, prev_list_peers=prev_list_peers)
     return [*acc, result]
 
 
@@ -145,20 +156,15 @@ def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> lis
     if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
         new_bullet = "-"
         if list_match["bullet"] not in {"-", "*"}:
-            new_bullet = f"{len(line.prev_peers) + 1 if inc_numbers else 1}."
+            new_bullet = f"{len(line.prev_list_peers) + 1 if inc_numbers else 1}."
         new_content = f'{new_bullet} {list_match["item"]}'
 
     return [*acc, new_content]
 
 
-def process_text(
-    text: str,
-    eol: str,
-    inc_numbers: bool,
-    use_sem_break: bool,
-) -> ParsedText:
+def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    lines = reduce(acc_parsed_lines, text.rstrip().split(eol), [])
+    lines = reduce(acc_parsed_lines, text.strip().split(EOL), [])
 
     code_block_indents = reduce(acc_code_block_indents, lines, [])
     new_indents = reduce(
@@ -178,23 +184,24 @@ def process_text(
 
 def normalize_list(
     text: str,
-    node: RenderTreeNode,  # noqa: ARG001
+    node: RenderTreeNode,
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
+    if node.level > 1:  # this function is recursive, so only process the top-level item
+        return text
+
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
 
-    eol = "\n"
     parsed_text = process_text(
         text=text,
-        eol="\n",
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
 
     return "".join(
-        f"{new_indent}{new_content}{eol}"
+        f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in zip_equal(
             parsed_text.new_indents,
             parsed_text.new_contents,

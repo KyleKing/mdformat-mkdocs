@@ -21,7 +21,6 @@ def test_parsed_result(line, title, text, expected, snapshot):
 
     output = process_text(
         text=text,
-        eol="\n",
         inc_numbers=inc_numbers,
         use_sem_break=use_sem_break,
     )
