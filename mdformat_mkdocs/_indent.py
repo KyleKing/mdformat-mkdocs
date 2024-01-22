@@ -30,12 +30,15 @@ DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 class Syntax(StrEnum):
     """Non-standard line types."""
 
+    LIST = "LIST"
     START_MARKED = "START_MARKED"
     EDGE_CODE = "EDGE_CODE"
     HTML = "HTML"
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
+        if RE_LIST_ITEM.fullmatch(content):
+            return cls.LIST
         if any(content.startswith(f"{marker} ") for marker in MARKERS):
             return cls.START_MARKED
         if content.startswith("```"):
@@ -79,7 +82,7 @@ def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
     parsed = ParsedLine(indent=indent, content=content, syntax=syntax)
     parents = []
     with suppress(StopIteration):
-        parent = next(line for line in acc if is_parent_line(line, parsed))
+        parent = next(line for line in acc[::-1] if is_parent_line(line, parsed))
         parents = [*parent.parents, parent.parsed]
     result = LineResult(parsed=parsed, parents=parents)
     return [*acc, result]
@@ -93,20 +96,14 @@ def acc_code_block_indents(acc: list[str | None], line: LineResult) -> list[str 
     return [*acc, result]
 
 
-def acc_non_empty_lines(
-    acc: list[LineResult | None],
-    line: LineResult,
-) -> list[LineResult | None]:
-    last = acc[-1] if acc else None
-    result = line if line.parsed.content else last
-    return [*acc, result]
-
-
 def acc_new_indents(
     acc: list[str],
     arg: tuple[LineResult, str | None],
     use_sem_break: bool,  # Attach with partial
 ) -> list[str]:
+    if use_sem_break:
+        raise NotImplementedError("Pending implementation!")
+
     line, code_block_indent = arg
 
     raw_indent = line.parsed.indent
@@ -130,11 +127,14 @@ class ParsedText(NamedTuple):
     code_block_indents: list[str | None]
 
 
-def acc_new_contents(acc: list[str], line: LineResult) -> list[str]:
+def acc_new_contents(acc: list[str], line: LineResult, number_mode: bool) -> list[str]:
     new_content = line.parsed.content
     if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
-        is_numbered = list_match["bullet"] not in {"-", "*"}
-        new_bullet = "1." if is_numbered else "-"  # FIXME: Number!
+        new_bullet = "-"
+        if list_match["bullet"] not in {"-", "*"}:
+            new_bullet = "1."
+            if number_mode:
+                raise NotImplementedError("TODO!")
         new_content = f'{new_bullet} {list_match["item"]}'
 
     return [*acc, new_content]
@@ -150,18 +150,13 @@ def process_text(
     lines = reduce(acc_parsed_lines, text.rstrip().split(eol), [])
 
     code_block_indents = reduce(acc_code_block_indents, lines, [])
-    # non_empty_lines = reduce(acc_non_empty_lines, lines, [])
-    # prev_non_empty_lines = [None, *non_empty_lines][: len(lines)]
     new_indents = reduce(
         partial(acc_new_indents, use_sem_break=use_sem_break),
         zip_equal(lines, code_block_indents),
         [],
     )
 
-    # TODO: Are there ever filler chars now when not using render?
-    # indent = indent.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
-
-    new_contents = reduce(acc_new_contents, lines, [])
+    new_contents = reduce(partial(acc_new_contents, number_mode=number_mode), lines, [])
     return ParsedText(
         new_indents=new_indents,
         new_contents=new_contents,
