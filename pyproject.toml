@@ -41,6 +41,7 @@ recommended = [
 ]
 test = [
     "pytest >= 7.4.4",
+    "pytest-beartype >= 0.0.1",
     "pytest-cov >= 4.1.0",
 ]
 dev = ["pre-commit"]
