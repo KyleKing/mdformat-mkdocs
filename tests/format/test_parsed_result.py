@@ -16,13 +16,13 @@ fixtures = read_fixture_file(FIXTURE_PATH)
 )
 def test_parsed_result(line, title, text, expected, snapshot):
     # TODO: Read these settings from the 'title'
-    number_mode = False
+    inc_numbers = False
     use_sem_break = False
 
     output = process_text(
         text=text,
         eol="\n",
-        number_mode=number_mode,
+        inc_numbers=inc_numbers,
         use_sem_break=use_sem_break,
     )
     assert output == snapshot

@@ -15,6 +15,8 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -29,6 +31,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -48,6 +52,8 @@
           indent='        ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
     ]),
     new_contents=list([
@@ -79,6 +85,8 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -93,6 +101,8 @@
           indent='   ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -112,6 +122,8 @@
           indent='      ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -136,6 +148,8 @@
           indent='         ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
     ]),
     new_contents=list([
@@ -167,6 +181,8 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -181,6 +197,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
     ]),
     new_contents=list([
@@ -214,6 +232,8 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -228,6 +248,8 @@
           indent='  ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -247,6 +269,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -271,6 +295,8 @@
           indent='      ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -300,6 +326,8 @@
           indent='        ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -319,6 +347,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -338,6 +368,29 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+          LineResult(
+            parents=list([
+              ParsedLine(
+                content='- item 1',
+                indent='',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+              ParsedLine(
+                content='- item 2',
+                indent='  ',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+            ]),
+            parsed=ParsedLine(
+              content='- item 6',
+              indent='    ',
+              syntax=<Syntax.LIST: 'LIST'>,
+            ),
+            prev_peers=list([
+            ]),
+          ),
+        ]),
       }),
       dict({
         'parents': list([
@@ -347,6 +400,19 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+          LineResult(
+            parents=list([
+            ]),
+            parsed=ParsedLine(
+              content='- item 1',
+              indent='',
+              syntax=<Syntax.LIST: 'LIST'>,
+            ),
+            prev_peers=list([
+            ]),
+          ),
+        ]),
       }),
     ]),
     new_contents=list([
@@ -390,6 +456,8 @@
           indent='',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -404,6 +472,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -423,6 +493,8 @@
           indent='        ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -437,6 +509,8 @@
           indent='    ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+        ]),
       }),
       dict({
         'parents': list([
@@ -456,6 +530,29 @@
           indent='        ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+          LineResult(
+            parents=list([
+              ParsedLine(
+                content='1. item 1',
+                indent='',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+              ParsedLine(
+                content='1. item 2-a',
+                indent='    ',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+            ]),
+            parsed=ParsedLine(
+              content='1. item 3-a',
+              indent='        ',
+              syntax=<Syntax.LIST: 'LIST'>,
+            ),
+            prev_peers=list([
+            ]),
+          ),
+        ]),
       }),
       dict({
         'parents': list([
@@ -475,6 +572,71 @@
           indent='        ',
           syntax=<Syntax.LIST: 'LIST'>,
         ),
+        'prev_peers': list([
+          LineResult(
+            parents=list([
+              ParsedLine(
+                content='1. item 1',
+                indent='',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+              ParsedLine(
+                content='2. item 2-b',
+                indent='    ',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+            ]),
+            parsed=ParsedLine(
+              content='1. item 3-b',
+              indent='        ',
+              syntax=<Syntax.LIST: 'LIST'>,
+            ),
+            prev_peers=list([
+              LineResult(
+                parents=list([
+                  ParsedLine(
+                    content='1. item 1',
+                    indent='',
+                    syntax=<Syntax.LIST: 'LIST'>,
+                  ),
+                  ParsedLine(
+                    content='1. item 2-a',
+                    indent='    ',
+                    syntax=<Syntax.LIST: 'LIST'>,
+                  ),
+                ]),
+                parsed=ParsedLine(
+                  content='1. item 3-a',
+                  indent='        ',
+                  syntax=<Syntax.LIST: 'LIST'>,
+                ),
+                prev_peers=list([
+                ]),
+              ),
+            ]),
+          ),
+          LineResult(
+            parents=list([
+              ParsedLine(
+                content='1. item 1',
+                indent='',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+              ParsedLine(
+                content='1. item 2-a',
+                indent='    ',
+                syntax=<Syntax.LIST: 'LIST'>,
+              ),
+            ]),
+            parsed=ParsedLine(
+              content='1. item 3-a',
+              indent='        ',
+              syntax=<Syntax.LIST: 'LIST'>,
+            ),
+            prev_peers=list([
+            ]),
+          ),
+        ]),
       }),
     ]),
     new_contents=list([

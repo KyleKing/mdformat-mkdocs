@@ -62,6 +62,7 @@ class LineResult(NamedTuple):
 
     parsed: ParsedLine
     parents: list[ParsedLine]
+    prev_peers: list[ParsedLine]
 
 
 def separate_indent(line: str) -> tuple[str, str]:
@@ -76,15 +77,27 @@ def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     return len(parsed.indent) > len(prev_line.parsed.indent)
 
 
+def is_peer_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+    return len(parsed.indent) == len(prev_line.parsed.indent)
+
+
 def acc_parsed_lines(acc: list[LineResult], content: str) -> list[LineResult]:
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
     parsed = ParsedLine(indent=indent, content=content, syntax=syntax)
+
+    parent_idx = 0
     parents = []
     with suppress(StopIteration):
-        parent = next(line for line in acc[::-1] if is_parent_line(line, parsed))
+        parent_idx, parent = next(
+            (idx, line)
+            for idx, line in enumerate(acc[::-1])
+            if is_parent_line(line, parsed)
+        )
         parents = [*parent.parents, parent.parsed]
-    result = LineResult(parsed=parsed, parents=parents)
+    prev_peers = [line for line in acc[parent_idx:][::-1] if is_peer_line(line, parsed)]
+
+    result = LineResult(parsed=parsed, parents=parents, prev_peers=prev_peers)
     return [*acc, result]
 
 
@@ -127,14 +140,12 @@ class ParsedText(NamedTuple):
     code_block_indents: list[str | None]
 
 
-def acc_new_contents(acc: list[str], line: LineResult, number_mode: bool) -> list[str]:
+def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> list[str]:
     new_content = line.parsed.content
     if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
         new_bullet = "-"
         if list_match["bullet"] not in {"-", "*"}:
-            new_bullet = "1."
-            if number_mode:
-                raise NotImplementedError("TODO!")
+            new_bullet = f"{len(line.prev_peers) + 1 if inc_numbers else 1}."
         new_content = f'{new_bullet} {list_match["item"]}'
 
     return [*acc, new_content]
@@ -143,7 +154,7 @@ def acc_new_contents(acc: list[str], line: LineResult, number_mode: bool) -> lis
 def process_text(
     text: str,
     eol: str,
-    number_mode: bool,
+    inc_numbers: bool,
     use_sem_break: bool,
 ) -> ParsedText:
     """Post-processor to normalize lists."""
@@ -156,7 +167,7 @@ def process_text(
         [],
     )
 
-    new_contents = reduce(partial(acc_new_contents, number_mode=number_mode), lines, [])
+    new_contents = reduce(partial(acc_new_contents, inc_numbers=inc_numbers), lines, [])
     return ParsedText(
         new_indents=new_indents,
         new_contents=new_contents,
@@ -172,13 +183,13 @@ def normalize_list(
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
     # Retrieve user-options
-    number_mode = bool(context.options["mdformat"].get("number"))
+    inc_numbers = bool(context.options["mdformat"].get("number"))
 
     eol = "\n"
     parsed_text = process_text(
         text=text,
         eol="\n",
-        number_mode=number_mode,
+        inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
 
