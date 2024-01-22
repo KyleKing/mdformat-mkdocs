@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import re
 from contextlib import suppress
+from enum import Enum
 from functools import partial, reduce
 from typing import Callable, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import zip_equal
 
-from ._backports import StrEnum
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 
 MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
@@ -27,7 +27,7 @@ DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 """Default indent."""
 
 
-class Syntax(StrEnum):
+class Syntax(Enum):
     """Non-standard line types."""
 
     LIST = "LIST"
