@@ -19,6 +19,7 @@ requires-python = ">=3.8.4"
 dependencies = [
     "mdformat >= 0.7.16",
     "mdformat-admon >= 2.0.1",
+    "more-itertools >= 10.2.0"
     # "mdformat-gfm >= 0.?.?",  # FIXME: PENDING RELEASE (https://github.com/hukkin/mdformat-gfm/issues/31)
 ]
 dynamic = ["version", "description"]
