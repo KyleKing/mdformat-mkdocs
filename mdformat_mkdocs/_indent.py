@@ -20,8 +20,8 @@ RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
 EOL = "\n"
 """Line delimiter."""
 
-FILLER_CHAR = "𝕏"  # noqa: RUF001
-"""A spacer that is inserted and then removed to ensure proper word wrap."""
+# FILLER_CHAR = "𝕏"  # noqa: RUF003
+# """A spacer that is inserted and then removed to ensure proper word wrap."""
 
 MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
@@ -48,6 +48,8 @@ class Syntax(Enum):
             return cls.EDGE_CODE
         if content.startswith("<"):
             # TODO: Figure out how to handle "markdown in HTML" (like figcaption)
+            # PLANNED: for a paragraph - identify if it starts and ends with <>,
+            #  then treat as a concurrent block with unmodified inner indentation
             return cls.HTML
         return None
 
@@ -120,57 +122,51 @@ def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineRe
     return [*acc, result]
 
 
-class CodeBlockIndent(NamedTuple):
+def get_inner_indent(block_indent: str, line_indent: str) -> str:
+    return "".join(line_indent[len(block_indent) :])
+
+
+class BlockIndent(NamedTuple):
     """Track the parsed code block indentation."""
 
-    block_raw_indent: str
-    block_indent_depth: int
-    line_inner_indent: str
-
-    def new_inner_indent(self, raw_indent: str) -> CodeBlockIndent:
-        len_block_indent = len(self.block_raw_indent)
-        return CodeBlockIndent(
-            block_raw_indent=self.block_raw_indent,
-            block_indent_depth=self.block_indent_depth,
-            # Only field that differs from rest of block
-            line_inner_indent="".join(raw_indent[len_block_indent:]),
-        )
+    raw_indent: str
+    indent_depth: int
 
 
 def acc_code_block_indents(
-    acc: list[CodeBlockIndent | None],
+    acc: list[BlockIndent | None],
     line: LineResult,
-) -> list[CodeBlockIndent | None]:
+) -> list[BlockIndent | None]:
     last = (acc or [None])[-1]
     result = last
-
     if line.parsed.syntax == Syntax.EDGE_CODE:
-        if last:
-            result = None
-        else:  # On first edge, start tracking a code block
-            result = CodeBlockIndent(
-                block_raw_indent=line.parsed.indent,
-                block_indent_depth=len(line.parents),
-                line_inner_indent="",
+        result = (
+            None  # On second edge, stop tracking
+            if last
+            # On first edge, start tracking a code block
+            else BlockIndent(
+                raw_indent=line.parsed.indent,
+                indent_depth=len(line.parents),
             )
-    elif last:
-        result = last.new_inner_indent(raw_indent=line.parsed.indent)
-
+        )
     return [*acc, result]
 
 
 def acc_new_indents(
     acc: list[str],
-    arg: tuple[LineResult, CodeBlockIndent | None],
+    arg: tuple[LineResult, BlockIndent | None],
 ) -> list[str]:
     line, code_block_indent = arg
 
     result = ""
     if line.parsed.content:
         result = DEFAULT_INDENT * len(line.parents)
-        if code_block_indent:  # PLANNED:  and line.parsed.syntax != Syntax.EDGE_CODE
-            depth = code_block_indent.block_indent_depth
-            extra_indent = code_block_indent.line_inner_indent
+        if code_block_indent:
+            depth = code_block_indent.indent_depth
+            extra_indent = get_inner_indent(
+                block_indent=code_block_indent.raw_indent,
+                line_indent=line.parsed.indent,
+            )
             result = DEFAULT_INDENT * depth + extra_indent
 
     return [*acc, result]
@@ -183,7 +179,7 @@ class ParsedText(NamedTuple):
     new_contents: list[str]
     # Used only for debugging purposes
     lines: list[dict]
-    code_block_indents: list[CodeBlockIndent | None]
+    code_block_indents: list[BlockIndent | None]
 
 
 def acc_new_contents(

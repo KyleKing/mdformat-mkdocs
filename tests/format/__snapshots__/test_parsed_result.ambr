@@ -463,35 +463,29 @@
     code_block_indents=list([
       None,
       None,
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='    ',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='    ',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
-      CodeBlockIndent(
-        block_indent_depth=1,
-        block_raw_indent='    ',
-        line_inner_indent='        ',
+      BlockIndent(
+        indent_depth=1,
+        raw_indent='    ',
       ),
       None,
     ]),
