@@ -80,7 +80,9 @@ def separate_indent(line: str) -> tuple[str, str]:
 
 
 def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
-    return len(parsed.indent) > len(prev_line.parsed.indent)
+    return bool(prev_line.parsed.content) and len(parsed.indent) > len(
+        prev_line.parsed.indent,
+    )
 
 
 def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
@@ -227,7 +229,9 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    if node.level > 1:  # this function is recursive, so only process the top-level item
+    if node.level > 1:
+        # Note: this function is called recursively,
+        #   so only process the top-level item
         return text
 
     # Retrieve user-options
@@ -239,6 +243,7 @@ def normalize_list(
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
 
+    # PLANNED: Need a flat_map (collapse in more-itertools) to handle semantic indents
     return "".join(
         f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in zip_equal(

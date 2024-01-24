@@ -517,10 +517,10 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=1,
-            syntax=None,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
@@ -535,10 +535,10 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=1,
-            syntax=None,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
@@ -553,10 +553,10 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=1,
-            syntax=None,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
           ),
           ParsedLine(
             content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
@@ -589,9 +589,15 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=5,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+          ParsedLine(
+            content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+            indent='    ',
+            line_num=3,
             syntax=None,
           ),
         ]),
@@ -607,9 +613,15 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=5,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+          ParsedLine(
+            content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+            indent='    ',
+            line_num=3,
             syntax=None,
           ),
           ParsedLine(
@@ -631,10 +643,10 @@
       dict({
         'parents': list([
           ParsedLine(
-            content='',
+            content='1. Add a serializer class',
             indent='',
-            line_num=5,
-            syntax=None,
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
         'parsed': ParsedLine(
