@@ -124,6 +124,12 @@ def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineRe
     return [*acc, result]
 
 
+def acc_single_line_breaks(acc: list[LineResult], line: LineResult) -> list[LineResult]:
+    """Remove any repeated lines without content."""
+    last_content = acc[-1].parsed.content if acc else None
+    return [*acc, line] if line.parsed.content or last_content else acc
+
+
 def get_inner_indent(block_indent: str, line_indent: str) -> str:
     return "".join(line_indent[len(block_indent) :])
 
@@ -204,7 +210,8 @@ def acc_new_contents(
 
 def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
+    all_lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
+    lines = reduce(acc_single_line_breaks, all_lines, [])
 
     code_block_indents = reduce(acc_code_block_indents, lines, [])
     new_indents = reduce(acc_new_indents, zip_equal(lines, code_block_indents), [])
@@ -227,10 +234,11 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    if node.level > 1:
-        # Note: this function is called recursively,
-        #   so only process the top-level item
-        return text
+    # FIXME: should be skip only if root of this node is a list!
+    # if node.level > 1:
+    #     # Note: this function is called recursively,
+    #     #   so only process the top-level item
+    #     return text
 
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
@@ -242,7 +250,12 @@ def normalize_list(
     )
 
     # PLANNED: Need a flat_map (collapse in more-itertools) to handle semantic indents
-    return "".join(
+    result = "".join(
         f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in parsed_text.new_lines
-    )
+    ).rstrip()
+
+    # if "Unordered" in result:
+    #     breakpoint()
+
+    return result
