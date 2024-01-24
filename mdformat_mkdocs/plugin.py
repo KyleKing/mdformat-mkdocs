@@ -13,6 +13,7 @@ from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
 
 from ._indent import normalize_list as unbounded_normalize_list
+from ._indent import rstrip_result
 from .mdit_plugins import (
     CONTENT_TAB_MARKERS,
     MKDOCS_ADMON_MARKERS,
@@ -215,6 +216,7 @@ def oop_normalize_list(  # TODO: REMOVE
     return rendered.rstrip()
 
 
+@rstrip_result
 def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Postprocess inline tokens.
 
@@ -226,7 +228,7 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
 
     """
     if not context.do_wrap:
-        return text.rstrip()
+        return text
     wrap_mode = context.options["mdformat"]["wrap"]
     if (
         not isinstance(wrap_mode, int)  # noqa: PLR0916
@@ -238,7 +240,7 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
             and node.parent.parent.type != "list_item"
         )
     ):
-        return text.rstrip()
+        return text
 
     _counter = -1
     parent = node.parent
@@ -266,8 +268,8 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
             else:
                 words.append(word)
                 wrapped_length = next_length + 1
-        return soft_break.join(_w for _w in words if _w).rstrip()
-    return f"{filler}{soft_break}{text}".rstrip() if filler else text
+        return soft_break.join(_w for _w in words if _w)
+    return f"{filler}{soft_break}{text}" if filler else text
 
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can

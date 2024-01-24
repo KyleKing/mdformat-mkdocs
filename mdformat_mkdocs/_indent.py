@@ -1,15 +1,28 @@
 from __future__ import annotations
 
+import functools
 import re
+from collections.abc import Callable
 from contextlib import suppress
 from enum import Enum
 from functools import partial, reduce
-from typing import Callable, NamedTuple
+from typing import NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import zip_equal
 
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
+
+ReturnsStr = Callable[..., str]
+
+
+def rstrip_result(func: ReturnsStr) -> ReturnsStr:
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs) -> str:
+        return func(*args, **kwargs).rstrip()
+
+    return wrapper
+
 
 MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
 """All block type markers."""
@@ -228,6 +241,7 @@ def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTex
     )
 
 
+@rstrip_result
 def normalize_list(
     text: str,
     node: RenderTreeNode,
@@ -235,10 +249,10 @@ def normalize_list(
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
     # FIXME: should be skip only if root of this node is a list!
-    # if node.level > 1:
-    #     # Note: this function is called recursively,
-    #     #   so only process the top-level item
-    #     return text
+    if node.level > 1:
+        # Note: this function is called recursively,
+        #   so only process the top-level item
+        return text
 
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
@@ -250,12 +264,7 @@ def normalize_list(
     )
 
     # PLANNED: Need a flat_map (collapse in more-itertools) to handle semantic indents
-    result = "".join(
+    return "".join(
         f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in parsed_text.new_lines
-    ).rstrip()
-
-    # if "Unordered" in result:
-    #     breakpoint()
-
-    return result
+    )
