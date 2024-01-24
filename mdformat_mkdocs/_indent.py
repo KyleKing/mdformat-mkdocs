@@ -137,12 +137,6 @@ def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineRe
     return [*acc, result]
 
 
-def acc_single_line_breaks(acc: list[LineResult], line: LineResult) -> list[LineResult]:
-    """Remove any repeated lines without content."""
-    last_content = acc[-1].parsed.content if acc else None
-    return [*acc, line] if line.parsed.content or last_content else acc
-
-
 def get_inner_indent(block_indent: str, line_indent: str) -> str:
     return "".join(line_indent[len(block_indent) :])
 
@@ -223,8 +217,7 @@ def acc_new_contents(
 
 def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    all_lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
-    lines = reduce(acc_single_line_breaks, all_lines, [])
+    lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
 
     code_block_indents = reduce(acc_code_block_indents, lines, [])
     new_indents = reduce(acc_new_indents, zip_equal(lines, code_block_indents), [])
