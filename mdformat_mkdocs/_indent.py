@@ -20,7 +20,7 @@ RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
 EOL = "\n"
 """Line delimiter."""
 
-# FILLER_CHAR = "𝕏"  # noqa: RUF003
+# > FILLER_CHAR = "𝕏"  # noqa: RUF003
 # """A spacer that is inserted and then removed to ensure proper word wrap."""
 
 MKDOCS_INDENT_COUNT = 4
@@ -107,7 +107,7 @@ def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineRe
     parents = []
     with suppress(StopIteration):
         parent_idx, parent = next(
-            (idx, line)
+            (len(acc) - idx, line)
             for idx, line in enumerate(acc[::-1])
             if is_parent_line(line, parsed)
         )
@@ -177,8 +177,7 @@ def acc_new_indents(
 class ParsedText(NamedTuple):
     """Intermediary result of parsing the text."""
 
-    new_indents: list[str]
-    new_contents: list[str]
+    new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
     lines: list[dict]
     code_block_indents: list[BlockIndent | None]
@@ -216,8 +215,7 @@ def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTex
         [],
     )
     return ParsedText(
-        new_indents=new_indents,
-        new_contents=new_contents,
+        new_lines=[*zip_equal(new_indents, new_contents)],
         lines=[line._asdict() for line in lines],
         code_block_indents=code_block_indents,
     )
@@ -246,8 +244,5 @@ def normalize_list(
     # PLANNED: Need a flat_map (collapse in more-itertools) to handle semantic indents
     return "".join(
         f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in zip_equal(
-            parsed_text.new_indents,
-            parsed_text.new_contents,
-        )
+        for new_indent, new_content in parsed_text.new_lines
     )

@@ -63,3 +63,50 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
     ```
 .
 .
+
+
+Deterministic HTML Formatting (FIXME: Resolve)
+.
+### Isolate with Black Pixels: Sub-options
+
+??? info "Full-size Image"
+
+    There are no additional steps required if keeping full size image.
+
+    <figure markdown>
+        ![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }
+        <figcaption>Example full-size output</figcaption>
+    </figure>
+.
+.
+
+
+No extra newlines (FIXME: Resolve)
+.
+=== "Not Me"
+    Markdown **content**.
+
+    Multiple paragraphs.
+
+
+===+ "Select Me"
+    More Markdown **content**.
+
+    - list item a
+    - list item b
+
+=== "Not Me Either"
+    Another Tab
+.
+.
+
+
+Correctly identifies peers when numbering
+.
+1. One
+    1. 1-A
+2. Two
+    1. 2-A
+    2. 2-B
+.
+.

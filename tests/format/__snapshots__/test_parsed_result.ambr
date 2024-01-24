@@ -62,15 +62,19 @@
         ]),
       }),
     ]),
-    new_contents=list([
-      '- item 1',
-      '- item 2',
-      '1. item 3',
-    ]),
-    new_indents=list([
-      '',
-      '    ',
-      '        ',
+    new_lines=list([
+      tuple(
+        '',
+        '- item 1',
+      ),
+      tuple(
+        '    ',
+        '- item 2',
+      ),
+      tuple(
+        '        ',
+        '1. item 3',
+      ),
     ]),
   )
 # ---
@@ -168,17 +172,148 @@
         ]),
       }),
     ]),
-    new_contents=list([
-      '- item 1',
-      '- item 2',
-      '- item 3',
-      '- item 4',
+    new_lines=list([
+      tuple(
+        '',
+        '- item 1',
+      ),
+      tuple(
+        '    ',
+        '- item 2',
+      ),
+      tuple(
+        '        ',
+        '- item 3',
+      ),
+      tuple(
+        '            ',
+        '- item 4',
+      ),
     ]),
-    new_indents=list([
-      '',
-      '    ',
-      '        ',
-      '            ',
+  )
+# ---
+# name: test_parsed_result[Correctly identifies peers when numbering]
+  ParsedText(
+    code_block_indents=list([
+      None,
+      None,
+      None,
+      None,
+      None,
+    ]),
+    lines=list([
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='1. One',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='1. One',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='1. 1-A',
+          indent='    ',
+          line_num=1,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='2. Two',
+          indent='',
+          line_num=2,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+          ParsedLine(
+            content='1. One',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='2. Two',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='1. 2-A',
+          indent='    ',
+          line_num=3,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='2. Two',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='2. 2-B',
+          indent='    ',
+          line_num=4,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+          ParsedLine(
+            content='1. 2-A',
+            indent='    ',
+            line_num=3,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+      }),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '1. One',
+      ),
+      tuple(
+        '    ',
+        '1. 1-A',
+      ),
+      tuple(
+        '',
+        '1. Two',
+      ),
+      tuple(
+        '    ',
+        '1. 2-A',
+      ),
+      tuple(
+        '    ',
+        '1. 2-B',
+      ),
     ]),
   )
 # ---
@@ -220,13 +355,237 @@
         ]),
       }),
     ]),
-    new_contents=list([
-      '- item 1',
-      '- item 2',
+    new_lines=list([
+      tuple(
+        '',
+        '- item 1',
+      ),
+      tuple(
+        '    ',
+        '- item 2',
+      ),
     ]),
-    new_indents=list([
-      '',
-      '    ',
+  )
+# ---
+# name: test_parsed_result[Deterministic HTML Formatting (FIXME: Resolve)]
+  ParsedText(
+    code_block_indents=list([
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+    ]),
+    lines=list([
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='### Isolate with Black Pixels: Sub-options',
+          indent='',
+          line_num=0,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=1,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='??? info "Full-size Image"',
+          indent='',
+          line_num=2,
+          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=3,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='There are no additional steps required if keeping full size image.',
+          indent='    ',
+          line_num=4,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=5,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='<figure markdown>',
+          indent='    ',
+          line_num=6,
+          syntax=<Syntax.HTML: 'HTML'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+          ParsedLine(
+            content='<figure markdown>',
+            indent='    ',
+            line_num=6,
+            syntax=<Syntax.HTML: 'HTML'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
+          indent='        ',
+          line_num=7,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+          ParsedLine(
+            content='<figure markdown>',
+            indent='    ',
+            line_num=6,
+            syntax=<Syntax.HTML: 'HTML'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='<figcaption>Example full-size output</figcaption>',
+          indent='        ',
+          line_num=8,
+          syntax=<Syntax.HTML: 'HTML'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='</figure>',
+          indent='    ',
+          line_num=9,
+          syntax=<Syntax.HTML: 'HTML'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '### Isolate with Black Pixels: Sub-options',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '??? info "Full-size Image"',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        'There are no additional steps required if keeping full size image.',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '<figure markdown>',
+      ),
+      tuple(
+        '        ',
+        '![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
+      ),
+      tuple(
+        '        ',
+        '<figcaption>Example full-size output</figcaption>',
+      ),
+      tuple(
+        '    ',
+        '</figure>',
+      ),
     ]),
   )
 # ---
@@ -385,6 +744,12 @@
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
+          ParsedLine(
+            content='- item 3',
+            indent='    ',
+            line_num=2,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
         ]),
       }),
       dict({
@@ -415,6 +780,12 @@
             line_num=5,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
+          ParsedLine(
+            content='- item 3',
+            indent='    ',
+            line_num=2,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
         ]),
       }),
       dict({
@@ -436,25 +807,39 @@
         ]),
       }),
     ]),
-    new_contents=list([
-      '- item 1',
-      '- item 2',
-      '- item 3',
-      '- item 4',
-      '- item 5',
-      '- item 6',
-      '- item 7',
-      '- item 8',
-    ]),
-    new_indents=list([
-      '',
-      '    ',
-      '        ',
-      '            ',
-      '                ',
-      '        ',
-      '        ',
-      '',
+    new_lines=list([
+      tuple(
+        '',
+        '- item 1',
+      ),
+      tuple(
+        '    ',
+        '- item 2',
+      ),
+      tuple(
+        '        ',
+        '- item 3',
+      ),
+      tuple(
+        '            ',
+        '- item 4',
+      ),
+      tuple(
+        '                ',
+        '- item 5',
+      ),
+      tuple(
+        '        ',
+        '- item 6',
+      ),
+      tuple(
+        '        ',
+        '- item 7',
+      ),
+      tuple(
+        '',
+        '- item 8',
+      ),
     ]),
   )
 # ---
@@ -659,27 +1044,333 @@
         ]),
       }),
     ]),
-    new_contents=list([
-      '1. Add a serializer class',
-      '',
-      '```python',
-      'class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
-      '"""Used to retrieve recurring_event info"""',
-      '',
-      'class Meta:',
-      'model = RecurringEvent  # (2)!',
-      '```',
+    new_lines=list([
+      tuple(
+        '',
+        '1. Add a serializer class',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '```python',
+      ),
+      tuple(
+        '    ',
+        'class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
+      ),
+      tuple(
+        '        ',
+        '"""Used to retrieve recurring_event info"""',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '        ',
+        'class Meta:',
+      ),
+      tuple(
+        '            ',
+        'model = RecurringEvent  # (2)!',
+      ),
+      tuple(
+        '    ',
+        '```',
+      ),
     ]),
-    new_indents=list([
-      '',
-      '',
-      '    ',
-      '    ',
-      '        ',
-      '',
-      '        ',
-      '            ',
-      '    ',
+  )
+# ---
+# name: test_parsed_result[No extra newlines (FIXME: Resolve)]
+  ParsedText(
+    code_block_indents=list([
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+      None,
+    ]),
+    lines=list([
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='=== "Not Me"',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='=== "Not Me"',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='Markdown **content**.',
+          indent='    ',
+          line_num=1,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=2,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='=== "Not Me"',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='Multiple paragraphs.',
+          indent='    ',
+          line_num=3,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=4,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=5,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='===+ "Select Me"',
+          indent='',
+          line_num=6,
+          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='===+ "Select Me"',
+            indent='',
+            line_num=6,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='More Markdown **content**.',
+          indent='    ',
+          line_num=7,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=8,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='===+ "Select Me"',
+            indent='',
+            line_num=6,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='- list item a',
+          indent='    ',
+          line_num=9,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='===+ "Select Me"',
+            indent='',
+            line_num=6,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='- list item b',
+          indent='    ',
+          line_num=10,
+          syntax=<Syntax.LIST: 'LIST'>,
+        ),
+        'prev_list_peers': list([
+          ParsedLine(
+            content='- list item a',
+            indent='    ',
+            line_num=9,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='',
+          indent='',
+          line_num=11,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+        ]),
+        'parsed': ParsedLine(
+          content='=== "Not Me Either"',
+          indent='',
+          line_num=12,
+          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+      dict({
+        'parents': list([
+          ParsedLine(
+            content='=== "Not Me Either"',
+            indent='',
+            line_num=12,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+        ]),
+        'parsed': ParsedLine(
+          content='Another Tab',
+          indent='    ',
+          line_num=13,
+          syntax=None,
+        ),
+        'prev_list_peers': list([
+        ]),
+      }),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '=== "Not Me"',
+      ),
+      tuple(
+        '    ',
+        'Markdown **content**.',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        'Multiple paragraphs.',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '===+ "Select Me"',
+      ),
+      tuple(
+        '    ',
+        'More Markdown **content**.',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '- list item a',
+      ),
+      tuple(
+        '    ',
+        '- list item b',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '=== "Not Me Either"',
+      ),
+      tuple(
+        '    ',
+        'Another Tab',
+      ),
     ]),
   )
 # ---
@@ -764,6 +1455,12 @@
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
+          ParsedLine(
+            content='1. item 2-a',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.LIST: 'LIST'>,
+          ),
         ]),
       }),
       dict({
@@ -788,12 +1485,6 @@
           syntax=<Syntax.LIST: 'LIST'>,
         ),
         'prev_list_peers': list([
-          ParsedLine(
-            content='1. item 3-a',
-            indent='        ',
-            line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
-          ),
         ]),
       }),
       dict({
@@ -824,30 +1515,34 @@
             line_num=4,
             syntax=<Syntax.LIST: 'LIST'>,
           ),
-          ParsedLine(
-            content='1. item 3-a',
-            indent='        ',
-            line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
-          ),
         ]),
       }),
     ]),
-    new_contents=list([
-      '1. item 1',
-      '1. item 2-a',
-      '1. item 3-a',
-      '1. item 2-b',
-      '1. item 3-b',
-      '1. item 3-b',
-    ]),
-    new_indents=list([
-      '',
-      '    ',
-      '        ',
-      '    ',
-      '        ',
-      '        ',
+    new_lines=list([
+      tuple(
+        '',
+        '1. item 1',
+      ),
+      tuple(
+        '    ',
+        '1. item 2-a',
+      ),
+      tuple(
+        '        ',
+        '1. item 3-a',
+      ),
+      tuple(
+        '    ',
+        '1. item 2-b',
+      ),
+      tuple(
+        '        ',
+        '1. item 3-b',
+      ),
+      tuple(
+        '        ',
+        '1. item 3-b',
+      ),
     ]),
   )
 # ---
