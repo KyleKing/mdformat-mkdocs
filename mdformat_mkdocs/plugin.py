@@ -226,7 +226,7 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
 
     """
     if not context.do_wrap:
-        return text
+        return text.rstrip()
     wrap_mode = context.options["mdformat"]["wrap"]
     if (
         not isinstance(wrap_mode, int)  # noqa: PLR0916
@@ -238,7 +238,7 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
             and node.parent.parent.type != "list_item"
         )
     ):
-        return text
+        return text.rstrip()
 
     _counter = -1
     parent = node.parent
@@ -266,8 +266,8 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
             else:
                 words.append(word)
                 wrapped_length = next_length + 1
-        return soft_break.join(_w for _w in words if _w)
-    return f"{filler}{soft_break}{text}" if filler else text
+        return soft_break.join(_w for _w in words if _w).rstrip()
+    return f"{filler}{soft_break}{text}".rstrip() if filler else text
 
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can

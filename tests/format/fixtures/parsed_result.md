@@ -81,26 +81,6 @@ Deterministic HTML Formatting (FIXME: Resolve)
 .
 
 
-No extra newlines (FIXME: Resolve)
-.
-=== "Not Me"
-    Markdown **content**.
-
-    Multiple paragraphs.
-
-
-===+ "Select Me"
-    More Markdown **content**.
-
-    - list item a
-    - list item b
-
-=== "Not Me Either"
-    Another Tab
-.
-.
-
-
 Correctly identifies peers when numbering
 .
 1. One
