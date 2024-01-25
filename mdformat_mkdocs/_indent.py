@@ -1,10 +1,11 @@
+"""Normalize list indentation."""
+
 from __future__ import annotations
 
-import functools
 import re
 from contextlib import suppress
 from enum import Enum
-from functools import partial, reduce
+from functools import partial, reduce, wraps
 from typing import Callable, Literal, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -12,15 +13,26 @@ from more_itertools import zip_equal
 
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 
+# ======================================================================================
+# General Helpers
+
+
+EOL = "\n"
+"""Line delimiter."""
+
 
 def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
     """Decorator to `rstrip` the function return."""
 
-    @functools.wraps(func)
+    @wraps(func)
     def wrapper(*args, **kwargs) -> str:
         return func(*args, **kwargs).rstrip()
 
     return wrapper
+
+
+# ======================================================================================
+# Parsing Operations
 
 
 MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
@@ -29,31 +41,24 @@ MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
 RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
-EOL = "\n"
-"""Line delimiter."""
-
-# > FILLER_CHAR = "𝕏"  # noqa: RUF003
-# """A spacer that is inserted and then removed to ensure proper word wrap."""
-
-MKDOCS_INDENT_COUNT = 4
-"""Use 4-spaces for mkdocs."""
-
-DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
-"""Default indent."""
-
 
 class Syntax(Enum):
     """Non-standard line types."""
 
-    LIST = "LIST"
+    LIST_BULLETED = "LIST_BULLETED"
+    LIST_NUMBERED = "LIST_NUMBERED"
     START_MARKED = "START_MARKED"
     EDGE_CODE = "EDGE_CODE"
     HTML = "HTML"
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
-        if RE_LIST_ITEM.fullmatch(content):
-            return cls.LIST
+        if match := RE_LIST_ITEM.fullmatch(content):
+            return (
+                cls.LIST_NUMBERED
+                if match["bullet"] not in {"-", "*"}
+                else cls.LIST_BULLETED
+            )
         if any(content.startswith(f"{marker} ") for marker in MARKERS):
             return cls.START_MARKED
         if content.startswith("```"):
@@ -84,7 +89,7 @@ def separate_indent(line: str) -> tuple[str, str]:
     """Separate leading indent from content. Also used by the test suite."""
     re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
     match = re_indent.match(line)
-    assert match is not None  # for pylint # noqa: S101
+    assert match is not None  # for pyright # noqa: S101
     return (match["indent"], match["content"])
 
 
@@ -95,9 +100,11 @@ def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 
 
 def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+    list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
     return (
-        len(parsed.indent) == len(prev_line.parsed.indent)
-        and prev_line.parsed.syntax == Syntax.LIST
+        parsed.syntax in list_types
+        and prev_line.parsed.syntax in list_types
+        and len(parsed.indent) == len(prev_line.parsed.indent)
     )
 
 
@@ -125,18 +132,18 @@ def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResu
         )
         parents = [*parent.parents, parent.parsed]
 
-    prev_list_peers = (
-        [
-            line.parsed
-            for line in acc[parent_idx:][::-1]
-            if is_peer_list_line(line, parsed)
-        ]
-        if parsed.syntax == Syntax.LIST
-        else []
-    )
+    prev_list_peers = [
+        line.parsed
+        for line in acc[parent_idx:][::-1]
+        if is_peer_list_line(line, parsed)
+    ]
 
     result = LineResult(parsed=parsed, parents=parents, prev_list_peers=prev_list_peers)
     return [*acc, result]
+
+
+# ======================================================================================
+# Block Parsing Operations
 
 
 def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
@@ -198,6 +205,16 @@ def acc_html_blocks(
     return [*acc, result]
 
 
+# ======================================================================================
+# High-Level Accumulators
+
+MKDOCS_INDENT_COUNT = 4
+"""Use 4-spaces for mkdocs."""
+
+DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
+"""Default indent."""
+
+
 def acc_new_indents(
     acc: list[str],
     arg: tuple[LineResult, BlockIndent | None],
@@ -222,18 +239,21 @@ def acc_new_indents(
 class ParsedText(NamedTuple):
     """Intermediary result of parsing the text."""
 
+    lines: list[LineResult]
     new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
-    lines: list[LineResult]
-    block_indents: list[BlockIndent | None]
+    debug_block_indents: list[BlockIndent | None]
 
 
 def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> list[str]:
     new_content = line.parsed.content
-    if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
+    if line.parsed.syntax in {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}:
+        list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
+        assert list_match is not None  # for pyright # noqa: S101
         new_bullet = "-"
-        if list_match["bullet"] not in {"-", "*"}:
-            new_bullet = f"{len(line.prev_list_peers) + 1 if inc_numbers else 1}."
+        if line.parsed.syntax == Syntax.LIST_NUMBERED:
+            counter = len(line.prev_list_peers) + 1 if inc_numbers else 1
+            new_bullet = f"{counter}."
         new_content = f'{new_bullet} {list_match["item"]}'
 
     return [*acc, new_content]
@@ -256,17 +276,20 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
         [],
     )
     return ParsedText(
-        new_lines=[*zip_equal(new_indents, new_contents)],
         lines=lines,
-        block_indents=block_indents,
+        new_lines=[*zip_equal(new_indents, new_contents)],
+        debug_block_indents=block_indents,
     )
 
+
+# ======================================================================================
+# Join Operations
 
 def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
     if use_sem_break:
         raise NotImplementedError("Pending text wrap implementation")
 
-    # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle semantic indents
+    # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle wrapping!
     return "".join(
         f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in parsed_text.new_lines

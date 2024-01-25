@@ -1,7 +1,7 @@
 # serializer version: 1
 # name: test_parsed_result[Combination list]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -14,7 +14,7 @@
           content='- item 1',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -25,14 +25,14 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='* item 2',
           indent='    ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -43,20 +43,20 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='* item 2',
             indent='    ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. item 3',
           indent='        ',
           line_num=2,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -80,7 +80,7 @@
 # ---
 # name: test_parsed_result[Corrected Indentation from 3x]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -94,7 +94,7 @@
           content='- item 1',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -105,14 +105,14 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 2',
           indent='   ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -123,20 +123,20 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='   ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 3',
           indent='      ',
           line_num=2,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -147,26 +147,26 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='   ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='      ',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 4',
           indent='         ',
           line_num=3,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -194,7 +194,7 @@
 # ---
 # name: test_parsed_result[Correctly identifies peers when numbering]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -209,7 +209,7 @@
           content='1. One',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -220,14 +220,14 @@
             content='1. One',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. 1-A',
           indent='    ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -239,14 +239,14 @@
           content='2. Two',
           indent='',
           line_num=2,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='1. One',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
       ),
@@ -256,14 +256,14 @@
             content='2. Two',
             indent='',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. 2-A',
           indent='    ',
           line_num=3,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -274,21 +274,21 @@
             content='2. Two',
             indent='',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='2. 2-B',
           indent='    ',
           line_num=4,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='1. 2-A',
             indent='    ',
             line_num=3,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
       ),
@@ -319,7 +319,7 @@
 # ---
 # name: test_parsed_result[Dashed list]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
     ]),
@@ -331,7 +331,7 @@
           content='- item 1',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -342,14 +342,14 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 2',
           indent='    ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -369,7 +369,7 @@
 # ---
 # name: test_parsed_result[Deterministic HTML Formatting]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -556,7 +556,7 @@
 # ---
 # name: test_parsed_result[Handle Jagged Indents 2x]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -574,7 +574,7 @@
           content='- item 1',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -585,14 +585,14 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 2',
           indent='  ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -603,20 +603,20 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 3',
           indent='    ',
           line_num=2,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -627,26 +627,26 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='    ',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 4',
           indent='      ',
           line_num=3,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -657,32 +657,32 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='    ',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 4',
             indent='      ',
             line_num=3,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 5',
           indent='        ',
           line_num=4,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -693,27 +693,27 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 6',
           indent='    ',
           line_num=5,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='- item 3',
             indent='    ',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
       ),
@@ -723,33 +723,33 @@
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 2',
             indent='  ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='- item 7',
           indent='    ',
           line_num=6,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='- item 6',
             indent='    ',
             line_num=5,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
           ParsedLine(
             content='- item 3',
             indent='    ',
             line_num=2,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
       ),
@@ -760,14 +760,14 @@
           content='- item 8',
           indent='',
           line_num=7,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='- item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
           ),
         ]),
       ),
@@ -810,7 +810,7 @@
 # ---
 # name: test_parsed_result[Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       BlockIndent(
@@ -853,7 +853,7 @@
           content='1. Add a serializer class',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -876,7 +876,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
@@ -894,7 +894,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
@@ -912,7 +912,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
@@ -948,7 +948,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
@@ -972,7 +972,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
@@ -1002,7 +1002,7 @@
             content='1. Add a serializer class',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
@@ -1057,7 +1057,7 @@
 # ---
 # name: test_parsed_result[Numbered list]
   ParsedText(
-    block_indents=list([
+    debug_block_indents=list([
       None,
       None,
       None,
@@ -1073,7 +1073,7 @@
           content='1. item 1',
           indent='',
           line_num=0,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -1084,14 +1084,14 @@
             content='1. item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. item 2-a',
           indent='    ',
           line_num=1,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -1102,20 +1102,20 @@
             content='1. item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='1. item 2-a',
             indent='    ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. item 3-a',
           indent='        ',
           line_num=2,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -1126,21 +1126,21 @@
             content='1. item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='2. item 2-b',
           indent='    ',
           line_num=3,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='1. item 2-a',
             indent='    ',
             line_num=1,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
       ),
@@ -1150,20 +1150,20 @@
             content='1. item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='2. item 2-b',
             indent='    ',
             line_num=3,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='1. item 3-b',
           indent='        ',
           line_num=4,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
         ]),
@@ -1174,27 +1174,27 @@
             content='1. item 1',
             indent='',
             line_num=0,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
           ParsedLine(
             content='2. item 2-b',
             indent='    ',
             line_num=3,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='2. item 3-b',
           indent='        ',
           line_num=5,
-          syntax=<Syntax.LIST: 'LIST'>,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
         ),
         prev_list_peers=list([
           ParsedLine(
             content='1. item 3-b',
             indent='        ',
             line_num=4,
-            syntax=<Syntax.LIST: 'LIST'>,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
           ),
         ]),
       ),
