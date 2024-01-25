@@ -1,3 +1,9 @@
+"""Copied from <https://github.com/hukkin/mdformat-gfm/blob/735781e3fcf95d92cd4537a9712893d00415cd63/src/mdformat_gfm/plugin.py>.
+
+Will be removed when released (Workaround for https://github.com/hukkin/mdformat-gfm/issues/31)
+
+"""
+
 import re
 
 import mdformat.plugins
@@ -29,7 +35,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
 
 def _strikethrough_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     content = "".join(child.render(context) for child in node.children)
-    return "~~" + content + "~~"
+    return f"~~{content}~~"
 
 
 def _render_with_default_renderer(node: RenderTreeNode, context: RenderContext) -> str:
@@ -47,9 +53,9 @@ def _render_with_default_renderer(node: RenderTreeNode, context: RenderContext) 
 
 
 def _is_task_list_item(node: RenderTreeNode) -> bool:
-    assert node.type == "list_item"
+    assert node.type == "list_item"  # noqa: S101
     classes = node.attrs.get("class", "")
-    assert isinstance(classes, str)
+    assert isinstance(classes, str)  # noqa: S101
     return "task-list-item" in classes
 
 
@@ -61,10 +67,10 @@ def _list_item_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     # tasks are annotated by html. We need to remove the HTML.
     paragraph_node = node.children[0]
     inline_node = paragraph_node.children[0]
-    assert inline_node.type == "inline"
-    assert inline_node.children, "inline token must have children"
+    assert inline_node.type == "inline"  # noqa: S101
+    assert inline_node.children, "inline token must have children"  # noqa: S101
     html_inline_node = inline_node.children[0]
-    assert 'class="task-list-item-checkbox"' in html_inline_node.content
+    assert 'class="task-list-item-checkbox"' in html_inline_node.content  # noqa: S101
 
     # This is naughty, shouldn't mutate and rely on `.remove` here
     inline_node.children.remove(html_inline_node)
@@ -98,7 +104,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
     if not isinstance(wrap_mode, int):
         return text
     if (
-        node.parent
+        node.parent  # noqa: PLR0916
         and node.parent.type == "paragraph"
         and not node.parent.previous_sibling
         and node.parent.parent
@@ -106,8 +112,7 @@ def _postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext)
         and _is_task_list_item(node.parent.parent)
     ):
         text = text.lstrip("\x00")
-        text = text.lstrip()
-        text = "xxxx" + text
+        text = f"xxxx{text.lstrip()}"
     return text
 
 
@@ -115,7 +120,7 @@ def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     """Extend the default link renderer to handle linkify links."""
     if node.markup == "linkify":
         autolink_url = node.attrs["href"]
-        assert isinstance(autolink_url, str)
+        assert isinstance(autolink_url, str)  # noqa: S101
         startswith_scheme = RE_COMMONMARK_URL_SCHEME.match(autolink_url)
         if startswith_scheme and not node.children[0].content.startswith(
             startswith_scheme.group(),
@@ -127,11 +132,13 @@ def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     return _render_with_default_renderer(node, context)
 
 
-def _escape_text(text: str, node: RenderTreeNode, context: RenderContext) -> str:
+def _escape_text(
+    text: str,
+    node: RenderTreeNode,  # noqa: ARG001
+    context: RenderContext,  # noqa: ARG001
+) -> str:
     # Escape strikethroughs
-    text = text.replace("~~", "\\~~")
-
-    return text
+    return text.replace("~~", "\\~~")
 
 
 RENDERERS = {
@@ -139,4 +146,7 @@ RENDERERS = {
     "list_item": _list_item_renderer,
     "link": _link_renderer,
 }
-POSTPROCESSORS = {"text": _escape_text, "inline": _postprocess_inline}
+POSTPROCESSORS = {
+    "text": _escape_text,
+    "inline": _postprocess_inline,
+}
