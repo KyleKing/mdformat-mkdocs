@@ -1,32 +1,5 @@
 # mdformat-mkdocs
 
----
-
-## "v2.0.0rc#" Warning
-
-To avoid unexpected formatting errors, you must install `mdformat-gfm` separately until this issue is resolved: <https://github.com/hukkin/mdformat-gfm/issues/31>
-
-For pre-commit, this would be something like:
-
-```yaml
-repos:
-  - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.17
-    hooks:
-      - id: mdformat
-        additional_dependencies:
-          - mdformat-mkdocs[recommended]>=2.0.0rc3
-          - mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git
-```
-
-For any other usage with pip, you will need some variation of:
-
-```sh
-pip install mdformat-gfm@git+https://github.com/hukkin/mdformat-gfm.git
-```
-
----
-
 [![Build Status][ci-badge]][ci-link] [![PyPI version][pypi-badge]][pypi-link]
 
 <!-- [![codecov.io][cov-badge]][cov-link]

@@ -19,8 +19,10 @@ requires-python = ">=3.8.4"
 dependencies = [
     "mdformat >= 0.7.16",
     "mdformat-admon >= 2.0.1",
-    "more-itertools >= 10.2.0"
-    # "mdformat-gfm >= 0.?.?",  # FIXME: PENDING RELEASE (https://github.com/hukkin/mdformat-gfm/issues/31)
+    "more-itertools >= 10.2.0",
+    # "mdformat-gfm >= 0.4.0", TODO: Pending release (https://github.com/hukkin/mdformat-gfm/issues/31)
+    "markdown-it-py[linkify] >= 3.0.0 ",  # HACK: Only temporary pending the mdformat-gfm release
+    "mdformat-tables >= 0.4.1",  # HACK: Only temporary pending the mdformat-gfm release
 ]
 dynamic = ["version", "description"]
 

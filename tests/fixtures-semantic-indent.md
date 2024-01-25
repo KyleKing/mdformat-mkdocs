@@ -306,8 +306,8 @@ Task List / Check List (WARN: escaping is prevented by mdformat-gfm. Tested by p
 - [x] #739
   - [ ] Add delight to the experience when all tasks are complete :tada:
 .
-- \[x\] #739
-    - \[ \] Add delight to the experience when all tasks are complete :tada:
+- [x] #739
+    - [ ] Add delight to the experience when all tasks are complete :tada:
 .
 
 Footnotes (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
