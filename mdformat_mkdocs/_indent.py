@@ -5,7 +5,7 @@ import re
 from contextlib import suppress
 from enum import Enum
 from functools import partial, reduce
-from typing import Callable, Literal, NamedTuple
+from typing import Callable, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import zip_equal
@@ -48,7 +48,6 @@ class Syntax(Enum):
     LIST = "LIST"
     START_MARKED = "START_MARKED"
     EDGE_CODE = "EDGE_CODE"
-    HTML = "HTML"
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
@@ -58,8 +57,6 @@ class Syntax(Enum):
             return cls.START_MARKED
         if content.startswith("```"):
             return cls.EDGE_CODE
-        if content.startswith("<"):
-            return cls.HTML
         return None
 
 
@@ -152,7 +149,6 @@ class BlockIndent(NamedTuple):
 
     raw_indent: str
     indent_depth: int
-    kind: Literal["code", "HTML"]
 
 
 def acc_code_block_indents(
@@ -164,34 +160,12 @@ def acc_code_block_indents(
     if line.parsed.syntax == Syntax.EDGE_CODE:
         # On first edge, start tracking a code block
         #   on the second edge, stop tracking
-        result = (
-            None
-            if last
-            else BlockIndent(
-                raw_indent=line.parsed.indent,
-                indent_depth=len(line.parents),
-                kind="code",
-            )
-        )
-    return [*acc, result]
-
-
-def acc_html_blocks(
-    acc: list[BlockIndent | None],
-    line: LineResult,
-) -> list[BlockIndent | None]:
-    last = (acc or [None])[-1]
-    result = last
-    if line.parsed.syntax == Syntax.HTML:
-        # Start tracking an HTML block if not already
-        result = last or BlockIndent(
+        new_block = BlockIndent(
             raw_indent=line.parsed.indent,
             indent_depth=len(line.parents),
-            kind="HTML",
         )
-    elif last and not line.parsed.content:
-        # Stop tracking an HTML block on a line break
-        result = None
+        result = None if last else new_block
+
     return [*acc, result]
 
 
@@ -241,11 +215,8 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     parsed_lines = reduce(acc_parsed_lines, enumerate(text.rstrip().split(EOL)), [])
     lines = reduce(acc_line_results, parsed_lines, [])
 
-    # `code_block_indents` take precedence to ignore contents of an HTML code block
-    code_indents = reduce(acc_code_block_indents, lines, [])
-    html_indents = reduce(acc_html_blocks, lines, [])
-    block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
-    new_indents = reduce(acc_new_indents, zip_equal(lines, block_indents), [])
+    code_block_indents = reduce(acc_code_block_indents, lines, [])
+    new_indents = reduce(acc_new_indents, zip_equal(lines, code_block_indents), [])
 
     new_contents = reduce(
         partial(acc_new_contents, inc_numbers=inc_numbers),
@@ -255,7 +226,7 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     return ParsedText(
         new_lines=[*zip_equal(new_indents, new_contents)],
         lines=lines,
-        block_indents=block_indents,
+        block_indents=code_block_indents,
     )
 
 
