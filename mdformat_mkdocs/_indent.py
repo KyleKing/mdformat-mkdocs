@@ -9,7 +9,7 @@ from functools import partial, reduce, wraps
 from typing import Callable, Literal, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
-from more_itertools import zip_equal
+from more_itertools import unzip, zip_equal
 
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 
@@ -154,7 +154,7 @@ def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
     outer_indent_len = len(block_indent.raw_indent)
     if outer_indent_len > len(line_indent):
         return block_indent.raw_indent
-    return "".join(line_indent[outer_indent_len:])
+    return line_indent[outer_indent_len:]
 
 
 class BlockIndent(NamedTuple):
@@ -285,14 +285,63 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
 # ======================================================================================
 # Join Operations
 
+
+class SemanticIndent(Enum):
+    NONE = ""
+    ONE_LESS_ON_NEXT = "⤓(←)"
+    ONE_LESS_SPACE = "←"
+    TWO_LESS_ON_NEXT = "⤓(←←)"  # Bulleted
+    TWO_LESS_SPACE = "←←"
+
+
+def acc_semantic_indents(
+    acc: list[SemanticIndent],
+    line: LineResult,
+) -> list[SemanticIndent]:
+    last = (acc or [SemanticIndent.NONE])[-1]
+
+    if not line.parsed.content:
+        result = SemanticIndent.NONE
+
+    elif line.parsed.syntax == Syntax.LIST_BULLETED:
+        result = SemanticIndent.TWO_LESS_ON_NEXT
+    elif line.parsed.syntax == Syntax.LIST_NUMBERED:
+        result = SemanticIndent.ONE_LESS_ON_NEXT
+
+    elif last == SemanticIndent.TWO_LESS_ON_NEXT:
+        result = SemanticIndent.TWO_LESS_SPACE
+    elif last == SemanticIndent.ONE_LESS_ON_NEXT:
+        result = SemanticIndent.ONE_LESS_SPACE
+    else:
+        result = last
+
+    return [*acc, result]
+
+
+def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
+    if s_i == SemanticIndent.ONE_LESS_SPACE:
+        return indent[:-1]
+    if s_i == SemanticIndent.TWO_LESS_SPACE:
+        return indent[:-2]
+    return indent
+
+
 def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
+    new_indents, new_contents = unzip(parsed_text.new_lines)
+
     if use_sem_break:
-        raise NotImplementedError("Pending text wrap implementation")
+        new_indents = [
+            trim_semantic_indent(indent, s_i)
+            for s_i, indent in zip_equal(
+                reduce(acc_semantic_indents, parsed_text.lines, []),
+                new_indents,
+            )
+        ]
 
     # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle wrapping!
     return "".join(
         f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in parsed_text.new_lines
+        for new_indent, new_content in zip_equal(new_indents, new_contents)
     )
 
 
