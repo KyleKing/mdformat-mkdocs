@@ -1,4 +1,4 @@
-from mdformat_mkdocs._helpers import separate_indent
+from mdformat_mkdocs._helpers import separate_indent  # noqa: PLC2701
 
 _SHOW_TEXT = True  # PLANNED: Make configurable based on pytest CLI
 

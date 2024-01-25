@@ -5,7 +5,8 @@ from __future__ import annotations
 import re
 from contextlib import suppress
 from enum import Enum
-from functools import partial, reduce
+from functools import reduce
+from itertools import starmap
 from typing import Callable, Literal, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
@@ -88,17 +89,15 @@ def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     )
 
 
-def acc_parsed_lines(acc: list[ParsedLine], arg: tuple[int, str]) -> list[ParsedLine]:
-    line_num, content = arg
+def parse_line(line_num: int, content: str) -> ParsedLine:
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
-    result = ParsedLine(
+    return ParsedLine(
         line_num=line_num,
         indent=indent,
         content=content,
         syntax=syntax,
     )
-    return [*acc, result]
 
 
 def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResult]:
@@ -129,12 +128,16 @@ def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResu
 def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
     """Return white space to the right of the outer indent block."""
     if block_indent.kind == "HTML":
+        # PLANNED: Consider restoring some pretty indentation for HTML
+        #   But the problem is that a single space is added to each line
+        #       from somewhere else in mdformat that needs to be undone or
+        #       accounted for
+        #   This feature may require knowing when the HTML block ends
         return ""
 
-    outer_indent_len = len(block_indent.raw_indent)
-    if outer_indent_len > len(line_indent):
-        return block_indent.raw_indent
-    return line_indent[outer_indent_len:]
+    if (outer_indent_len := len(block_indent.raw_indent)) <= len(line_indent):
+        return line_indent[outer_indent_len:]
+    return block_indent.raw_indent
 
 
 class BlockIndent(NamedTuple):
@@ -149,6 +152,7 @@ def acc_code_block_indents(
     acc: list[BlockIndent | None],
     line: LineResult,
 ) -> list[BlockIndent | None]:
+    # TODO: Is there a better way to handle the initial condition?
     last = (acc or [None])[-1]
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
@@ -192,12 +196,7 @@ DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 """Default indent."""
 
 
-def acc_new_indents(
-    acc: list[str],
-    arg: tuple[LineResult, BlockIndent | None],
-) -> list[str]:
-    line, block_indent = arg
-
+def format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> str:
     result = ""
     if line.parsed.content:
         if block_indent:
@@ -209,8 +208,7 @@ def acc_new_indents(
             result = DEFAULT_INDENT * depth + extra_indent
         else:
             result = DEFAULT_INDENT * len(line.parents)
-
-    return [*acc, result]
+    return result
 
 
 class ParsedText(NamedTuple):
@@ -222,7 +220,7 @@ class ParsedText(NamedTuple):
     debug_block_indents: list[BlockIndent | None]
 
 
-def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> list[str]:
+def format_new_content(line: LineResult, inc_numbers: bool) -> str:
     new_content = line.parsed.content
     if line.parsed.syntax in {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
@@ -233,25 +231,21 @@ def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> lis
             new_bullet = f"{counter}."
         new_content = f'{new_bullet} {list_match["item"]}'
 
-    return [*acc, new_content]
+    return new_content
 
 
 def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    parsed_lines = reduce(acc_parsed_lines, enumerate(text.rstrip().split(EOL)), [])
+    parsed_lines = list(starmap(parse_line, enumerate(text.rstrip().split(EOL))))
     lines = reduce(acc_line_results, parsed_lines, [])
 
     # `code_block_indents` take precedence to ignore contents of an HTML code block
     code_indents = reduce(acc_code_block_indents, lines, [])
     html_indents = reduce(acc_html_blocks, lines, [])
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
-    new_indents = reduce(acc_new_indents, zip_equal(lines, block_indents), [])
+    new_indents = list(starmap(format_new_indent, zip_equal(lines, block_indents)))
 
-    new_contents = reduce(
-        partial(acc_new_contents, inc_numbers=inc_numbers),
-        lines,
-        [],
-    )
+    new_contents = [format_new_content(line, inc_numbers) for line in lines]
     return ParsedText(
         lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
@@ -277,6 +271,7 @@ def acc_semantic_indents(
 ) -> list[SemanticIndent]:
     last = (acc or [SemanticIndent.NONE])[-1]
 
+    # TODO: This could probably be cleaned up and simplified quite a bit
     if not line.parsed.content:
         result = SemanticIndent.NONE
 
@@ -334,7 +329,8 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    # FIXME: should only skip if root of this node is a list!
+    # FIXME: Is this filter working correctly?
+    #   If it is, the test for "Formats non-root lists" should be failing
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item

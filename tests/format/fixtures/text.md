@@ -631,6 +631,22 @@ MKDocs Open Collapsible Sections
 .
 
 
+Formats non-root lists
+.
+!!! note
+    1. a
+        1. b
+        2. c
+            1. d
+.
+!!! note
+    1. a
+        1. b
+        1. c
+            1. d
+.
+
+
 Support Content Tabs (https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#grouping-code-blocks). Resolves #17: https://github.com/KyleKing/mdformat-admon/issues/17
 .
 Ultralytics commands use the following syntax:
