@@ -16,9 +16,11 @@ from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 # ======================================================================================
 # General Helpers
 
-
 EOL = "\n"
 """Line delimiter."""
+
+FILLER_CHAR = "𝕏"  # noqa: RUF001
+"""A spacer that is inserted and then removed to ensure proper word wrap."""
 
 
 def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
@@ -33,7 +35,6 @@ def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
 
 # ======================================================================================
 # Parsing Operations
-
 
 MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
 """All block type markers."""
@@ -337,6 +338,12 @@ def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
                 new_indents,
             )
         ]
+
+    # Remove filler characters added by inline formatting for 'wrap'
+    new_contents = map(
+        lambda content: content.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, ""),
+        new_contents,
+    )
 
     # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle wrapping!
     return "".join(
