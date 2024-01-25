@@ -1,11 +1,11 @@
-from mdformat_mkdocs.plugin import _separate_indent
+from mdformat_mkdocs._helpers import separate_indent
 
 _SHOW_TEXT = True  # PLANNED: Make configurable based on pytest CLI
 
 
 def _print(content: str, show_whitespace: bool) -> None:
     for line in content.split("\n"):
-        indent, content = _separate_indent(line)
+        indent, content = separate_indent(line)
         visible_indents = indent.replace(" ", "→").replace("\t", "➤")
         print((visible_indents if show_whitespace else indent) + content)
 

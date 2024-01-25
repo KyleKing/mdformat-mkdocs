@@ -11,7 +11,13 @@ from typing import Callable, Literal, NamedTuple
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
 
-from ._helpers import EOL, FILLER_CHAR, MKDOCS_INDENT_COUNT, rstrip_result
+from ._helpers import (
+    EOL,
+    FILLER_CHAR,
+    MKDOCS_INDENT_COUNT,
+    rstrip_result,
+    separate_indent,
+)
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 
 # ======================================================================================
@@ -65,14 +71,6 @@ class LineResult(NamedTuple):
     parsed: ParsedLine
     parents: list[ParsedLine]
     prev_list_peers: list[ParsedLine]  # Only applicable for lists
-
-
-def separate_indent(line: str) -> tuple[str, str]:
-    """Separate leading indent from content. Also used by the test suite."""
-    re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
-    match = re_indent.match(line)
-    assert match is not None  # for pyright # noqa: S101
-    return (match["indent"], match["content"])
 
 
 def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
