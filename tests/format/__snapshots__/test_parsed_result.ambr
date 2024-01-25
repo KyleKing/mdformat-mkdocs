@@ -540,11 +540,11 @@
         '<figure markdown>',
       ),
       tuple(
-        '         ',
+        '    ',
         '![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
       ),
       tuple(
-        '       ',
+        '    ',
         '<figcaption>Example full-size output</figcaption>',
       ),
       tuple(

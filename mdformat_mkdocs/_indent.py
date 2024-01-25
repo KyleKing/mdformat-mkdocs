@@ -141,6 +141,9 @@ def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResu
 
 def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
     """Return white space to the right of the outer indent block."""
+    if block_indent.kind == "HTML":
+        return ""
+
     outer_indent_len = len(block_indent.raw_indent)
     if outer_indent_len > len(line_indent):
         return block_indent.raw_indent
