@@ -39,9 +39,7 @@ TABBED_CODE_BLOCK = '''
     [
         (TABBED_CODE_BLOCK, TABBED_CODE_BLOCK),
     ],
-    ids=[
-        "TABBED_CODE_BLOCK",
-    ],
+    ids=["TABBED_CODE_BLOCK"],
 )
 def test_tabbed_code_block(text: str, expected: str):
     output = mdformat.text(text, extensions={"mkdocs", "admonition"})

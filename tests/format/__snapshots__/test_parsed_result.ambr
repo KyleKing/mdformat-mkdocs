@@ -1,26 +1,26 @@
 # serializer version: 1
 # name: test_parsed_result[Combination list]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 1',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -28,17 +28,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='* item 2',
           indent='    ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -52,15 +52,15 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. item 3',
           indent='        ',
           line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -80,27 +80,27 @@
 # ---
 # name: test_parsed_result[Corrected Indentation from 3x]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 1',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -108,17 +108,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 2',
           indent='   ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -132,17 +132,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 3',
           indent='      ',
           line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -162,15 +162,15 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 4',
           indent='         ',
           line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -194,7 +194,7 @@
 # ---
 # name: test_parsed_result[Correctly identifies peers when numbering]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
@@ -202,20 +202,20 @@
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. One',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. One',
             indent='',
@@ -223,25 +223,25 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. 1-A',
           indent='    ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='2. Two',
           indent='',
           line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='1. One',
             indent='',
@@ -249,9 +249,9 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='2. Two',
             indent='',
@@ -259,17 +259,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. 2-A',
           indent='    ',
           line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='2. Two',
             indent='',
@@ -277,13 +277,13 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='2. 2-B',
           indent='    ',
           line_num=4,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='1. 2-A',
             indent='    ',
@@ -291,7 +291,7 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -319,25 +319,25 @@
 # ---
 # name: test_parsed_result[Dashed list]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 1',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -345,15 +345,15 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 2',
           indent='    ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -367,200 +367,165 @@
     ]),
   )
 # ---
-# name: test_parsed_result[Deterministic HTML Formatting (FIXME: Resolve)]
+# name: test_parsed_result[Deterministic HTML Formatting]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
-      None,
-      None,
-      None,
-      None,
-      None,
-      None,
-      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
-          content='### Isolate with Black Pixels: Sub-options',
+        parsed=ParsedLine(
+          content='??? info "Full-size Image"',
           indent='',
           line_num=0,
-          syntax=None,
+          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
         ]),
-        'parsed': ParsedLine(
-          content='',
-          indent='',
+        parsed=ParsedLine(
+          content='There are no additional steps required if keeping full size image.',
+          indent='    ',
           line_num=1,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
-          content='??? info "Full-size Image"',
-          indent='',
-          line_num=2,
-          syntax=<Syntax.START_MARKED: 'START_MARKED'>,
-        ),
-        'prev_list_peers': list([
-        ]),
-      }),
-      dict({
-        'parents': list([
-        ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='',
           indent='',
-          line_num=3,
+          line_num=2,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='??? info "Full-size Image"',
             indent='',
-            line_num=2,
+            line_num=0,
             syntax=<Syntax.START_MARKED: 'START_MARKED'>,
           ),
         ]),
-        'parsed': ParsedLine(
-          content='There are no additional steps required if keeping full size image.',
+        parsed=ParsedLine(
+          content='<figure markdown>',
           indent='    ',
+          line_num=3,
+          syntax=<Syntax.HTML: 'HTML'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+          ParsedLine(
+            content='<figure markdown>',
+            indent='    ',
+            line_num=3,
+            syntax=<Syntax.HTML: 'HTML'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
+          indent='         ',
           line_num=4,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
-        ]),
-        'parsed': ParsedLine(
-          content='',
-          indent='',
-          line_num=5,
-          syntax=None,
-        ),
-        'prev_list_peers': list([
-        ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='??? info "Full-size Image"',
             indent='',
-            line_num=2,
+            line_num=0,
+            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
+          ),
+          ParsedLine(
+            content='<figure markdown>',
+            indent='    ',
+            line_num=3,
+            syntax=<Syntax.HTML: 'HTML'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='<figcaption>Example full-size output</figcaption>',
+          indent='       ',
+          line_num=5,
+          syntax=<Syntax.HTML: 'HTML'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='??? info "Full-size Image"',
+            indent='',
+            line_num=0,
             syntax=<Syntax.START_MARKED: 'START_MARKED'>,
           ),
         ]),
-        'parsed': ParsedLine(
-          content='<figure markdown>',
+        parsed=ParsedLine(
+          content='</figure>',
           indent='    ',
           line_num=6,
           syntax=<Syntax.HTML: 'HTML'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
-          ParsedLine(
-            content='??? info "Full-size Image"',
-            indent='',
-            line_num=2,
-            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
-          ),
-          ParsedLine(
-            content='<figure markdown>',
-            indent='    ',
-            line_num=6,
-            syntax=<Syntax.HTML: 'HTML'>,
-          ),
-        ]),
-        'parsed': ParsedLine(
-          content='![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
-          indent='        ',
-          line_num=7,
-          syntax=None,
-        ),
-        'prev_list_peers': list([
-        ]),
-      }),
-      dict({
-        'parents': list([
-          ParsedLine(
-            content='??? info "Full-size Image"',
-            indent='',
-            line_num=2,
-            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
-          ),
-          ParsedLine(
-            content='<figure markdown>',
-            indent='    ',
-            line_num=6,
-            syntax=<Syntax.HTML: 'HTML'>,
-          ),
-        ]),
-        'parsed': ParsedLine(
-          content='<figcaption>Example full-size output</figcaption>',
-          indent='        ',
-          line_num=8,
-          syntax=<Syntax.HTML: 'HTML'>,
-        ),
-        'prev_list_peers': list([
-        ]),
-      }),
-      dict({
-        'parents': list([
-          ParsedLine(
-            content='??? info "Full-size Image"',
-            indent='',
-            line_num=2,
-            syntax=<Syntax.START_MARKED: 'START_MARKED'>,
-          ),
-        ]),
-        'parsed': ParsedLine(
-          content='</figure>',
-          indent='    ',
-          line_num=9,
-          syntax=<Syntax.HTML: 'HTML'>,
-        ),
-        'prev_list_peers': list([
-        ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
         '',
-        '### Isolate with Black Pixels: Sub-options',
-      ),
-      tuple(
-        '',
-        '',
-      ),
-      tuple(
-        '',
         '??? info "Full-size Image"',
-      ),
-      tuple(
-        '',
-        '',
       ),
       tuple(
         '    ',
@@ -575,11 +540,11 @@
         '<figure markdown>',
       ),
       tuple(
-        '        ',
+        '         ',
         '![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
       ),
       tuple(
-        '        ',
+        '       ',
         '<figcaption>Example full-size output</figcaption>',
       ),
       tuple(
@@ -591,7 +556,7 @@
 # ---
 # name: test_parsed_result[Handle Jagged Indents 2x]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
@@ -602,20 +567,20 @@
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 1',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -623,17 +588,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 2',
           indent='  ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -647,17 +612,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 3',
           indent='    ',
           line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -677,17 +642,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 4',
           indent='      ',
           line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -713,17 +678,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 5',
           indent='        ',
           line_num=4,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -737,13 +702,13 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 6',
           indent='    ',
           line_num=5,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='- item 3',
             indent='    ',
@@ -751,9 +716,9 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -767,13 +732,13 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 7',
           indent='    ',
           line_num=6,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='- item 6',
             indent='    ',
@@ -787,17 +752,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='- item 8',
           indent='',
           line_num=7,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='- item 1',
             indent='',
@@ -805,7 +770,7 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -845,62 +810,68 @@
 # ---
 # name: test_parsed_result[Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs/issues/13]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. Add a serializer class',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='',
           indent='',
           line_num=1,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -908,17 +879,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='```python',
           indent='    ',
           line_num=2,
           syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -926,17 +897,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='class RecurringEventSerializer(serializers.ModelSerializer):  # (1)!',
           indent='    ',
           line_num=3,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -950,29 +921,29 @@
             syntax=None,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='"""Used to retrieve recurring_event info"""',
           indent='        ',
           line_num=4,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='',
           indent='',
           line_num=5,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -986,17 +957,17 @@
             syntax=None,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='class Meta:',
           indent='        ',
           line_num=6,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -1016,17 +987,17 @@
             syntax=None,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='model = RecurringEvent  # (2)!',
           indent='            ',
           line_num=7,
           syntax=None,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. Add a serializer class',
             indent='',
@@ -1034,15 +1005,15 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='```',
           indent='    ',
           line_num=8,
           syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -1086,7 +1057,7 @@
 # ---
 # name: test_parsed_result[Numbered list]
   ParsedText(
-    code_block_indents=list([
+    block_indents=list([
       None,
       None,
       None,
@@ -1095,20 +1066,20 @@
       None,
     ]),
     lines=list([
-      dict({
-        'parents': list([
+      LineResult(
+        parents=list([
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. item 1',
           indent='',
           line_num=0,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. item 1',
             indent='',
@@ -1116,17 +1087,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. item 2-a',
           indent='    ',
           line_num=1,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. item 1',
             indent='',
@@ -1140,17 +1111,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. item 3-a',
           indent='        ',
           line_num=2,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. item 1',
             indent='',
@@ -1158,13 +1129,13 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='2. item 2-b',
           indent='    ',
           line_num=3,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='1. item 2-a',
             indent='    ',
@@ -1172,9 +1143,9 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. item 1',
             indent='',
@@ -1188,17 +1159,17 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='1. item 3-b',
           indent='        ',
           line_num=4,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
         ]),
-      }),
-      dict({
-        'parents': list([
+      ),
+      LineResult(
+        parents=list([
           ParsedLine(
             content='1. item 1',
             indent='',
@@ -1212,13 +1183,13 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-        'parsed': ParsedLine(
+        parsed=ParsedLine(
           content='2. item 3-b',
           indent='        ',
           line_num=5,
           syntax=<Syntax.LIST: 'LIST'>,
         ),
-        'prev_list_peers': list([
+        prev_list_peers=list([
           ParsedLine(
             content='1. item 3-b',
             indent='        ',
@@ -1226,7 +1197,7 @@
             syntax=<Syntax.LIST: 'LIST'>,
           ),
         ]),
-      }),
+      ),
     ]),
     new_lines=list([
       tuple(

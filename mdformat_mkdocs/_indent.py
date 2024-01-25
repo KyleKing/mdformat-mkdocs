@@ -2,21 +2,20 @@ from __future__ import annotations
 
 import functools
 import re
-from collections.abc import Callable
 from contextlib import suppress
 from enum import Enum
 from functools import partial, reduce
-from typing import NamedTuple
+from typing import Callable, Literal, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import zip_equal
 
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 
-ReturnsStr = Callable[..., str]
 
+def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
+    """Decorator to `rstrip` the function return."""
 
-def rstrip_result(func: ReturnsStr) -> ReturnsStr:
     @functools.wraps(func)
     def wrapper(*args, **kwargs) -> str:
         return func(*args, **kwargs).rstrip()
@@ -60,9 +59,6 @@ class Syntax(Enum):
         if content.startswith("```"):
             return cls.EDGE_CODE
         if content.startswith("<"):
-            # TODO: Figure out how to handle "markdown in HTML" (like figcaption)
-            # PLANNED: for a paragraph - identify if it starts and ends with <>,
-            #  then treat as a concurrent block with unmodified inner indentation
             return cls.HTML
         return None
 
@@ -105,17 +101,20 @@ def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     )
 
 
-def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineResult]:
+def acc_parsed_lines(acc: list[ParsedLine], arg: tuple[int, str]) -> list[ParsedLine]:
     line_num, content = arg
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
-    parsed = ParsedLine(
+    result = ParsedLine(
         line_num=line_num,
         indent=indent,
         content=content,
         syntax=syntax,
     )
+    return [*acc, result]
 
+
+def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResult]:
     parent_idx = 0
     parents = []
     with suppress(StopIteration):
@@ -125,20 +124,27 @@ def acc_parsed_lines(acc: list[LineResult], arg: tuple[int, str]) -> list[LineRe
             if is_parent_line(line, parsed)
         )
         parents = [*parent.parents, parent.parsed]
-    prev_list_peers = []
-    if parsed.syntax == Syntax.LIST:
-        prev_list_peers += [
+
+    prev_list_peers = (
+        [
             line.parsed
             for line in acc[parent_idx:][::-1]
             if is_peer_list_line(line, parsed)
         ]
+        if parsed.syntax == Syntax.LIST
+        else []
+    )
 
     result = LineResult(parsed=parsed, parents=parents, prev_list_peers=prev_list_peers)
     return [*acc, result]
 
 
-def get_inner_indent(block_indent: str, line_indent: str) -> str:
-    return "".join(line_indent[len(block_indent) :])
+def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
+    """Return white space to the right of the outer indent block."""
+    outer_indent_len = len(block_indent.raw_indent)
+    if outer_indent_len > len(line_indent):
+        return block_indent.raw_indent
+    return "".join(line_indent[outer_indent_len:])
 
 
 class BlockIndent(NamedTuple):
@@ -146,6 +152,7 @@ class BlockIndent(NamedTuple):
 
     raw_indent: str
     indent_depth: int
+    kind: Literal["code", "HTML"]
 
 
 def acc_code_block_indents(
@@ -155,15 +162,36 @@ def acc_code_block_indents(
     last = (acc or [None])[-1]
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
+        # On first edge, start tracking a code block
+        #   on the second edge, stop tracking
         result = (
-            None  # On second edge, stop tracking
+            None
             if last
-            # On first edge, start tracking a code block
             else BlockIndent(
                 raw_indent=line.parsed.indent,
                 indent_depth=len(line.parents),
+                kind="code",
             )
         )
+    return [*acc, result]
+
+
+def acc_html_blocks(
+    acc: list[BlockIndent | None],
+    line: LineResult,
+) -> list[BlockIndent | None]:
+    last = (acc or [None])[-1]
+    result = last
+    if line.parsed.syntax == Syntax.HTML:
+        # Start tracking an HTML block if not already
+        result = last or BlockIndent(
+            raw_indent=line.parsed.indent,
+            indent_depth=len(line.parents),
+            kind="HTML",
+        )
+    elif last and not line.parsed.content:
+        # Stop tracking an HTML block on a line break
+        result = None
     return [*acc, result]
 
 
@@ -171,18 +199,19 @@ def acc_new_indents(
     acc: list[str],
     arg: tuple[LineResult, BlockIndent | None],
 ) -> list[str]:
-    line, code_block_indent = arg
+    line, block_indent = arg
 
     result = ""
     if line.parsed.content:
-        result = DEFAULT_INDENT * len(line.parents)
-        if code_block_indent:
-            depth = code_block_indent.indent_depth
+        if block_indent:
+            depth = block_indent.indent_depth
             extra_indent = get_inner_indent(
-                block_indent=code_block_indent.raw_indent,
+                block_indent=block_indent,
                 line_indent=line.parsed.indent,
             )
             result = DEFAULT_INDENT * depth + extra_indent
+        else:
+            result = DEFAULT_INDENT * len(line.parents)
 
     return [*acc, result]
 
@@ -192,19 +221,11 @@ class ParsedText(NamedTuple):
 
     new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
-    lines: list[dict]
-    code_block_indents: list[BlockIndent | None]
+    lines: list[LineResult]
+    block_indents: list[BlockIndent | None]
 
 
-def acc_new_contents(
-    acc: list[str],
-    line: LineResult,
-    inc_numbers: bool,
-    use_sem_break: bool,
-) -> list[str]:
-    if use_sem_break:
-        raise NotImplementedError("Pending text wrap implementation")
-
+def acc_new_contents(acc: list[str], line: LineResult, inc_numbers: bool) -> list[str]:
     new_content = line.parsed.content
     if list_match := RE_LIST_ITEM.fullmatch(line.parsed.content):
         new_bullet = "-"
@@ -215,22 +236,37 @@ def acc_new_contents(
     return [*acc, new_content]
 
 
-def process_text(text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
+def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    lines = reduce(acc_parsed_lines, enumerate(text.strip().split(EOL)), [])
+    parsed_lines = reduce(acc_parsed_lines, enumerate(text.rstrip().split(EOL)), [])
+    lines = reduce(acc_line_results, parsed_lines, [])
 
-    code_block_indents = reduce(acc_code_block_indents, lines, [])
-    new_indents = reduce(acc_new_indents, zip_equal(lines, code_block_indents), [])
+    # `code_block_indents` take precedence to ignore contents of an HTML code block
+    code_indents = reduce(acc_code_block_indents, lines, [])
+    html_indents = reduce(acc_html_blocks, lines, [])
+    block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
+    new_indents = reduce(acc_new_indents, zip_equal(lines, block_indents), [])
 
     new_contents = reduce(
-        partial(acc_new_contents, inc_numbers=inc_numbers, use_sem_break=use_sem_break),
+        partial(acc_new_contents, inc_numbers=inc_numbers),
         lines,
         [],
     )
     return ParsedText(
         new_lines=[*zip_equal(new_indents, new_contents)],
-        lines=[line._asdict() for line in lines],
-        code_block_indents=code_block_indents,
+        lines=lines,
+        block_indents=block_indents,
+    )
+
+
+def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
+    if use_sem_break:
+        raise NotImplementedError("Pending text wrap implementation")
+
+    # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle semantic indents
+    return "".join(
+        f"{new_indent}{new_content}{EOL}"
+        for new_indent, new_content in parsed_text.new_lines
     )
 
 
@@ -241,7 +277,7 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    # FIXME: should be skip only if root of this node is a list!
+    # FIXME: should only skip if root of this node is a list!
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item
@@ -250,14 +286,9 @@ def normalize_list(
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
 
-    parsed_text = process_text(
-        text=text,
-        inc_numbers=inc_numbers,
-        use_sem_break=check_if_align_semantic_breaks_in_lists(),
-    )
+    parsed_text = parse_text(text=text, inc_numbers=inc_numbers)
 
-    # PLANNED: Need a flat_map (collapse in more-itertools) to handle semantic indents
-    return "".join(
-        f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in parsed_text.new_lines
+    return merge_parsed_text(
+        parsed_text=parsed_text,
+        use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
