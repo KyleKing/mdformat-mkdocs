@@ -26,7 +26,7 @@ from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
 MARKERS = CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
 """All block type markers."""
 
-RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*\d.]+)\s+(?P<item>.+)")
+RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*]|\d+\.)\s+(?P<item>.+)")
 """Match `bullet` and `item` against `content`."""
 
 
