@@ -373,10 +373,26 @@
       None,
       None,
       None,
-      None,
-      None,
-      None,
-      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='HTML',
+        raw_indent='    ',
+      ),
     ]),
     lines=list([
       LineResult(
@@ -434,7 +450,7 @@
           content='<figure markdown>',
           indent='    ',
           line_num=3,
-          syntax=None,
+          syntax=<Syntax.HTML: 'HTML'>,
         ),
         prev_list_peers=list([
         ]),
@@ -451,7 +467,7 @@
             content='<figure markdown>',
             indent='    ',
             line_num=3,
-            syntax=None,
+            syntax=<Syntax.HTML: 'HTML'>,
           ),
         ]),
         parsed=ParsedLine(
@@ -475,14 +491,14 @@
             content='<figure markdown>',
             indent='    ',
             line_num=3,
-            syntax=None,
+            syntax=<Syntax.HTML: 'HTML'>,
           ),
         ]),
         parsed=ParsedLine(
           content='<figcaption>Example full-size output</figcaption>',
           indent='       ',
           line_num=5,
-          syntax=None,
+          syntax=<Syntax.HTML: 'HTML'>,
         ),
         prev_list_peers=list([
         ]),
@@ -500,7 +516,7 @@
           content='</figure>',
           indent='    ',
           line_num=6,
-          syntax=None,
+          syntax=<Syntax.HTML: 'HTML'>,
         ),
         prev_list_peers=list([
         ]),
@@ -524,11 +540,11 @@
         '<figure markdown>',
       ),
       tuple(
-        '        ',
+        '         ',
         '![Example Full size Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/845c00d0-52a6-4b1e-8010-4ba73e011b99){ width=240 }',
       ),
       tuple(
-        '        ',
+        '       ',
         '<figcaption>Example full-size output</figcaption>',
       ),
       tuple(
@@ -799,26 +815,32 @@
       None,
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       BlockIndent(
         indent_depth=1,
+        kind='code',
         raw_indent='    ',
       ),
       None,
