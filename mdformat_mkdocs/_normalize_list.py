@@ -5,33 +5,14 @@ from __future__ import annotations
 import re
 from contextlib import suppress
 from enum import Enum
-from functools import partial, reduce, wraps
+from functools import partial, reduce
 from typing import Callable, Literal, NamedTuple
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
 
+from ._helpers import EOL, FILLER_CHAR, MKDOCS_INDENT_COUNT, rstrip_result
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
-
-# ======================================================================================
-# General Helpers
-
-EOL = "\n"
-"""Line delimiter."""
-
-FILLER_CHAR = "𝕏"  # noqa: RUF001
-"""A spacer that is inserted and then removed to ensure proper word wrap."""
-
-
-def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
-    """Decorator to `rstrip` the function return."""
-
-    @wraps(func)
-    def wrapper(*args, **kwargs) -> str:
-        return func(*args, **kwargs).rstrip()
-
-    return wrapper
-
 
 # ======================================================================================
 # Parsing Operations
@@ -209,9 +190,6 @@ def acc_html_blocks(
 # ======================================================================================
 # High-Level Accumulators
 
-MKDOCS_INDENT_COUNT = 4
-"""Use 4-spaces for mkdocs."""
-
 DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 """Default indent."""
 
@@ -345,7 +323,6 @@ def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
         new_contents,
     )
 
-    # PLANNED: Need a flat_map (`collapse` in more-itertools) to handle wrapping!
     return "".join(
         f"{new_indent}{new_content}{EOL}"
         for new_indent, new_content in zip_equal(new_indents, new_contents)
