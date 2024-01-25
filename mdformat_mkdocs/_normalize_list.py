@@ -316,10 +316,10 @@ def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
         ]
 
     # Remove filler characters added by inline formatting for 'wrap'
-    new_contents = map(
-        lambda content: content.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, ""),
-        new_contents,
-    )
+    new_contents = [
+        content.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
+        for content in new_contents
+    ]
 
     return "".join(
         f"{new_indent}{new_content}{EOL}"
