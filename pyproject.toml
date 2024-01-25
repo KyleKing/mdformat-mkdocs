@@ -19,6 +19,7 @@ requires-python = ">=3.8.4"
 dependencies = [
     "mdformat >= 0.7.16",
     "mdformat-admon >= 2.0.1",
+    "more-itertools >= 10.2.0"
     # "mdformat-gfm >= 0.?.?",  # FIXME: PENDING RELEASE (https://github.com/hukkin/mdformat-gfm/issues/31)
 ]
 dynamic = ["version", "description"]
@@ -40,7 +41,9 @@ recommended = [
 ]
 test = [
     "pytest >= 7.4.4",
+    "pytest-beartype >= 0.0.1",
     "pytest-cov >= 4.1.0",
+    "syrupy >= 4.6.0",
 ]
 dev = ["pre-commit"]
 
@@ -58,5 +61,5 @@ exclude = [".github/", "tests/"]
 now = true
 runner = "tox"
 runner_args = ["-e", "py38-recommended"]
-patterns = ["*.py", "*.md"]
+patterns = ["*.py", "*.md", "*.ambr"]
 ignore_patterns = []
