@@ -25,7 +25,8 @@ CASE_1_FALSE_40 = """
 # Content
 
 - Test Testing Test Testing Test Testing
-    Test Testing Test Testing Test Testing
+    Test Testing Test Testing Test
+    Testing
     - Test Testing Test Testing Test
         Testing Test Testing Test Testing
         Test Testing Test Testing Test
@@ -58,7 +59,8 @@ CASE_1_TRUE_40 = """
 # Content
 
 - Test Testing Test Testing Test Testing
-  Test Testing Test Testing Test Testing
+  Test Testing Test Testing Test
+  Testing
     - Test Testing Test Testing Test
       Testing Test Testing Test Testing
       Test Testing Test Testing Test

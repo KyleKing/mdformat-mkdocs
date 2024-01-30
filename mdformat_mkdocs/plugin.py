@@ -10,7 +10,6 @@ from markdown_it import MarkdownIt
 from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
 
-from ._copy_of_mdformat_gfm import GFM_POSTPROCESSORS, GFM_RENDERERS, gfm_update_mdit
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_inline
 from .mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin
@@ -44,9 +43,6 @@ def update_mdit(mdit: MarkdownIt) -> None:
         False,
     )
 
-    # HACK: Only temporary pending the mdformat-gfm release
-    gfm_update_mdit(mdit)
-
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can
 # render the given `RenderTreeNode` type. These override the default
@@ -56,7 +52,6 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
-    **GFM_RENDERERS,  # HACK: Only temporary pending the mdformat-gfm release
 }
 
 
@@ -79,5 +74,4 @@ POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
     "inline": postprocess_inline,
     "ordered_list": normalize_list,
-    **GFM_POSTPROCESSORS,  # HACK: Only temporary pending the mdformat-gfm release
 }

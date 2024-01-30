@@ -6,6 +6,6 @@
     list item 2
 2. If you store artifacts in the
     repository, you need to remember to
-    compile the application before every
-    commit.
+    compile the application before
+    every commit.
 3. Compiled application.

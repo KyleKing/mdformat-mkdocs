@@ -251,15 +251,15 @@ Nested semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
 .
 
 
-Table (with GFM formatting)
+Table
 .
 | Label          |   Rating | Comment              |
 |:---------------|---------:|:---------------------|
 | Name           |         2| <!-- Comment -->     |
 .
-| Label | Rating | Comment          |
-| :---- | -----: | :--------------- |
-| Name  |      2 | <!-- Comment --> |
+| Label          |   Rating | Comment              |
+|:---------------|---------:|:---------------------|
+| Name           |         2| <!-- Comment -->     |
 .
 
 Floating Link
@@ -300,13 +300,13 @@ Headings
 ###### \[h6\] The smallest heading
 .
 
-Task List / Check List (temporarily fixed with mdformat-gfm HACK)
+Task List / Check List (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
 .
 - [x] #739
   - [ ] Add delight to the experience when all tasks are complete :tada:
 .
-- [x] #739
-    - [ ] Add delight to the experience when all tasks are complete :tada:
+- \[x\] #739
+    - \[ \] Add delight to the experience when all tasks are complete :tada:
 .
 
 Footnotes (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
