@@ -80,3 +80,5 @@ jobs:
         env:
           FLIT_USERNAME: __token__
           FLIT_PASSWORD: ${{ secrets.PYPI_KEY }}
+      - name: Generate GitHub Release Notes
+        uses: softprops/action-gh-release@v1
