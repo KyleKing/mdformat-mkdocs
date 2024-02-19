@@ -28,10 +28,10 @@ dynamic = ["version", "description"]
 recommended = [
     # Keep in-sync with README
     "mdformat-beautysh >= 0.1.1",
-    "mdformat-black >= 0.1.1",
     "mdformat-config >= 0.1.3",
     "mdformat-footnote >= 0.1.1",
     "mdformat-frontmatter >= 2.0.8",
+    "mdformat-ruff >= 0.1.3",
     "mdformat-simple-breaks >= 0.0.1",
     "mdformat-tables >= 0.4.1",
     "mdformat-toc >= 0.3.0",
