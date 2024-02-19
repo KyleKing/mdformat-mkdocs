@@ -1,6 +1,10 @@
 # Docs: https://github.com/charliermarsh/ruff
 # Tip: run python -m ruff --explain RUF100
 
+line-length = 88
+target-version = 'py38'
+
+[lint]
 ignore = [
   'ANN002', # Missing type annotation for `*args`
   'ANN003', # Missing type annotation for `**kwargs`
@@ -31,21 +35,19 @@ ignore = [
   'TID252', # Relative imports from parent modules are banned
   'TRY003', # Avoid specifying long messages outside the exception class
 ]
-line-length = 88
 preview = true
 select = ['ALL']
-target-version = 'py38'
 unfixable = [
   'ERA001', # Commented out code
 ]
 
-[flake8-quotes]
+[lint.flake8-quotes]
 inline-quotes = 'double'
 
-[isort]
+[lint.isort]
 known-first-party = ['mdformat_mkdocs']
 
-[per-file-ignores]
+[lint.per-file-ignores]
 '__init__.py' = [
   'D104', # Missing docstring in public package
   'F401', # imported but unused; consider adding to __all__ or using a redundant alias
@@ -63,5 +65,5 @@ known-first-party = ['mdformat_mkdocs']
   'T201', # `print` found'
 ]
 
-[pylint]
+[lint.pylint]
 max-args = 6
