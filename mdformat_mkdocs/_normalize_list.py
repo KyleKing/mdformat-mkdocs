@@ -301,24 +301,27 @@ def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
 def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
-    if use_sem_break:
-        new_indents = [
+    new_indents_iter = (
+        (
             trim_semantic_indent(indent, s_i)
             for s_i, indent in zip_equal(
                 reduce(acc_semantic_indents, parsed_text.lines, []),
                 new_indents,
             )
-        ]
+        )
+        if use_sem_break
+        else new_indents
+    )
 
     # Remove filler characters added by inline formatting for 'wrap'
-    new_contents = [
+    new_contents_iter = (
         content.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
         for content in new_contents
-    ]
+    )
 
     return "".join(
         f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in zip_equal(new_indents, new_contents)
+        for new_indent, new_content in zip_equal(new_indents_iter, new_contents_iter)
     )
 
 
