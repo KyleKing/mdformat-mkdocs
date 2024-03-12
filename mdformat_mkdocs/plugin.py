@@ -8,7 +8,7 @@ from typing import Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer.typing import Postprocess, Render
-from mdformat_admon import RENDERERS as ADMON_RENDERS  # type: ignore[import-untyped]
+from mdformat_admon import RENDERERS as ADMON_RENDERS
 
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_inline
