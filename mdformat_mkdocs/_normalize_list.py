@@ -7,7 +7,7 @@ from contextlib import suppress
 from enum import Enum
 from functools import reduce
 from itertools import starmap
-from typing import Callable, Literal, NamedTuple
+from typing import Callable, Literal, NamedTuple, TypeVar
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
@@ -20,6 +20,27 @@ from ._helpers import (
     separate_indent,
 )
 from .mdit_plugins import CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
+
+# ======================================================================================
+# FP Helpers
+
+Tin = TypeVar("Tin")
+Tout = TypeVar("Tout")
+
+
+def map_lookback(
+    func: Callable[[Tout, Tin], Tout],
+    items: list[Tin],
+    initial: Tout,
+) -> list[Tout]:
+    """Modify each item based on the result of the modification to the prior item."""
+    results = [initial]
+    if len(items) > 1:
+        for item in items[1:]:
+            result = func(results[-1], item)
+            results.append(result)
+    return results
+
 
 # ======================================================================================
 # Parsing Operations
@@ -100,25 +121,32 @@ def parse_line(line_num: int, content: str) -> ParsedLine:
     )
 
 
-def acc_line_results(acc: list[LineResult], parsed: ParsedLine) -> list[LineResult]:
-    parent_idx = 0
-    parents = []
-    with suppress(StopIteration):
-        parent_idx, parent = next(
-            (len(acc) - idx, line)
-            for idx, line in enumerate(acc[::-1])
-            if is_parent_line(line, parsed)
+def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
+    results: list[LineResult] = []
+    for parsed in parsed_lines:
+        parent_idx = 0
+        parents = []
+        with suppress(StopIteration):
+            parent_idx, parent = next(
+                (len(results) - idx, line)
+                for idx, line in enumerate(results[::-1])
+                if is_parent_line(line, parsed)
+            )
+            parents = [*parent.parents, parent.parsed]
+
+        prev_list_peers = [
+            line.parsed
+            for line in results[parent_idx:][::-1]
+            if is_peer_list_line(line, parsed)
+        ]
+
+        result = LineResult(
+            parsed=parsed,
+            parents=parents,
+            prev_list_peers=prev_list_peers,
         )
-        parents = [*parent.parents, parent.parsed]
-
-    prev_list_peers = [
-        line.parsed
-        for line in acc[parent_idx:][::-1]
-        if is_peer_list_line(line, parsed)
-    ]
-
-    result = LineResult(parsed=parsed, parents=parents, prev_list_peers=prev_list_peers)
-    return [*acc, result]
+        results.append(result)
+    return results
 
 
 # ======================================================================================
@@ -148,12 +176,7 @@ class BlockIndent(NamedTuple):
     kind: Literal["code", "HTML"]
 
 
-def acc_code_block_indents(
-    acc: list[BlockIndent | None],
-    line: LineResult,
-) -> list[BlockIndent | None]:
-    # TODO: Is there a better way to handle the initial condition?
-    last = (acc or [None])[-1]
+def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
         # On first edge, start tracking a code block
@@ -167,14 +190,10 @@ def acc_code_block_indents(
                 kind="code",
             )
         )
-    return [*acc, result]
+    return result
 
 
-def acc_html_blocks(
-    acc: list[BlockIndent | None],
-    line: LineResult,
-) -> list[BlockIndent | None]:
-    last = (acc or [None])[-1]
+def parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     result = last
     if line.parsed.syntax == Syntax.HTML:
         # Start tracking an HTML block if not already
@@ -186,7 +205,7 @@ def acc_html_blocks(
     elif last and not line.parsed.content:
         # Stop tracking an HTML block on a line break
         result = None
-    return [*acc, result]
+    return result
 
 
 # ======================================================================================
@@ -237,11 +256,11 @@ def format_new_content(line: LineResult, inc_numbers: bool) -> str:
 def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     """Post-processor to normalize lists."""
     parsed_lines = list(starmap(parse_line, enumerate(text.rstrip().split(EOL))))
-    lines = reduce(acc_line_results, parsed_lines, [])
+    lines = acc_line_results(parsed_lines)
 
     # `code_block_indents` take precedence to ignore contents of an HTML code block
-    code_indents = reduce(acc_code_block_indents, lines, [])
-    html_indents = reduce(acc_html_blocks, lines, [])
+    code_indents = map_lookback(parse_code_block, lines, None)
+    html_indents = map_lookback(parse_html_line, lines, None)
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
     new_indents = list(starmap(format_new_indent, zip_equal(lines, block_indents)))
 
