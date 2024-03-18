@@ -315,21 +315,17 @@ def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
 def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
-    new_indents_iter = (
-        starmap(
-            trim_semantic_indent,
-            zip_equal(
-                new_indents,
-                map_lookback(
-                    parse_semantic_indent,
-                    parsed_text.lines,
-                    parse_semantic_indent(SemanticIndent.INITIAL, parsed_text.lines[0]),
-                ),
-            ),
+    new_indents_iter = new_indents
+    if use_sem_break:
+        semantic_indents = map_lookback(
+            parse_semantic_indent,
+            parsed_text.lines,
+            parse_semantic_indent(SemanticIndent.INITIAL, parsed_text.lines[0]),
         )
-        if use_sem_break
-        else new_indents
-    )
+        new_indents_iter = starmap(
+            trim_semantic_indent,
+            zip_equal(new_indents, semantic_indents),
+        )
 
     # Remove filler characters added by inline formatting for 'wrap'
     new_contents_iter = (
