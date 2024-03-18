@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 from contextlib import suppress
 from enum import Enum
-from functools import reduce
 from itertools import starmap
 from typing import Callable, Literal, NamedTuple, TypeVar
 
@@ -277,22 +276,18 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
 
 
 class SemanticIndent(Enum):
-    NONE = ""
+    INITIAL = "Hack for MyPy and map_lookack, which returns initial..."
+    EMPTY = ""
     ONE_LESS_ON_NEXT = "⤓(←)"
     ONE_LESS_SPACE = "←"
     TWO_LESS_ON_NEXT = "⤓(←←)"  # Bulleted
     TWO_LESS_SPACE = "←←"
 
 
-def acc_semantic_indents(
-    acc: list[SemanticIndent],
-    line: LineResult,
-) -> list[SemanticIndent]:
-    last = (acc or [SemanticIndent.NONE])[-1]
-
-    # TODO: This could probably be cleaned up and simplified quite a bit
+def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
+    # TODO: This works, but is very confusing
     if not line.parsed.content:
-        result = SemanticIndent.NONE
+        result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
         result = SemanticIndent.TWO_LESS_ON_NEXT
@@ -306,7 +301,7 @@ def acc_semantic_indents(
     else:
         result = last
 
-    return [*acc, result]
+    return result
 
 
 def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
@@ -321,12 +316,16 @@ def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
     new_indents_iter = (
-        (
-            trim_semantic_indent(indent, s_i)
-            for s_i, indent in zip_equal(
-                reduce(acc_semantic_indents, parsed_text.lines, []),
+        starmap(
+            trim_semantic_indent,
+            zip_equal(
                 new_indents,
-            )
+                map_lookback(
+                    parse_semantic_indent,
+                    parsed_text.lines,
+                    parse_semantic_indent(SemanticIndent.INITIAL, parsed_text.lines[0]),
+                ),
+            ),
         )
         if use_sem_break
         else new_indents
