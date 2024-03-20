@@ -7,12 +7,13 @@ from functools import partial
 from typing import Mapping
 
 from markdown_it import MarkdownIt
+from mdformat.renderer import RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS
 
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_inline
-from .mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin
+from .mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin, wikilink_plugin
 
 _ALIGN_SEMANTIC_BREAKS_IN_LISTS = False
 """user-specified flag for toggling semantic breaks.
@@ -36,12 +37,17 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     mdit.use(mkdocs_admon_plugin)
     mdit.use(content_tabs_plugin)
+    mdit.use(wikilink_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
         "align_semantic_breaks_in_lists",
         False,
     )
+
+
+def _render_wikilink(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    return node.content
 
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can
@@ -52,6 +58,7 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
+    "wikilink": _render_wikilink,
 }
 
 
