@@ -40,7 +40,7 @@ repos:
     rev: 0.7.17
     hooks:
       - id: mdformat
-        additional_dependencies: ['mdformat-mkdocs[recommended]>=1.0.6']
+        additional_dependencies: ['mdformat-mkdocs[recommended]>=2.0.4']
         exclude: tests/.+\.md|mkdocs-demo/docs/README.md
         args: [--wrap=no]
   - repo: https://github.com/lyz-code/yamlfix/
