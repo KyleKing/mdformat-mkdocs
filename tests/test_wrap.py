@@ -89,9 +89,10 @@ CASE_1_TRUE_80 = """
    Test Testing Test Testing Test Testing Test Testing Test Testing
 """
 
-TICKET_020 = """
+SPACE = " "
+TICKET_020 = f"""
 - first line first line first line first line first line first line first line
-    whitespace
+    whitespace{SPACE}
 - second line
 """
 TICKET_020_TRUE_79 = """
@@ -125,4 +126,4 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
         extensions={"mkdocs"},
     )
     print_text(output, expected)
-    assert output.strip() == expected.strip()
+    assert output.lstrip() == expected.lstrip()
