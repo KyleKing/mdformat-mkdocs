@@ -1433,3 +1433,27 @@ The rows index the label files, each corresponding to an image in your dataset, 
 
 The rows index the label files, each corresponding to an image in your dataset, and the columns correspond to your class-label indices. Each row represents a pseudo feature-vector, with the count of each class-label present in your dataset. This data structure enables the application of K-Fold Cross Validation to an object detection dataset.
 .
+
+Support Link Reference Definitions
+.
+[foo]: /url "title"
+
+[foo]
+
+[link][foo]
+.
+[foo]
+
+[link][foo]
+
+[foo]: /url "title"
+.
+
+Without CLI argument, does not support Python mkdocstring cross-references (https://github.com/KyleKing/mdformat-mkdocs/issues/19)
+.
+[package.module.object][]
+[Object][package.module.object]
+.
+\[package.module.object\]\[\]
+\[Object\]\[package.module.object\]
+.
