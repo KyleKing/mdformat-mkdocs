@@ -13,7 +13,7 @@ def _print(content: str, show_whitespace: bool) -> None:
 def print_text(output: str, expected: str, show_whitespace: bool = False) -> None:
     if _SHOW_TEXT:
         print("--  Output  --")
-        _print(output.strip(), show_whitespace)
+        _print(output, show_whitespace)
         print("-- Expected --")
-        _print(expected.strip(), show_whitespace)
+        _print(expected, show_whitespace)
         print("--  <End>   --")

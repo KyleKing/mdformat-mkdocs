@@ -77,7 +77,7 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
 
 def _render_link(node: RenderTreeNode, context: RenderContext) -> str:
     if _IGNORE_MISSING_REFERENCE:
-        raise NotImplementedError("Pending!")
+        return _render_node_content(node, context)
     link = DEFAULT_RENDERERS.get("link", _render_node_content)
     return link(node, context)
 

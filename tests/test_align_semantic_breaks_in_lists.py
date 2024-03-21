@@ -22,4 +22,4 @@ def test_align_semantic_breaks_in_lists(line, title, text, expected):
         extensions={"mkdocs"},
     )
     print_text(output, expected)
-    assert output.rstrip() == expected.rstrip()
+    assert output == expected
