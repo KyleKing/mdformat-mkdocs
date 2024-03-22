@@ -19,9 +19,6 @@ PREFIX = "mkdocstrings_crossreference"
 
 
 def _mkdocstrings_crossreference(state: StateInline, silent: bool) -> bool:
-    if state.src[state.pos] != "[":  # Exit quickly
-        return False
-
     match = LINK_PATTERN.match(state.src[state.pos :])
     if not match:
         return False

@@ -3,8 +3,13 @@ import pytest
 
 from .helpers import print_text
 
-TICKET_019 = """[package.module.object][]
+TICKET_019 = """Example python mkdocstring snippets
+
+[package.module.object][]
 [Object][package.module.object]
+
+- [package.module.object][]
+- [Object][package.module.object]
 """
 
 
