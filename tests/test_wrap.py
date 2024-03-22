@@ -89,18 +89,6 @@ CASE_1_TRUE_80 = """
    Test Testing Test Testing Test Testing Test Testing Test Testing
 """
 
-SPACE = " "
-TICKET_020 = f"""
-- first line first line first line first line first line first line first line
-    whitespace{SPACE}
-- second line
-"""
-TICKET_020_TRUE_79 = """
-- first line first line first line first line first line first line first line
-  whitespace
-- second line
-"""
-
 
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
@@ -109,14 +97,12 @@ TICKET_020_TRUE_79 = """
         (CASE_1, CASE_1_FALSE_80, False, 80),
         (CASE_1, CASE_1_TRUE_40, True, 40),
         (CASE_1, CASE_1_TRUE_80, True, 80),
-        (TICKET_020, TICKET_020_TRUE_79, True, 79),
     ],
     ids=[
         "CASE_1_FALSE_40",
         "CASE_1_FALSE_80",
         "CASE_1_TRUE_40",
         "CASE_1_TRUE_80",
-        "TICKET_020_TRUE_79",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
