@@ -24,3 +24,10 @@ repos:
         files: tests/pre-commit-test-align_semantic_breaks_in_lists.md
         types: [markdown]
         language: system
+      - id: mdformat-with-ignore-missing-references
+        name: mdformat-with-ignore-missing-references
+        entry: mdformat
+        args: [--ignore-missing-references]
+        files: tests/pre-commit-test-ignore-missing-references.md
+        types: [markdown]
+        language: system
