@@ -23,7 +23,7 @@ TICKET_019 = """Example python mkdocstring snippets
 def test_align_semantic_breaks_in_lists(text, expected):
     output = mdformat.text(
         text,
-        options={"ignore_missing_reference": True},
+        options={"ignore_missing_references": True},
         extensions={"mkdocs"},
     )
     print_text(output, expected)

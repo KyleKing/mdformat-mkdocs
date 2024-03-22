@@ -20,7 +20,7 @@ from .mdit_plugins import (
     mkdocstrings_crossreference_plugin,
 )
 
-_IGNORE_MISSING_REFERENCE = None
+_IGNORE_MISSING_REFERENCES = None
 """user-specified flag to turn off bracket escaping when no link reference found.
 
 Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/19
@@ -60,12 +60,12 @@ def update_mdit(mdit: MarkdownIt) -> None:
         "align_semantic_breaks_in_lists",
         False,
     )
-    global _IGNORE_MISSING_REFERENCE  # noqa: PLW0603
-    _IGNORE_MISSING_REFERENCE = mdit.options["mdformat"].get(
-        "ignore_missing_reference",
+    global _IGNORE_MISSING_REFERENCES  # noqa: PLW0603
+    _IGNORE_MISSING_REFERENCES = mdit.options["mdformat"].get(
+        "ignore_missing_references",
         False,
     )
-    if _IGNORE_MISSING_REFERENCE:
+    if _IGNORE_MISSING_REFERENCES:
         mdit.use(mkdocstrings_crossreference_plugin)
 
 
@@ -74,7 +74,7 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
 
 
 def _render_link(node: RenderTreeNode, context: RenderContext) -> str:
-    if _IGNORE_MISSING_REFERENCE:
+    if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
     link = DEFAULT_RENDERERS.get("link", _render_node_content)
     return link(node, context)

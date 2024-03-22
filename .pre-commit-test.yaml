@@ -28,6 +28,6 @@ repos:
         name: mdformat-with-ignore-missing-references
         entry: mdformat
         args: [--ignore-missing-references]
-        files: tests/pre-commit-test-ignore-missing-references.md
+        files: tests/pre-commit-test-ignore_missing_references.md
         types: [markdown]
         language: system

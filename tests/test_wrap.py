@@ -109,14 +109,14 @@ TICKET_020_TRUE_79 = """
         (CASE_1, CASE_1_FALSE_80, False, 80),
         (CASE_1, CASE_1_TRUE_40, True, 40),
         (CASE_1, CASE_1_TRUE_80, True, 80),
-        # (TICKET_020, TICKET_020_TRUE_79, True, 79),
+        (TICKET_020, TICKET_020_TRUE_79, True, 79),
     ],
     ids=[
         "CASE_1_FALSE_40",
         "CASE_1_FALSE_80",
         "CASE_1_TRUE_40",
         "CASE_1_TRUE_80",
-        # "TICKET_020_TRUE_79",  # FIXME: Resolve trailing whitespace issue
+        "TICKET_020_TRUE_79",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
