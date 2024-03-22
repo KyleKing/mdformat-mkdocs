@@ -34,6 +34,7 @@ Add this package wherever you use `mdformat` and the plugin will be auto-recogni
 - [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
 - [mdformat-tables](https://pypi.org/project/mdformat-tables)
 - [mdformat-web](https://pypi.org/project/mdformat-web)
+- [mdformat-wikilink](https://github.com/tmr232/mdformat-wikilink)
 
 ### Pre-Commit
 
@@ -64,12 +65,13 @@ To generate HTML output, `mkdocs_admon_plugin` can be imported from `mdit_plugin
 
 ```py
 from markdown_it import MarkdownIt
+
 from mdformat_mkdocs.mdit_plugins import mkdocs_admon_plugin
 
 md = MarkdownIt()
 md.use(mkdocs_admon_plugin)
 
-text = '??? note\n    content'
+text = "??? note\n    content"
 md.render(text)
 # <details class="note">
 # <summary>Note</summary>

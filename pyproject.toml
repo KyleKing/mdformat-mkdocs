@@ -35,6 +35,7 @@ recommended = [
     "mdformat-simple-breaks >= 0.0.1",
     "mdformat-tables >= 0.4.1",
     "mdformat-web >= 0.1.0",
+    "mdformat-wikilink >= 0.2.0",
     # Patches https://github.com/lovesegfault/beautysh/issues/248 for Python 3.12
     "setuptools",
 ]

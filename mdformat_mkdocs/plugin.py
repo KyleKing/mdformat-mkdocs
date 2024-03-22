@@ -18,7 +18,6 @@ from .mdit_plugins import (
     content_tabs_plugin,
     mkdocs_admon_plugin,
     mkdocstrings_crossreference_plugin,
-    wikilink_plugin,
 )
 
 _IGNORE_MISSING_REFERENCE = None
@@ -55,7 +54,6 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     mdit.use(mkdocs_admon_plugin)
     mdit.use(content_tabs_plugin)
-    mdit.use(wikilink_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
@@ -91,7 +89,6 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_link,
-    "wikilink": _render_node_content,
 }
 
 
