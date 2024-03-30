@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from beartype.typing import List
 from mdformat.renderer import RenderContext, RenderTreeNode
 
 from ._helpers import FILLER_CHAR, MKDOCS_INDENT_COUNT, rstrip_result
@@ -51,7 +50,7 @@ def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) 
     if len(text) > wrap_mode:
         indent_length = MKDOCS_INDENT_COUNT * indent_count
         wrapped_length = -123
-        words: List[str] = []
+        words: list[str] = []
         for word in text.split(soft_break):
             next_length = wrapped_length + len(word)
             if not words:

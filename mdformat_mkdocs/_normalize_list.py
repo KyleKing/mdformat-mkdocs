@@ -8,7 +8,6 @@ from enum import Enum
 from itertools import starmap
 from typing import Callable, Literal, NamedTuple, TypeVar
 
-from beartype.typing import List, Tuple
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
 
@@ -30,9 +29,9 @@ Tout = TypeVar("Tout")
 
 def map_lookback(
     func: Callable[[Tout, Tin], Tout],
-    items: List[Tin],
+    items: list[Tin],
     initial: Tout,
-) -> List[Tout]:
+) -> list[Tout]:
     """Modify each item based on the result of the modification to the prior item."""
     results = [initial]
     if len(items) > 1:
@@ -91,8 +90,8 @@ class LineResult(NamedTuple):
     """Parsed Line of text."""
 
     parsed: ParsedLine
-    parents: List[ParsedLine]
-    prev_list_peers: List[ParsedLine]  # Only applicable for lists
+    parents: list[ParsedLine]
+    prev_list_peers: list[ParsedLine]  # Only applicable for lists
 
 
 def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
@@ -121,8 +120,8 @@ def parse_line(line_num: int, content: str) -> ParsedLine:
     )
 
 
-def acc_line_results(parsed_lines: List[ParsedLine]) -> List[LineResult]:
-    results: List[LineResult] = []
+def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
+    results: list[LineResult] = []
     for parsed in parsed_lines:
         parent_idx = 0
         parents = []
@@ -233,10 +232,10 @@ def format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> str
 class ParsedText(NamedTuple):
     """Intermediary result of parsing the text."""
 
-    lines: List[LineResult]
-    new_lines: List[Tuple[str, str]]
+    lines: list[LineResult]
+    new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
-    debug_block_indents: List[BlockIndent | None]
+    debug_block_indents: list[BlockIndent | None]
 
 
 def format_new_content(line: LineResult, inc_numbers: bool) -> str:
