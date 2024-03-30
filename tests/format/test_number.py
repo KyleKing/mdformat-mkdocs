@@ -1,7 +1,7 @@
 import mdformat
 import pytest
 
-from .helpers import print_text
+from ..helpers import print_text
 
 CASE_1 = """
 1. One
