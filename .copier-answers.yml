@@ -1,0 +1,16 @@
+# yamllint disable-file
+# Answer file maintained by Copier for: https://github.com/KyleKing/mdformat-plugin-template
+# DO NOT MODIFY THIS FILE. Edit by re-running copier and changing responses to the questions
+# Check into version control.
+_commit: 0.1.2
+_src_path: gh:KyleKing/mdformat-plugin-template
+author_email: dev.act.kyle@gmail.com
+author_name: Kyle King
+author_username: kyleking
+copyright_date: '2024'
+package_name_kebab: mdformat-mkdocs
+plugin_name: mkdocs
+repository_namespace: kyleking
+repository_provider: https://github.com
+repository_url: https://github.com/kyleking/mdformat-mkdocs
+
