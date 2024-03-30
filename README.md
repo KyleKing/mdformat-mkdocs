@@ -47,7 +47,7 @@ repos:
         additional_dependencies:
           - mdformat-mkdocs>=2.0.0
           # Or
-          # - "mdformat-mkdocs[recommended]>=2.0.0"
+          # - "mdformat-mkdocs[recommended]>=2.0.6"
 ```
 
 ### pipx

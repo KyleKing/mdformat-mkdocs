@@ -62,7 +62,7 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-runner_args = ["-e", "py38-beartype"]
+runner_args = ["-e", "py312-beartype"]
 
 [tool.tomlsort]
 all = true
