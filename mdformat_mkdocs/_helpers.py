@@ -6,6 +6,8 @@ import re
 from functools import wraps
 from typing import Callable
 
+from beartype.typing import Tuple
+
 EOL = "\n"
 """Line delimiter."""
 
@@ -26,7 +28,7 @@ def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
     return wrapper
 
 
-def separate_indent(line: str) -> tuple[str, str]:
+def separate_indent(line: str) -> Tuple[str, str]:
     """Separate leading indent from content. Also used by the test suite."""
     re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
     match = re_indent.match(line)
