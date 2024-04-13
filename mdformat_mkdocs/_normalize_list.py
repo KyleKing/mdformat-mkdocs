@@ -122,9 +122,21 @@ def parse_line(line_num: int, content: str) -> ParsedLine:
 
 def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
     results: list[LineResult] = []
+    fenced_block = False
     for parsed in parsed_lines:
         parent_idx = 0
         parents = []
+
+        if fenced_block and parsed.syntax != Syntax.EDGE_CODE:
+            parsed = ParsedLine(
+                line_num=parsed.line_num,
+                indent=parsed.indent,
+                content=parsed.content,
+                syntax=None,
+            )
+        if parsed.syntax == Syntax.EDGE_CODE:
+            fenced_block = not fenced_block
+
         with suppress(StopIteration):
             parent_idx, parent = next(
                 (len(results) - idx, line)
