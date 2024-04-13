@@ -1457,3 +1457,18 @@ Without CLI argument, does not support Python mkdocstring cross-references (http
 \[package.module.object\]\[\]
 \[Object\]\[package.module.object\]
 .
+
+Do not format lists in code blocks
+.
+* Item 1
+
+   ```text
+   * sample plain text block.
+   ```
+.
+- Item 1
+
+    ```text
+    * sample plain text block.
+    ```
+.

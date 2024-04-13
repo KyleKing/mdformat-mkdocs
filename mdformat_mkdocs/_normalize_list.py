@@ -238,9 +238,12 @@ class ParsedText(NamedTuple):
     debug_block_indents: list[BlockIndent | None]
 
 
-def format_new_content(line: LineResult, inc_numbers: bool) -> str:
+def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> str:
     new_content = line.parsed.content
-    if line.parsed.syntax in {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}:
+    if not is_code and line.parsed.syntax in {
+        Syntax.LIST_BULLETED,
+        Syntax.LIST_NUMBERED,
+    }:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
         assert list_match is not None  # for pyright # noqa: S101
         new_bullet = "-"
@@ -263,7 +266,10 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
     new_indents = list(starmap(format_new_indent, zip_equal(lines, block_indents)))
 
-    new_contents = [format_new_content(line, inc_numbers) for line in lines]
+    new_contents = [
+        format_new_content(line, inc_numbers, ci is not None)
+        for line, ci in zip_equal(lines, code_indents)
+    ]
     return ParsedText(
         lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
@@ -276,6 +282,8 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
 
 
 class SemanticIndent(Enum):
+    """Possible states for evaluating semantic indents. The values aren't relevant."""
+
     INITIAL = "Hack for MyPy and map_lookack, which returns initial..."
     EMPTY = ""
     ONE_LESS_ON_NEXT = "⤓(←)"
@@ -285,6 +293,7 @@ class SemanticIndent(Enum):
 
 
 def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
+    """Conditionally evaluate when semantic indents are necessary."""
     # TODO: This works, but is very confusing
     if not line.parsed.content:
         result = SemanticIndent.EMPTY
@@ -346,6 +355,7 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
+    """Format markdown list."""
     # FIXME: Is this filter working correctly?
     #   If it is, the test for "Formats non-root lists" should be failing
     if node.level > 1:
