@@ -122,20 +122,9 @@ def parse_line(line_num: int, content: str) -> ParsedLine:
 
 def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
     results: list[LineResult] = []
-    fenced_block = False
     for parsed in parsed_lines:
         parent_idx = 0
         parents = []
-
-        if fenced_block and parsed.syntax != Syntax.EDGE_CODE:
-            parsed = ParsedLine(
-                line_num=parsed.line_num,
-                indent=parsed.indent,
-                content=parsed.content,
-                syntax=None,
-            )
-        if parsed.syntax == Syntax.EDGE_CODE:
-            fenced_block = not fenced_block
 
         with suppress(StopIteration):
             parent_idx, parent = next(
@@ -250,9 +239,12 @@ class ParsedText(NamedTuple):
     debug_block_indents: list[BlockIndent | None]
 
 
-def format_new_content(line: LineResult, inc_numbers: bool) -> str:
+def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> str:
     new_content = line.parsed.content
-    if line.parsed.syntax in {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}:
+    if not is_code and line.parsed.syntax in {
+        Syntax.LIST_BULLETED,
+        Syntax.LIST_NUMBERED,
+    }:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
         assert list_match is not None  # for pyright # noqa: S101
         new_bullet = "-"
@@ -275,7 +267,10 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
     new_indents = list(starmap(format_new_indent, zip_equal(lines, block_indents)))
 
-    new_contents = [format_new_content(line, inc_numbers) for line in lines]
+    new_contents = [
+        format_new_content(line, inc_numbers, ci is not None)
+        for line, ci in zip_equal(lines, code_indents)
+    ]
     return ParsedText(
         lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
