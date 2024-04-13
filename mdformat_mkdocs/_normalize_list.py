@@ -288,6 +288,8 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
 
 
 class SemanticIndent(Enum):
+    """Possible states for evaluating semantic indents. The values aren't relevant."""
+
     INITIAL = "Hack for MyPy and map_lookack, which returns initial..."
     EMPTY = ""
     ONE_LESS_ON_NEXT = "⤓(←)"
@@ -297,6 +299,7 @@ class SemanticIndent(Enum):
 
 
 def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
+    """Conditionally evaluate when semantic indents are necessary."""
     # TODO: This works, but is very confusing
     if not line.parsed.content:
         result = SemanticIndent.EMPTY
@@ -358,6 +361,7 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
+    """Format markdown list."""
     # FIXME: Is this filter working correctly?
     #   If it is, the test for "Formats non-root lists" should be failing
     if node.level > 1:
