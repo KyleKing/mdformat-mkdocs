@@ -125,7 +125,6 @@ def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
     for parsed in parsed_lines:
         parent_idx = 0
         parents = []
-
         with suppress(StopIteration):
             parent_idx, parent = next(
                 (len(results) - idx, line)
