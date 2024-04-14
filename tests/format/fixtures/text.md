@@ -1472,3 +1472,26 @@ Do not format lists in code blocks
     * sample plain text block.
     ```
 .
+
+Ignore multiple empty lines within code blocks
+.
+* Item 1
+
+    ```text
+
+
+
+
+    * Asterisk
+    ```
+.
+- Item 1
+
+    ```text
+
+
+
+
+    * Asterisk
+    ```
+.
