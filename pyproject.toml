@@ -14,7 +14,7 @@ classifiers = [
 ]
 dependencies = [
   "mdformat >= 0.7.16",
-  "mdformat-admon >= 2.0.2",
+  "mdformat-admon >= 2.0.3",
   "mdformat-gfm >= 0.3.6",
   "more-itertools >= 10.2.0",
 ]

@@ -16,6 +16,6 @@ fixtures = read_fixture_file(FIXTURE_PATH)
     ids=[f[1] for f in fixtures],
 )
 def test_content_tabs_fixtures(line, title, text, expected):
-    output = mdformat.text(text, extensions={"mkdocs", "admonition"})
+    output = mdformat.text(text, extensions={"mkdocs", "admon"})
     print_text(output, expected)
     assert output.rstrip() == expected.rstrip()
