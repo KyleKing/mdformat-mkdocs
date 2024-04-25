@@ -249,7 +249,7 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
         new_bullet = "-"
         if line.parsed.syntax == Syntax.LIST_NUMBERED:
             first_peer = (
-                line.prev_list_peers[0] if line.prev_list_peers else line.parsed
+                line.prev_list_peers[-1] if line.prev_list_peers else line.parsed
             )
             base_num = 0 if first_peer.content.startswith("0.") else 1
             counter = len(line.prev_list_peers) + base_num if inc_numbers else base_num
