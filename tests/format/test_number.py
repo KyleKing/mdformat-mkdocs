@@ -25,6 +25,8 @@ CASE_0 = """
         1. ddd
 0. Seven
 """
+
+
 CASE_0_NUMBERED = """
 0. One
     1. AAA
