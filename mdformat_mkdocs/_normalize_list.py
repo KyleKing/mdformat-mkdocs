@@ -62,6 +62,7 @@ class Syntax(Enum):
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
+        """Determine Syntax type from string."""
         if match := RE_LIST_ITEM.fullmatch(content):
             return (
                 cls.LIST_NUMBERED
@@ -95,12 +96,14 @@ class LineResult(NamedTuple):
 
 
 def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+    """Returns true if previous line has content and a lower indent (e.g. parent)."""
     return bool(prev_line.parsed.content) and len(parsed.indent) > len(
         prev_line.parsed.indent,
     )
 
 
 def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+    """Returns True if two list items share the same scope and level."""
     list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
     return (
         parsed.syntax in list_types
@@ -110,6 +113,7 @@ def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 
 
 def parse_line(line_num: int, content: str) -> ParsedLine:
+    """Create summary object separating line from content."""
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
     return ParsedLine(
@@ -176,6 +180,7 @@ class BlockIndent(NamedTuple):
 
 
 def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
+    """Identify fenced or indented sections internally referred to as 'code blocks.'"""
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
         # On first edge, start tracking a code block
@@ -193,6 +198,7 @@ def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent 
 
 
 def parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
+    """Identify sections of HTML."""
     result = last
     if line.parsed.syntax == Syntax.HTML:
         # Start tracking an HTML block if not already
@@ -215,6 +221,7 @@ DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 
 
 def format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> str:
+    """Normalize the list indent."""
     result = ""
     if line.parsed.content:
         if block_indent:
@@ -239,6 +246,7 @@ class ParsedText(NamedTuple):
 
 
 def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> str:
+    """Normalize the list bullet or number."""
     new_content = line.parsed.content
     if not is_code and line.parsed.syntax in {
         Syntax.LIST_BULLETED,
