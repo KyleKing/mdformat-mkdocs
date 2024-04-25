@@ -1495,3 +1495,10 @@ Ignore multiple empty lines within code blocks
     * Asterisk
     ```
 .
+
+0-indexed markdown list (https://github.com/KyleKing/mdformat-mkdocs/issues/24)
+.
+0. xyz
+.
+0. xyz
+.
