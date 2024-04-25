@@ -6,7 +6,7 @@ with suppress(ImportError):  # Only suppress beartype warnings when installed
     from warnings import filterwarnings
 
     from beartype.roar import (
-        BeartypeClawDecorWarning,
+        BeartypeClawDecorWarning,  # Too many False Positives using NamedTuples
         BeartypeDecorHintPep585DeprecationWarning,
     )
 
