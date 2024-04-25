@@ -1508,3 +1508,35 @@ Ignore multiple empty lines within code blocks
     1. inner
     1. next
 .
+
+Unsupported versions of 0-indexed markdown list (Within unordered list)
+.
+* unordered
+    0. xyz
+    5. abc
+        1. inner
+        4. next
+.
+- unordered
+    0\. xyz
+    5\. abc
+    1\. inner
+    4\. next
+.
+
+Unsupported versions of 0-indexed markdown list (Within ordered list)
+.
+0. ordered
+    0. xyz
+    5. abc
+        1. inner
+        4. next
+1. next
+.
+0. ordered
+    0\. xyz
+    5\. abc
+    1\. inner
+    4\. next
+0. next
+.
