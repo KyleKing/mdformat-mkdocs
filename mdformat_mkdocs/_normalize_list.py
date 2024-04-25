@@ -248,7 +248,11 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
         assert list_match is not None  # for pyright # noqa: S101
         new_bullet = "-"
         if line.parsed.syntax == Syntax.LIST_NUMBERED:
-            counter = len(line.prev_list_peers) + 1 if inc_numbers else 1
+            first_peer = (
+                line.prev_list_peers[-1] if line.prev_list_peers else line.parsed
+            )
+            base_num = 0 if first_peer.content.startswith("0.") else 1
+            counter = len(line.prev_list_peers) + base_num if inc_numbers else base_num
             new_bullet = f"{counter}."
         new_content = f'{new_bullet} {list_match["item"]}'
 
