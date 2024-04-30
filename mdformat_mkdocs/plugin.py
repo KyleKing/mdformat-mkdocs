@@ -82,6 +82,37 @@ def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str
     return link(node, context)
 
 
+def _render_with_default_renderer(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render the node using default renderer instead of the one in `context`.
+
+    We don't use `RenderContext.with_default_renderer_for` because that
+    changes the default renderer in context, where it's applied
+    recursively to render functions of children.
+    """
+    syntax_type = node.type
+    text = DEFAULT_RENDERERS[syntax_type](node, context)
+    for postprocessor in context.postprocessors.get(syntax_type, ()):
+        text = postprocessor(text, node, context)
+    return text
+
+
+def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
+    """Override empty links `[...](<>)` with `[...]()`."""
+    rendered = _render_with_default_renderer(node, context)
+    if rendered.endswith("](<>)"):
+        return rendered[:-3] + ")"
+
+    from mdformat.plugins import PARSER_EXTENSIONS
+
+    # HACK: run other plugin renders if they exist
+    syntax_type = node.type
+    for name, plugin in PARSER_EXTENSIONS.items():
+        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
+            return plugin.RENDERERS[syntax_type](node, context)
+
+    return rendered
+
+
 # A mapping from `RenderTreeNode.type` to a `Render` function that can
 # render the given `RenderTreeNode` type. These override the default
 # `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
@@ -91,6 +122,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
+    "link": _link_renderer,
 }
 
 
