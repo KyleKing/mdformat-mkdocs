@@ -70,10 +70,12 @@ def update_mdit(mdit: MarkdownIt) -> None:
 
 
 def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Return node content without additional processing."""
     return node.content
 
 
-def _render_link(node: RenderTreeNode, context: RenderContext) -> str:
+def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render a MKDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
     link = DEFAULT_RENDERERS.get("link", _render_node_content)
@@ -88,7 +90,7 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
-    MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_link,
+    MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
 }
 
 
