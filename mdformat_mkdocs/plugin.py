@@ -102,7 +102,7 @@ def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     if rendered.endswith("](<>)"):
         return rendered[:-3] + ")"
 
-    from mdformat.plugins import PARSER_EXTENSIONS
+    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
 
     # HACK: run other plugin renders if they exist
     syntax_type = node.type
