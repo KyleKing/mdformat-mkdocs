@@ -1540,3 +1540,10 @@ Unsupported versions of 0-indexed markdown list (Within ordered list)
     4\. next
 0. next
 .
+
+Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
+.
+[](){#some-anchor-name}
+.
+[](){#some-anchor-name}
+.

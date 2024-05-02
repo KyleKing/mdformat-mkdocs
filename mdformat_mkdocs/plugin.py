@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from functools import partial
+from functools import lru_cache, partial
 from typing import Mapping
 
 from markdown_it import MarkdownIt
@@ -52,8 +52,8 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    mdit.use(mkdocs_admon_plugin)
     mdit.use(content_tabs_plugin)
+    mdit.use(mkdocs_admon_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
@@ -74,12 +74,67 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.content
 
 
+def _render_with_default_renderer(
+    node: RenderTreeNode,
+    context: RenderContext,
+    syntax_type: str,
+) -> str:
+    """Attempt to render using the mdformat DEFAULT.
+
+    Adapted from:
+    https://github.com/hukkin/mdformat-gfm/blob/bd3c3392830fc4805d51582adcd1ae0d0630aed4/src/mdformat_gfm/plugin.py#L35-L46
+
+    """
+    text = DEFAULT_RENDERERS.get(syntax_type, _render_node_content)(node, context)
+    for postprocessor in context.postprocessors.get(syntax_type, ()):
+        text = postprocessor(text, node, context)
+    return text
+
+
+@lru_cache(maxsize=1)
+def _match_plugin_renderer(syntax_type: str) -> Render | None:
+    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
+
+    for name, plugin in PARSER_EXTENSIONS.items():
+        # Ignore this plugin (mkdocs) to avoid recursion. Name is set in pyproject.toml
+        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
+            return plugin.RENDERERS[syntax_type]
+    return None
+
+
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
     """Render a MKDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
-    link = DEFAULT_RENDERERS.get("link", _render_node_content)
-    return link(node, context)
+    # Default to treating the matched content as a link
+    return _render_with_default_renderer(node, context, "link")
+
+
+def _render_links_and_mkdocs_anchors(
+    node: RenderTreeNode,
+    context: RenderContext,
+) -> str:
+    """Intercepts rendering of [MKDocs AutoRefs 'markdown anchors'](https://mkdocs.github.io/autorefs/#markdown-anchors).
+
+    Replaces `[...](<>)` with `[...]()` to produce output like:
+
+    ```md
+    [](){#some-anchor-name}
+    ```
+
+    If no match, defers to other plugins or the default
+
+    """
+    syntax_type = node.type
+
+    rendered = _render_with_default_renderer(node, context, syntax_type)
+    if rendered.endswith("](<>)"):
+        return rendered[:-3] + ")"
+
+    # Run other plugin renders if they exist
+    if plugin_render := _match_plugin_renderer(syntax_type):
+        return plugin_render(node, context)
+    return rendered
 
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can
@@ -91,6 +146,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
+    "link": _render_links_and_mkdocs_anchors,
 }
 
 
