@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from functools import partial
+from functools import lru_cache, partial
 from typing import Mapping
 
 from markdown_it import MarkdownIt
@@ -14,11 +14,9 @@ from mdformat_admon import RENDERERS as ADMON_RENDERS
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_inline
 from .mdit_plugins import (
-    MKDOCS_ANCHORS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     content_tabs_plugin,
     mkdocs_admon_plugin,
-    mkdocs_anchors_plugin,
     mkdocstrings_crossreference_plugin,
 )
 
@@ -56,7 +54,6 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     mdit.use(content_tabs_plugin)
     mdit.use(mkdocs_admon_plugin)
-    mdit.use(mkdocs_anchors_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
@@ -80,7 +77,7 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
 def _render_with_default_renderer(
     node: RenderTreeNode,
     context: RenderContext,
-    syntax_type: str | None = None,
+    syntax_type: str,
 ) -> str:
     """Attempt to render using the mdformat DEFAULT.
 
@@ -98,15 +95,44 @@ def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str
     """Render a MKDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
+    # Default to treating the matched content as a link
     return _render_with_default_renderer(node, context, "link")
 
 
-def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
-    """Override empty links `[...](<>)` with `[...]()`."""
-    rendered = _render_with_default_renderer(node, context, "link")
+@lru_cache(maxsize=1)
+def _match_plugin_renderer(syntax_type: str) -> Render | None:
+    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
+
+    for name, plugin in PARSER_EXTENSIONS.items():
+        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
+            return plugin.RENDERERS[syntax_type]
+    return None
+
+
+def _render_links_and_mkdocs_anchors(
+    node: RenderTreeNode,
+    context: RenderContext,
+) -> str:
+    """Intercepts rendering of [MKDocs AutoRefs 'markdown anchors'](https://mkdocs.github.io/autorefs/#markdown-anchors).
+
+    Replaces `[...](<>)` with `[...]()` to produce output like:
+
+    ```md
+    [](){#some-anchor-name}
+    ```
+
+    If no match, defers to other plugins or the default
+
+    """
+    syntax_type = node.type
+
+    rendered = _render_with_default_renderer(node, context, syntax_type)
     if rendered.endswith("](<>)"):
         return rendered[:-3] + ")"
-    breakpoint()
+
+    # Run other plugin renders if they exist
+    if plugin_render := _match_plugin_renderer(syntax_type):
+        return plugin_render(node, context)
     return rendered
 
 
@@ -119,7 +145,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
-    MKDOCS_ANCHORS_PREFIX: _link_renderer,
+    "link": _render_links_and_mkdocs_anchors,
 }
 
 
