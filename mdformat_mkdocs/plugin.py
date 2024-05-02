@@ -14,9 +14,11 @@ from mdformat_admon import RENDERERS as ADMON_RENDERS
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_inline
 from .mdit_plugins import (
+    MKDOCS_ANCHORS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     content_tabs_plugin,
     mkdocs_admon_plugin,
+    mkdocs_anchors_plugin,
     mkdocstrings_crossreference_plugin,
 )
 
@@ -52,8 +54,9 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    mdit.use(mkdocs_admon_plugin)
     mdit.use(content_tabs_plugin)
+    mdit.use(mkdocs_admon_plugin)
+    mdit.use(mkdocs_anchors_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
@@ -74,42 +77,36 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.content
 
 
-def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
-    """Render a MKDocs crossreference link."""
-    if _IGNORE_MISSING_REFERENCES:
-        return _render_node_content(node, context)
-    link = DEFAULT_RENDERERS.get("link", _render_node_content)
-    return link(node, context)
+def _render_with_default_renderer(
+    node: RenderTreeNode,
+    context: RenderContext,
+    syntax_type: str | None = None,
+) -> str:
+    """Attempt to render using the mdformat DEFAULT.
 
+    Adapted from:
+    https://github.com/hukkin/mdformat-gfm/blob/bd3c3392830fc4805d51582adcd1ae0d0630aed4/src/mdformat_gfm/plugin.py#L35-L46
 
-def _render_with_default_renderer(node: RenderTreeNode, context: RenderContext) -> str:
-    """Render the node using default renderer instead of the one in `context`.
-
-    We don't use `RenderContext.with_default_renderer_for` because that
-    changes the default renderer in context, where it's applied
-    recursively to render functions of children.
     """
-    syntax_type = node.type
-    text = DEFAULT_RENDERERS[syntax_type](node, context)
+    text = DEFAULT_RENDERERS.get(syntax_type, _render_node_content)(node, context)
     for postprocessor in context.postprocessors.get(syntax_type, ()):
         text = postprocessor(text, node, context)
     return text
 
 
+def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render a MKDocs crossreference link."""
+    if _IGNORE_MISSING_REFERENCES:
+        return _render_node_content(node, context)
+    return _render_with_default_renderer(node, context, "link")
+
+
 def _link_renderer(node: RenderTreeNode, context: RenderContext) -> str:
     """Override empty links `[...](<>)` with `[...]()`."""
-    rendered = _render_with_default_renderer(node, context)
+    rendered = _render_with_default_renderer(node, context, "link")
     if rendered.endswith("](<>)"):
         return rendered[:-3] + ")"
-
-    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
-
-    # HACK: run other plugin renders if they exist
-    syntax_type = node.type
-    for name, plugin in PARSER_EXTENSIONS.items():
-        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
-            return plugin.RENDERERS[syntax_type](node, context)
-
+    breakpoint()
     return rendered
 
 
@@ -122,7 +119,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
-    "link": _link_renderer,
+    MKDOCS_ANCHORS_PREFIX: _link_renderer,
 }
 
 
