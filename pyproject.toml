@@ -25,7 +25,7 @@ readme = "README.md"
 requires-python = ">=3.8.0"
 
 [project.entry-points."mdformat.parser_extension"]
-mkdocs = "mdformat_mkdocs"
+mkdocs = "mdformat_mkdocs" # Do not change name without modifying '_match_plugin_renderer'
 
 [project.optional-dependencies]
 dev = ["pre-commit"]

@@ -91,22 +91,23 @@ def _render_with_default_renderer(
     return text
 
 
+@lru_cache(maxsize=1)
+def _match_plugin_renderer(syntax_type: str) -> Render | None:
+    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
+
+    for name, plugin in PARSER_EXTENSIONS.items():
+        # Ignore this plugin (mkdocs) to avoid recursion. Name is set in pyproject.toml
+        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
+            return plugin.RENDERERS[syntax_type]
+    return None
+
+
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
     """Render a MKDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
     # Default to treating the matched content as a link
     return _render_with_default_renderer(node, context, "link")
-
-
-@lru_cache(maxsize=1)
-def _match_plugin_renderer(syntax_type: str) -> Render | None:
-    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
-
-    for name, plugin in PARSER_EXTENSIONS.items():
-        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
-            return plugin.RENDERERS[syntax_type]
-    return None
 
 
 def _render_links_and_mkdocs_anchors(
