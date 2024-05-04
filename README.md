@@ -11,12 +11,11 @@ An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](h
 
 Supports:
 
-- Indents are converted to 4-spaces instead of 2
-    - *Note*: see caveats when using the optional Semantic Indents on numbered lists which may not be a full multiple of 4
+- Indents are converted to four-spaces instead of two
+    - *Note*: when specifying `--align-semantic-breaks-in-lists`, the nested indent for ordered lists is three, but is otherwise a multiple of four
 - Unordered list bullets are converted to dashes (`-`) instead of `*`
 - By default, ordered lists are standardized on a single digit (`1.` or `0.`) unless `--number` is specified, then `mdformat-mkdocs` will apply consecutive numbering to ordered lists [for consistency with `mdformat`](https://github.com/executablebooks/mdformat?tab=readme-ov-file#options)
-- standardized as all `1.` rather than incrementing
-- Admonitions (extends [`mdformat-admon`](https://pypi.org/project/mdformat-admon))
+- Supports MkDocs admonition syntax
 - MkDocs-Material Content Tabs (<https://squidfunk.github.io/mkdocs-material/reference/content-tabs>)
     - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 - "[Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors)" syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
