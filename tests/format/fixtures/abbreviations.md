@@ -1,14 +1,16 @@
-Abbreviations (Similar to footnote with `*`)
+Abbreviations (Similar to footnote, but with `*`)
 .
-The HTML specification is maintained by the W3C.
+The HTML specification is maintained.
 
 *[HTML]: Hyper Text Markup Language
-*[W3C]: World Wide Web Consortium
+
+Potentially other content
 .
-The HTML specification is maintained by the W3C.
+The HTML specification is maintained.
 
 *[HTML]: Hyper Text Markup Language
-*[W3C]: World Wide Web Consortium
+
+Potentially other content
 .
 
 
@@ -34,3 +36,4 @@ The HTML specification is maintained by the W3C.
 *[HTML]: Hyper Text Markup Language
 *[W3C]: World Wide Web Consortium
 .
+
