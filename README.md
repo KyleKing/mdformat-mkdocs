@@ -18,6 +18,7 @@ Supports:
 - Supports MkDocs admonition syntax
 - [MkDocs-Material "Content Tabs"](https://squidfunk.github.io/mkdocs-material/reference/content-tabs)
     - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
+- [MkDocs-Material "Abreviations"](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)
 - "[Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors)" syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
