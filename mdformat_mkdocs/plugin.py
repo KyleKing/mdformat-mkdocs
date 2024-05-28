@@ -12,7 +12,7 @@ from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS
 
 from ._normalize_list import normalize_list as unbounded_normalize_list
-from ._postprocess_inline import postprocess_inline
+from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     content_tabs_plugin,
@@ -103,7 +103,7 @@ def _match_plugin_renderer(syntax_type: str) -> Render | None:
 
 
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
-    """Render a MKDocs crossreference link."""
+    """Render a MkDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
     # Default to treating the matched content as a link
@@ -114,7 +114,7 @@ def _render_links_and_mkdocs_anchors(
     node: RenderTreeNode,
     context: RenderContext,
 ) -> str:
-    """Intercepts rendering of [MKDocs AutoRefs 'markdown anchors'](https://mkdocs.github.io/autorefs/#markdown-anchors).
+    """Intercepts rendering of [MkDocs AutoRefs 'markdown anchors'](https://mkdocs.github.io/autorefs/#markdown-anchors).
 
     Replaces `[...](<>)` with `[...]()` to produce output like:
 
@@ -167,6 +167,6 @@ normalize_list = partial(
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "inline": postprocess_inline,
+    "inline": postprocess_list_wrap,
     "ordered_list": normalize_list,
 }

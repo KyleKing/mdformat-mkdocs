@@ -16,7 +16,7 @@ Supports:
 - Unordered list bullets are converted to dashes (`-`) instead of `*`
 - By default, ordered lists are standardized on a single digit (`1.` or `0.`) unless `--number` is specified, then `mdformat-mkdocs` will apply consecutive numbering to ordered lists [for consistency with `mdformat`](https://github.com/executablebooks/mdformat?tab=readme-ov-file#options)
 - Supports MkDocs admonition syntax
-- MkDocs-Material Content Tabs (<https://squidfunk.github.io/mkdocs-material/reference/content-tabs>)
+- [MkDocs-Material "Content Tabs"](https://squidfunk.github.io/mkdocs-material/reference/content-tabs)
     - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 - "[Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors)" syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
 

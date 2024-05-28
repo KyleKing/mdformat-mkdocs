@@ -18,7 +18,7 @@ def format_content_tab_markup(
     start_line: int,
     admonition: AdmonitionData,
 ) -> None:
-    """WARNING: this is not the proper markup for MKDocs.
+    """WARNING: this is not the proper markup for MkDocs.
 
     Would require recursively calling the parser to identify all sequential
     content tabs
@@ -58,7 +58,7 @@ def content_tab_logic(
 ) -> bool:
     # Because content-tabs look like admonitions syntactically, we can
     #   reuse admonition parsing logic
-    # Supported variations from: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed/
+    # Supported variations from: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
         markers=CONTENT_TAB_MARKERS,
     )

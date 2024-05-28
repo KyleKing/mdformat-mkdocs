@@ -11,14 +11,15 @@ FILLER = FILLER_CHAR * (MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two sp
 
 
 @rstrip_result
-def postprocess_inline(text: str, node: RenderTreeNode, context: RenderContext) -> str:
+def postprocess_list_wrap(text: str, node: RenderTreeNode, context: RenderContext) -> str:
     """Postprocess inline tokens.
 
     Fix word wrap for lists to account for the change in indentation.
     We fool word wrap by prefixing an unwrappable dummy string of the same length.
-    This prefix needs to be later removed (in `_list_item_renderer`).
+    This prefix needs to be later removed (in `merge_parsed_text`).
 
-    Adapted from: https://github.com/hukkin/mdformat-gfm/blob/cf316a121b6cf35cbff7b0ad6e171f287803f8cb/src/mdformat_gfm/plugin.py#L86-L111
+    Adapted from:
+    https://github.com/hukkin/mdformat-gfm/blob/cf316a121b6cf35cbff7b0ad6e171f287803f8cb/src/mdformat_gfm/plugin.py#L86-L111
 
     """
     if not context.do_wrap:
