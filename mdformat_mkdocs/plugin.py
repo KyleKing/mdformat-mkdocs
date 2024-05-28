@@ -21,6 +21,7 @@ from .mdit_plugins import (
     mkdocs_admon_plugin,
     mkdocstrings_crossreference_plugin,
 )
+from .mdit_plugins._mkdocs_abbreviations import PREFIX_BLOCK
 
 _IGNORE_MISSING_REFERENCES = None
 """user-specified flag to turn off bracket escaping when no link reference found.
@@ -155,6 +156,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     MKDOCS_ABBREVIATIONS_PREFIX: _render_abbreviation,
+    PREFIX_BLOCK: _render_abbreviation,
     "link": _render_links_and_mkdocs_anchors,
 }
 

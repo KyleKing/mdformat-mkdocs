@@ -17,6 +17,7 @@ from mdit_py_plugins.utils import is_code_block
 
 ABBREVIATION_PATTERN = re.compile(r"\*\\?\[(?P<label>[^\]]+)\\?\]: .*")
 PREFIX = "mkdocs_abbreviation"
+PREFIX_BLOCK = f"{PREFIX}_paragraph"
 
 
 def _mkdocs_abbreviation(
@@ -44,55 +45,29 @@ def _mkdocs_abbreviation(
     if silent:
         return True
 
-    pos = start  # FIXME: Maybe?
-
-    open_token = Token(f"{PREFIX}_open", "", 1)
+    open_token = Token(f"{PREFIX_BLOCK}_open", "", 1)
     open_token.meta = {"label": match["label"]}
     open_token.level = state.level
     state.level += 1
     state.tokens.append(open_token)
 
-    oldBMark = state.bMarks[startLine]
-    oldTShift = state.tShift[startLine]
-    oldSCount = state.sCount[startLine]
     oldParentType = state.parentType
-
-    posAfterColon = pos
-    initial = offset = (
-        state.sCount[startLine]
-        + pos
-        - (state.bMarks[startLine] + state.tShift[startLine])
-    )
-
-    pos += match.end()
-
-    state.tShift[startLine] = pos - posAfterColon
-    state.sCount[startLine] = offset - initial
-
-    state.bMarks[startLine] = posAfterColon
-    state.blkIndent += 4
-    state.parentType = "footnote"
-
-    if state.sCount[startLine] < state.blkIndent:
-        state.sCount[startLine] += state.blkIndent
 
     state.md.block.tokenize(state, startLine, endLine)
 
     state.parentType = oldParentType
-    state.blkIndent -= 4
-    state.tShift[startLine] = oldTShift
-    state.sCount[startLine] = oldSCount
-    state.bMarks[startLine] = oldBMark
 
     open_token.map = [startLine, state.line]
 
-    token = Token("footnote_reference_close", "", -1)
+    token = Token(f"{PREFIX_BLOCK}_close", "", -1)
     state.level -= 1
     token.level = state.level
     state.tokens.append(token)
 
     token = state.push(PREFIX, "", 0)
-    token.content = match.group()
+    # FIXME: Keep iterating until the last Abbreviation to prevent breaks
+    # token.content = match.group()
+    token.content = state.src[start:]
 
     return True
 
@@ -101,7 +76,7 @@ def mkdocs_abbreviations_plugin(md: MarkdownIt) -> None:
     # md.inline.ruler.push(PREFIX, _mkdocs_abbreviation)
     md.block.ruler.before(
         "paragraph",
-        PREFIX,
+        PREFIX_BLOCK,
         _mkdocs_abbreviation,
         {"alt": ["paragraph"]},
     )
