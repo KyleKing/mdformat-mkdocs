@@ -11,7 +11,11 @@ FILLER = FILLER_CHAR * (MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two sp
 
 
 @rstrip_result
-def postprocess_list_wrap(text: str, node: RenderTreeNode, context: RenderContext) -> str:
+def postprocess_list_wrap(
+    text: str,
+    node: RenderTreeNode,
+    context: RenderContext,
+) -> str:
     """Postprocess inline tokens.
 
     Fix word wrap for lists to account for the change in indentation.
