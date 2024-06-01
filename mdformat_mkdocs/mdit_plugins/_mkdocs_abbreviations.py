@@ -15,7 +15,7 @@ from markdown_it.rules_block import StateBlock
 from markdown_it.token import Token
 from mdit_py_plugins.utils import is_code_block
 
-ABBREVIATION_PATTERN = re.compile(r"\*\\?\[(?P<label>[^\]]+)\\?\]: .*")
+ABBREVIATION_PATTERN = re.compile(r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: .*")
 PREFIX = "mkdocs_abbreviation"
 PREFIX_BLOCK = f"{PREFIX}_paragraph"
 
@@ -51,11 +51,11 @@ def _mkdocs_abbreviation(
     state.level += 1
     state.tokens.append(open_token)
 
-    oldParentType = state.parentType
+    old_parent_type = state.parentType
 
     state.md.block.tokenize(state, startLine, endLine)
 
-    state.parentType = oldParentType
+    state.parentType = old_parent_type
 
     open_token.map = [startLine, state.line]
 
@@ -65,8 +65,8 @@ def _mkdocs_abbreviation(
     state.tokens.append(token)
 
     token = state.push(PREFIX, "", 0)
-    # FIXME: Keep iterating until the last Abbreviation to prevent breaks
-    # token.content = match.group()
+    # FIXME: Reformat the line based on matching groups handling 1 or more matches
+    # > token.content = match.group()
     token.content = state.src[start:]
 
     return True
