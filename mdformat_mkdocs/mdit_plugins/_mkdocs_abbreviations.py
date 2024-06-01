@@ -8,6 +8,8 @@ Matches:
 
 """
 
+from __future__ import annotations
+
 import re
 
 from markdown_it import MarkdownIt
@@ -15,7 +17,9 @@ from markdown_it.rules_block import StateBlock
 from markdown_it.token import Token
 from mdit_py_plugins.utils import is_code_block
 
-ABBREVIATION_PATTERN = re.compile(r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: .*")
+ABBREVIATION_PATTERN = re.compile(
+    r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
+)
 PREFIX = "mkdocs_abbreviation"
 PREFIX_BLOCK = f"{PREFIX}_paragraph"
 
@@ -65,15 +69,20 @@ def _mkdocs_abbreviation(
     state.tokens.append(token)
 
     token = state.push(PREFIX, "", 0)
-    # FIXME: Reformat the line based on matching groups handling 1 or more matches
-    # > token.content = match.group()
-    token.content = state.src[start:]
+
+    content: list[str] = []
+    for line in (state.src[start:] + "").split("\n"):
+        match = ABBREVIATION_PATTERN.match(line)
+        if match:
+            content.append(f'*[{match["label"]}]: {match["description"]}')
+        else:
+            content.append(line)
+    token.content = "\n".join(content)
 
     return True
 
 
 def mkdocs_abbreviations_plugin(md: MarkdownIt) -> None:
-    # md.inline.ruler.push(PREFIX, _mkdocs_abbreviation)
     md.block.ruler.before(
         "paragraph",
         PREFIX_BLOCK,
