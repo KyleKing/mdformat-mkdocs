@@ -14,12 +14,12 @@ from mdformat_admon import RENDERERS as ADMON_RENDERS
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
-    MKDOCS_ABBREVIATIONS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
+    PYMD_ABBREVIATIONS_PREFIX,
     content_tabs_plugin,
-    mkdocs_abbreviations_plugin,
     mkdocs_admon_plugin,
     mkdocstrings_crossreference_plugin,
+    pymd_abbreviations_plugin,
 )
 
 _IGNORE_MISSING_REFERENCES = None
@@ -56,7 +56,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     mdit.use(content_tabs_plugin)
     mdit.use(mkdocs_admon_plugin)
-    mdit.use(mkdocs_abbreviations_plugin)
+    mdit.use(pymd_abbreviations_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
     _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
@@ -77,7 +77,7 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.content
 
 
-def _render_abbreviation(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+def _render_pymd_abbr(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render an Abbreviation."""
     return node.content
 
@@ -154,7 +154,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
-    MKDOCS_ABBREVIATIONS_PREFIX: _render_abbreviation,
+    PYMD_ABBREVIATIONS_PREFIX: _render_pymd_abbr,
     "link": _render_links_and_mkdocs_anchors,
 }
 

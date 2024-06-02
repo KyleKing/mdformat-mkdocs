@@ -6,7 +6,7 @@ from markdown_it.utils import read_fixture_file
 
 from ..helpers import print_text
 
-FIXTURE_PATH = Path(__file__).parent / "fixtures/abbreviations.md"
+FIXTURE_PATH = Path(__file__).parent / "fixtures/pymd_abbreviations.md"
 fixtures = read_fixture_file(FIXTURE_PATH)
 
 

@@ -23,7 +23,7 @@ from mdit_py_plugins.utils import is_code_block
 ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
 )
-PREFIX = "mkdocs_abbreviation"
+PYMD_ABBREVIATIONS_PREFIX = "mkdocs_abbreviation"
 
 
 def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
@@ -33,7 +33,7 @@ def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
     return ABBREVIATION_PATTERN.match(state.src[start:maximum])
 
 
-def _mkdocs_abbreviation(
+def _pymd_abbreviations(
     state: StateBlock,
     startLine: int,
     endLine: int,
@@ -75,7 +75,7 @@ def _mkdocs_abbreviation(
             max_line += 1
             matches.append(match)
 
-    token = state.push(PREFIX, "", 0)
+    token = state.push(PYMD_ABBREVIATIONS_PREFIX, "", 0)
     token.block = True
     token.content = "\n".join(
         [f'*[{match["label"]}]: {match["description"]}' for match in matches],
@@ -86,10 +86,10 @@ def _mkdocs_abbreviation(
     return True
 
 
-def mkdocs_abbreviations_plugin(md: MarkdownIt) -> None:
+def pymd_abbreviations_plugin(md: MarkdownIt) -> None:
     md.block.ruler.before(
         "reference",
-        PREFIX,
-        _mkdocs_abbreviation,
+        PYMD_ABBREVIATIONS_PREFIX,
+        _pymd_abbreviations,
         {"alt": ["paragraph", "reference"]},
     )
