@@ -31,10 +31,6 @@ def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
     return ABBREVIATION_PATTERN.match(state.src[start:maximum])
 
 
-ITERS = 0
-
-
-# PLANNED: replace with more than formatting the plain text
 def _mkdocs_abbreviation(
     state: StateBlock,
     startLine: int,
@@ -42,6 +38,8 @@ def _mkdocs_abbreviation(
     silent: bool,
 ) -> bool:
     """Identify syntax abbreviation, but the markup is incorrect.
+
+    <!-- PLANNED: replace with more than formatting the plain text -->
 
     To fix the generated markup, the abbreviation descriptions would need to
     be stored in the environment, but unlike markdown footnotes, the
@@ -60,11 +58,6 @@ def _mkdocs_abbreviation(
 
     if silent:
         return True
-
-    global ITERS
-    if ITERS > 3:
-        raise ValueError("TOO MANY!")
-    ITERS += 1
 
     matches = [match]
     max_line = startLine
@@ -93,7 +86,7 @@ def _mkdocs_abbreviation(
     state.tokens.append(token)
 
     token = state.push(PREFIX, "", 0)
-    # token.block = True
+    token.block = True
     token.content = "\n".join(
         [f'*[{match["label"]}]: {match["description"]}' for match in matches],
     )
@@ -104,17 +97,9 @@ def _mkdocs_abbreviation(
 
 
 def mkdocs_abbreviations_plugin(md: MarkdownIt) -> None:
-    global ITERS
-    ITERS = 0
-    # md.block.ruler.before(
-    #     "reference",
-    #     PREFIX,
-    #     _mkdocs_abbreviation,
-    #     {"alt": ["paragraph", "reference"]},
-    # )
     md.block.ruler.before(
-        "paragraph",
+        "reference",
         PREFIX,
         _mkdocs_abbreviation,
-        {"alt": ["paragraph"]},
+        {"alt": ["paragraph", "reference"]},
     )
