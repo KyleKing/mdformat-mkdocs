@@ -15,9 +15,11 @@ Supports:
     - *Note*: when specifying `--align-semantic-breaks-in-lists`, the nested indent for ordered lists is three, but is otherwise a multiple of four
 - Unordered list bullets are converted to dashes (`-`) instead of `*`
 - By default, ordered lists are standardized on a single digit (`1.` or `0.`) unless `--number` is specified, then `mdformat-mkdocs` will apply consecutive numbering to ordered lists [for consistency with `mdformat`](https://github.com/executablebooks/mdformat?tab=readme-ov-file#options)
-- Supports MkDocs admonition syntax
-- MkDocs-Material Content Tabs (<https://squidfunk.github.io/mkdocs-material/reference/content-tabs>)
-    - Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
+- [MkDocs-Material Admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions)
+- [MkDocs-Material "Content Tabs"\*](https://squidfunk.github.io/mkdocs-material/reference/content-tabs)
+    - \*Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
+- [Python Markdown "Abbreviations"\*](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)
+    - \*Note: the markup (HTML) rendered for abbreviations is not useful for rendering. If important, I'm open to contributions because this is an involved implementation
 - "[Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors)" syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
@@ -26,7 +28,7 @@ See the example test files, [./tests/pre-commit-test.md](https://raw.githubuserc
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with `mkdocs`:
+**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with typical documentation managed by `mkdocs`:
 
 - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
 - [mdformat-black](https://pypi.org/project/mdformat-black)
@@ -47,7 +49,7 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs>=2.0.0
+          - mdformat-mkdocs>=2.0.6
           # Or
           # - "mdformat-mkdocs[recommended]>=2.0.6"
 ```

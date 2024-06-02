@@ -1,4 +1,8 @@
+from __future__ import annotations
+
+from itertools import chain
 from pathlib import Path
+from typing import TypeVar
 
 import mdformat
 import pytest
@@ -6,8 +10,23 @@ from markdown_it.utils import read_fixture_file
 
 from ..helpers import print_text
 
-FIXTURE_PATH = Path(__file__).parent / "fixtures/content_tabs.md"
-fixtures = read_fixture_file(FIXTURE_PATH)
+T = TypeVar("T")
+
+
+def flatten(nested_list: list[list[T]]) -> list[T]:
+    return [*chain(*nested_list)]
+
+
+fixtures = flatten(
+    [
+        read_fixture_file(Path(__file__).parent / fixture_path)
+        for fixture_path in (
+            "fixtures/content_tabs.md",
+            "fixtures/pymd_abbreviations.md",
+            "fixtures/text.md",
+        )
+    ],
+)
 
 
 @pytest.mark.parametrize(

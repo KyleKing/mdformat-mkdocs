@@ -1,4 +1,4 @@
-"""MKDocs Admonition Plugin."""
+"""MkDocs Admonition Plugin."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
 MKDOCS_ADMON_MARKERS = {"!!!", "???", "???+"}
-"""All supported MKDocs Admonition markers."""
+"""All supported MkDocs Admonition markers."""
 
 
 def format_admon_markup(
@@ -70,7 +70,7 @@ def admonition_logic(
     endLine: int,
     silent: bool,
 ) -> bool:
-    """Parse MKDocs-style Admonitions.
+    """Parse MkDocs-style Admonitions.
 
     `Such as collapsible blocks
     <https://squidfunk.github.io/mkdocs-material/reference/admonitions/#collapsible-blocks>`.

@@ -611,7 +611,7 @@ content
 .
 
 
-MKDocs Closed Collapsible Sections
+MkDocs Closed Collapsible Sections
 .
 ??? note
      content
@@ -621,7 +621,7 @@ MKDocs Closed Collapsible Sections
 .
 
 
-MKDocs Open Collapsible Sections
+MkDocs Open Collapsible Sections
 .
 ???+ note
      content
@@ -1154,7 +1154,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
 .
 
 
-Example of non-code content from Material-MKDocs documentation without admonitions
+Example of non-code content from Material-MkDocs documentation without admonitions
 .
 === "Unordered list"
 
@@ -1180,7 +1180,7 @@ Example of non-code content from Material-MKDocs documentation without admonitio
 .
 
 
-Example from Material-MKDocs documentation within an admonition
+Example from Material-MkDocs documentation within an admonition
 .
 !!! example
     === "Unordered List"

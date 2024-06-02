@@ -32,7 +32,7 @@ No vertical separation
 .
 
 
-Example of non-code content from Material-MKDocs documentation without admonitions
+Example of non-code content from Material-MkDocs documentation without admonitions
 .
 === "Unordered list"
 
@@ -65,7 +65,7 @@ Example of non-code content from Material-MKDocs documentation without admonitio
 .
 
 
-Example from Material-MKDocs documentation within an admonition
+Example from Material-MkDocs documentation within an admonition
 .
 !!! example
 
