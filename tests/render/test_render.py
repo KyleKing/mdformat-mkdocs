@@ -23,6 +23,7 @@ def with_plugin(filename, plugins):
             "content-tabs.md",
             [mkdocs_admon_plugin, content_tabs_plugin],
         ),
+        *with_plugin("material_abbreviations.md", []),
     ],
 )
 def test_render(line, title, text, expected, plugins):
