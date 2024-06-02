@@ -1,10 +1,14 @@
-"""Ignore abbreviation syntax
+"""Python-Markdown Abbreviations.
 
 Matches:
 
 ```md
 *[HTML]: Hyper Text Markup Language
 ```
+
+Docs:
+https://github.com/Python-Markdown/markdown/blob/ec8c305fb14eb081bb874c917d8b91d3c5122334/docs/extensions/abbreviations.md
+
 
 """
 
@@ -14,14 +18,12 @@ import re
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
-from markdown_it.token import Token
 from mdit_py_plugins.utils import is_code_block
 
 ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
 )
 PREFIX = "mkdocs_abbreviation"
-PREFIX_BLOCK = f"{PREFIX}_paragraph"
 
 
 def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
@@ -37,16 +39,21 @@ def _mkdocs_abbreviation(
     endLine: int,
     silent: bool,
 ) -> bool:
-    """Identify syntax abbreviation, but the markup is incorrect.
+    """Identifies syntax abbreviation syntax, but generates incorrect markup.
 
-    <!-- PLANNED: replace with more than formatting the plain text -->
+    To properly generate markup, the abbreviation descriptions would need to
+    be stored in the state.env, but unlike markdown footnotes, the
+    `mdkocs-abbreviations` aren't limited to the same file, so a full
+    implementation in mdformat may not be possible, although someone more
+    familiar with the library could probably find a way.
 
-    To fix the generated markup, the abbreviation descriptions would need to
-    be stored in the environment, but unlike markdown footnotes, the
-    `mdkocs-abbreviations` can be global and may not be possible to support.
-    See the below `mdformat-footnote` plugin to reference if implementing
-    proper support for HTML:
+    If revisiting, the `mdformat-footnote` plugin is a great reference for how
+    Material Abbreviations could be implemented in full:
     https://github.com/executablebooks/mdit-py-plugins/blob/d11bdaf0979e6fae01c35db5a4d1f6a4b4dd8843/mdit_py_plugins/footnote/index.py#L103-L198
+
+    Additionally, reviewing the `python-markdown` implementation would likely
+    be helpful:
+    https://github.com/Python-Markdown/markdown/blob/ec8c305fb14eb081bb874c917d8b91d3c5122334/markdown/extensions/abbr.py
 
     """
     if is_code_block(state, startLine):
@@ -67,23 +74,6 @@ def _mkdocs_abbreviation(
         if match := _new_match(state, max_line + 1):
             max_line += 1
             matches.append(match)
-
-    open_token = Token(f"{PREFIX_BLOCK}_open", "", 1)
-    open_token.meta = {"label": [_m["label"] for _m in matches]}
-    open_token.level = state.level
-    state.level += 1
-    state.tokens.append(open_token)
-
-    old_parent_type = state.parentType
-
-    state.parentType = old_parent_type
-
-    open_token.map = [startLine, max_line]
-
-    token = Token(f"{PREFIX_BLOCK}_close", "", -1)
-    state.level -= 1
-    token.level = state.level
-    state.tokens.append(token)
 
     token = state.push(PREFIX, "", 0)
     token.block = True
