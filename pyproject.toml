@@ -13,7 +13,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-  "mdformat >= 0.7.16",
+  "mdformat >= 0.7.17",
   "mdformat-admon >= 2.0.3",
   "mdformat-gfm >= 0.3.6",
   "more-itertools >= 10.2.0",
@@ -25,7 +25,7 @@ readme = "README.md"
 requires-python = ">=3.8.0"
 
 [project.entry-points."mdformat.parser_extension"]
-mkdocs = "mdformat_mkdocs" # Do not change name without modifying '_match_plugin_renderer'
+mkdocs = "mdformat_mkdocs"
 
 [project.optional-dependencies]
 dev = ["pre-commit"]

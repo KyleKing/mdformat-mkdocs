@@ -23,6 +23,7 @@ def with_plugin(filename, plugins):
             "content-tabs.md",
             [mkdocs_admon_plugin, content_tabs_plugin],
         ),
+        *with_plugin("mkdocs_autorefs.md", []),
         *with_plugin("pymd_abbreviations.md", []),
     ],
 )

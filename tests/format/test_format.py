@@ -19,11 +19,12 @@ def flatten(nested_list: list[list[T]]) -> list[T]:
 
 fixtures = flatten(
     [
-        read_fixture_file(Path(__file__).parent / fixture_path)
+        read_fixture_file(Path(__file__).parent / "fixtures" / fixture_path)
         for fixture_path in (
-            "fixtures/content_tabs.md",
-            "fixtures/pymd_abbreviations.md",
-            "fixtures/text.md",
+            "content_tabs.md",
+            "mkdocs_autorefs.md",
+            "pymd_abbreviations.md",
+            "text.md",
         )
     ],
 )

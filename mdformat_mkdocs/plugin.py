@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from functools import lru_cache, partial
+from functools import partial
 from typing import Mapping
 
 from markdown_it import MarkdownIt
@@ -14,10 +14,12 @@ from mdformat_admon import RENDERERS as ADMON_RENDERS
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
+    MKDOCS_ANCHORS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
     content_tabs_plugin,
     mkdocs_admon_plugin,
+    mkdocs_anchors_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
 )
@@ -56,6 +58,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
     mdit.use(content_tabs_plugin)
     mdit.use(mkdocs_admon_plugin)
+    mdit.use(mkdocs_anchors_plugin)
     mdit.use(pymd_abbreviations_plugin)
 
     global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
@@ -75,6 +78,11 @@ def update_mdit(mdit: MarkdownIt) -> None:
 def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Return node content without additional processing."""
     return node.content
+
+
+def _render_meta_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Return node content without additional processing."""
+    return node.meta.get("content", "")
 
 
 def _render_pymd_abbr(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
@@ -99,50 +107,12 @@ def _render_with_default_renderer(
     return text
 
 
-@lru_cache(maxsize=1)
-def _match_plugin_renderer(syntax_type: str) -> Render | None:
-    from mdformat.plugins import PARSER_EXTENSIONS  # noqa: PLC0415
-
-    for name, plugin in PARSER_EXTENSIONS.items():
-        # Ignore this plugin (mkdocs) to avoid recursion. Name is set in pyproject.toml
-        if name != "mkdocs" and plugin.RENDERERS.get(syntax_type):
-            return plugin.RENDERERS[syntax_type]
-    return None
-
-
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
     """Render a MkDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
         return _render_node_content(node, context)
     # Default to treating the matched content as a link
     return _render_with_default_renderer(node, context, "link")
-
-
-def _render_links_and_mkdocs_anchors(
-    node: RenderTreeNode,
-    context: RenderContext,
-) -> str:
-    """Intercepts rendering of [MkDocs AutoRefs 'markdown anchors'](https://mkdocs.github.io/autorefs/#markdown-anchors).
-
-    Replaces `[...](<>)` with `[...]()` to produce output like:
-
-    ```md
-    [](){#some-anchor-name}
-    ```
-
-    If no match, defers to other plugins or the default
-
-    """
-    syntax_type = node.type
-
-    rendered = _render_with_default_renderer(node, context, syntax_type)
-    if rendered.endswith("](<>)"):
-        return rendered[:-3] + ")"
-
-    # Run other plugin renders if they exist
-    if plugin_render := _match_plugin_renderer(syntax_type):
-        return plugin_render(node, context)
-    return rendered
 
 
 # A mapping from `RenderTreeNode.type` to a `Render` function that can
@@ -154,8 +124,8 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
+    MKDOCS_ANCHORS_PREFIX: _render_meta_content,
     PYMD_ABBREVIATIONS_PREFIX: _render_pymd_abbr,
-    "link": _render_links_and_mkdocs_anchors,
 }
 
 
