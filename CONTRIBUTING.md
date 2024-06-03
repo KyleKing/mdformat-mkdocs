@@ -1,5 +1,14 @@
 # Development
 
+## API Documentation
+
+A collection of useful resources to reference when developing new features:
+
+- [`markdown-it-py` documentation](https://markdown-it-py.readthedocs.io/en/latest/using.html)
+- [`markdown-it` (JS) documentation](https://markdown-it.github.io/markdown-it)
+
+## Local Development
+
 This package utilizes [flit](https://flit.readthedocs.io) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
 
 To install these development dependencies:
