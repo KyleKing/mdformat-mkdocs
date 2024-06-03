@@ -2,7 +2,7 @@ Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
 .
 [](){#some-anchor-name}
 .
-<p><a href=""></a>{#some-anchor-name}</p>
+<p><a id="some-anchor-name" href=""></a></p>
 .
 
 For header (https://github.com/DFiantHDL/DFHDL/blob/192d7e58e1107da6b0a885e54a853a88bb619f29/docs/user-guide/state/index.md?plain=1#L1-L4 & https://dfianthdl.github.io/user-guide/state/#state-initialization)
@@ -24,6 +24,6 @@ verificar a precedência alfabética de um [](){#spiderWordFound4}texto em
 relação a outro
 .
 <p>**maior **e <strong>menor</strong> para
-verificar a precedência alfabética de um <a href=""></a>{#spiderWordFound4}texto em
+verificar a precedência alfabética de um <a id="spiderWordFound4" href=""></a>texto em
 relação a outro</p>
 .

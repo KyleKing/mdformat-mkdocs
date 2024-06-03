@@ -15,7 +15,7 @@ import re
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline import StateInline
 
-LINK_PATTERN = re.compile(r"\[\]\(<?>?\){#(?P<anchor>[^}]+)}")
+LINK_PATTERN = re.compile(r"\[\]\(<?>?\){#(?P<anchor>[^ }]+)}")
 MKDOCS_ANCHORS_PREFIX = "mkdocs_anchor"
 
 
@@ -27,17 +27,10 @@ def _mkdocs_anchors_plugin(state: StateInline, silent: bool) -> bool:
     if silent:
         return True
 
-    state.push(MKDOCS_ANCHORS_PREFIX, "", 0)
-
     anchor = match["anchor"]
-    state.push(
-        f"{MKDOCS_ANCHORS_PREFIX}_open",
-        "a",
-        1,
-        attrs={"id": anchor, "href": "???"},
-        content="",
-        meta={"content": f"[](){{#{anchor}}}"},
-    )
+    o_token = state.push(f"{MKDOCS_ANCHORS_PREFIX}_open", "a", 1)
+    o_token.attrs = {"id": anchor, "href": ""}
+    o_token.meta = {"content": f"[](){{#{anchor}}}"}
     state.push(f"{MKDOCS_ANCHORS_PREFIX}_close", "a", -1)
 
     state.posMax = match.end()
