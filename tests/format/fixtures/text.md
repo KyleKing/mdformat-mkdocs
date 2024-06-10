@@ -1547,3 +1547,40 @@ Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
 .
 [](){#some-anchor-name}
 .
+
+Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/issues/31)
+.
+# Title
+
+1.  Without '<'
+
+     ```bash
+     echo \
+      container name>
+     ```
+
+1.  With '<'
+
+     ```bash
+     echo \
+      <container name>
+     echo $VAR
+     ```
+.
+# Title
+
+1. Without '\<'
+
+    ```bash
+    echo \
+     container name>
+    ```
+
+1. With '\<'
+
+    ```bash
+    echo \
+     <container name>
+    echo $VAR
+        ```
+.
