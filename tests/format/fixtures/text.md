@@ -1540,3 +1540,40 @@ Unsupported versions of 0-indexed markdown list (Within ordered list)
     4\. next
 0. next
 .
+
+Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/issues/31)
+.
+# Title
+
+1.  Without '<'
+
+     ```bash
+     echo \
+      container name>
+     ```
+
+1.  With '<'
+
+     ```bash
+     echo \
+      <container name>
+     echo $VAR
+     ```
+.
+# Title
+
+1. Without '\<'
+
+    ```bash
+    echo \
+     container name>
+    ```
+
+1. With '\<'
+
+    ```bash
+    echo \
+     <container name>
+    echo $VAR
+    ```
+.
