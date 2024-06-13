@@ -174,6 +174,7 @@ def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
 class BlockIndent(NamedTuple):
     """Track the parsed code block indentation."""
 
+    start_line: int
     raw_indent: str
     indent_depth: int
     kind: Literal["code", "HTML"]
@@ -189,6 +190,7 @@ def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent 
             None
             if last
             else BlockIndent(
+                start_line=line.parsed.line_num,
                 raw_indent=line.parsed.indent,
                 indent_depth=len(line.parents),
                 kind="code",
@@ -203,6 +205,7 @@ def parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent |
     if line.parsed.syntax == Syntax.HTML:
         # Start tracking an HTML block if not already
         result = last or BlockIndent(
+            start_line=line.parsed.line_num,
             raw_indent=line.parsed.indent,
             indent_depth=len(line.parents),
             kind="HTML",
@@ -269,14 +272,18 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
 
 def parse_text(text: str, inc_numbers: bool) -> ParsedText:
     """Post-processor to normalize lists."""
-    parsed_lines = list(starmap(parse_line, enumerate(text.rstrip().split(EOL))))
+    parsed_lines = [*starmap(parse_line, enumerate(text.rstrip().split(EOL)))]
     lines = acc_line_results(parsed_lines)
 
-    # `code_block_indents` take precedence to ignore contents of an HTML code block
     code_indents = map_lookback(parse_code_block, lines, None)
-    html_indents = map_lookback(parse_html_line, lines, None)
+    html_indents = [
+        # Any indents initiated from within a `code_block_indents` should be ignored
+        indent if indent and code_indents[indent.start_line] is None else None
+        for indent in map_lookback(parse_html_line, lines, None)
+    ]
+    # When both, code_indents take precedence
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
-    new_indents = list(starmap(format_new_indent, zip_equal(lines, block_indents)))
+    new_indents = [*starmap(format_new_indent, zip_equal(lines, block_indents))]
 
     new_contents = [
         format_new_content(line, inc_numbers, ci is not None)
