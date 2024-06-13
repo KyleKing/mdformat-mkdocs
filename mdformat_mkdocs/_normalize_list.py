@@ -78,7 +78,6 @@ class Syntax(Enum):
         return None
 
 
-# TODO: Why not dataclass(frozen=True)?
 class ParsedLine(NamedTuple):
     """Parsed Line of text."""
 
@@ -278,10 +277,11 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
 
     code_indents = map_lookback(parse_code_block, lines, None)
     html_indents = [
-        # `code_block_indents` take precedence and should escape any code within
+        # Any indents initiated from within a `code_block_indents` should be ignored
         indent if indent and code_indents[indent.start_line] is None else None
         for indent in map_lookback(parse_html_line, lines, None)
     ]
+    # When both, code_indents take precedence
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
     new_indents = [*starmap(format_new_indent, zip_equal(lines, block_indents))]
 
