@@ -1582,5 +1582,5 @@ Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/is
     echo \
      <container name>
     echo $VAR
-        ```
+    ```
 .
