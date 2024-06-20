@@ -33,8 +33,7 @@ def _mkdocs_anchors_plugin(state: StateInline, silent: bool) -> bool:
     o_token.meta = {"content": f"[](){{#{anchor}}}"}
     state.push(f"{MKDOCS_ANCHORS_PREFIX}_close", "a", -1)
 
-    state.posMax = match.end()
-    state.pos = match.end() + 1
+    state.pos += match.end()
 
     return True
 
