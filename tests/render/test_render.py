@@ -7,7 +7,7 @@ from markdown_it.utils import read_fixture_file
 from mdformat_mkdocs.mdit_plugins import (
     content_tabs_plugin,
     mkdocs_admon_plugin,
-    mkdocs_anchors_plugin,
+    mkdocstrings_autorefs_plugin,
 )
 
 from ..helpers import print_text
@@ -27,7 +27,7 @@ def with_plugin(filename, plugins):
             "content-tabs.md",
             [mkdocs_admon_plugin, content_tabs_plugin],
         ),
-        *with_plugin("mkdocs_autorefs.md", [mkdocs_anchors_plugin]),
+        *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
         *with_plugin(
             "pymd_abbreviations.md",
             [],  # FIXME: Test with `pymd_abbreviations_plugin`
