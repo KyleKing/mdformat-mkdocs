@@ -5,8 +5,8 @@ from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 
 from mdformat_mkdocs.mdit_plugins import (
+    material_admon_plugin,
     material_content_tabs_plugin,
-    mkdocs_admon_plugin,
     mkdocstrings_autorefs_plugin,
 )
 
@@ -22,10 +22,10 @@ def with_plugin(filename, plugins):
 @pytest.mark.parametrize(
     ("line", "title", "text", "expected", "plugins"),
     [
-        *with_plugin("admonitions.md", [mkdocs_admon_plugin]),
+        *with_plugin("admonitions.md", [material_admon_plugin]),
         *with_plugin(
             "material_content_tabs.md",
-            [mkdocs_admon_plugin, material_content_tabs_plugin],
+            [material_admon_plugin, material_content_tabs_plugin],
         ),
         *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
         *with_plugin(

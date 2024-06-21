@@ -1,4 +1,18 @@
-"""MkDocs Admonition Plugin."""
+"""Match `mkdocs-material` admonitions.
+
+Matches:
+
+```md
+!!! note
+
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
+    nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
+    massa, nec semper lorem quam in massa.
+```
+
+Docs: <https://squidfunk.github.io/mkdocs-material/reference/admonitions/>
+
+"""
 
 from __future__ import annotations
 
@@ -17,7 +31,7 @@ from mdformat_admon.mdit_plugins import format_python_markdown_admon_markup
 PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
-MKDOCS_ADMON_MARKERS = {"!!!", "???", "???+"}
+MATERIAL_ADMON_MARKERS = {"!!!", "???", "???+"}
 """All supported MkDocs Admonition markers."""
 
 
@@ -82,7 +96,7 @@ def admonition_logic(
 
     """
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
-        markers=MKDOCS_ADMON_MARKERS,
+        markers=MATERIAL_ADMON_MARKERS,
     )
     result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
     if isinstance(result, AdmonitionData):
@@ -91,4 +105,4 @@ def admonition_logic(
     return result
 
 
-mkdocs_admon_plugin = admon_plugin_factory(PREFIX, admonition_logic)
+material_admon_plugin = admon_plugin_factory(PREFIX, admonition_logic)

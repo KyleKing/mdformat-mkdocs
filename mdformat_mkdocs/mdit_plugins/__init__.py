@@ -1,10 +1,10 @@
 """Plugins."""
 
+from ._material_admon import MATERIAL_ADMON_MARKERS, material_admon_plugin
 from ._material_material_content_tabs import (
     MATERIAL_CONTENT_TAB_MARKERS,
     material_content_tabs_plugin,
 )
-from ._mkdocs_admon import MKDOCS_ADMON_MARKERS, mkdocs_admon_plugin
 from ._mkdocstrings_autorefs import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     mkdocstrings_autorefs_plugin,

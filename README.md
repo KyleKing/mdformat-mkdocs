@@ -20,7 +20,7 @@ Supports:
     - \*Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 - [Python Markdown "Abbreviations"\*](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)
     - \*Note: the markup (HTML) rendered for abbreviations is not useful for rendering. If important, I'm open to contributions because this is an involved implementation
-- "[Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors)" syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
+- [Markdown anchors](https://mkdocstrings.github.io/autorefs/#markdown-anchors) syntax from the `mkdocs` [autorefs](https://mkdocstrings.github.io/autorefs) plugin
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 
@@ -65,15 +65,15 @@ pipx inject mdformat mdformat-mkdocs
 
 ## HTML Rendering
 
-To generate HTML output, `mkdocs_admon_plugin` can be imported from `mdit_plugins`. More plugins will be added in the future. For more guidance on `MarkdownIt`, see the docs: <https://markdown-it-py.readthedocs.io/en/latest/using.html#the-parser>
+To generate HTML output, `material_admon_plugin` can be imported from `mdit_plugins`. More plugins will be added in the future. For more guidance on `MarkdownIt`, see the docs: <https://markdown-it-py.readthedocs.io/en/latest/using.html#the-parser>
 
 ```py
 from markdown_it import MarkdownIt
 
-from mdformat_mkdocs.mdit_plugins import mkdocs_admon_plugin
+from mdformat_mkdocs.mdit_plugins import material_admon_plugin
 
 md = MarkdownIt()
-md.use(mkdocs_admon_plugin)
+md.use(material_admon_plugin)
 
 text = "??? note\n    content"
 md.render(text)

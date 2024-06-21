@@ -18,7 +18,7 @@ from ._helpers import (
     rstrip_result,
     separate_indent,
 )
-from .mdit_plugins import MATERIAL_CONTENT_TAB_MARKERS, MKDOCS_ADMON_MARKERS
+from .mdit_plugins import MATERIAL_ADMON_MARKERS, MATERIAL_CONTENT_TAB_MARKERS
 
 # ======================================================================================
 # FP Helpers
@@ -44,7 +44,7 @@ def map_lookback(
 # ======================================================================================
 # Parsing Operations
 
-MARKERS = MATERIAL_CONTENT_TAB_MARKERS.union(MKDOCS_ADMON_MARKERS)
+MARKERS = MATERIAL_CONTENT_TAB_MARKERS.union(MATERIAL_ADMON_MARKERS)
 """All block type markers."""
 
 RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*]|\d+\.)\s+(?P<item>.+)")
