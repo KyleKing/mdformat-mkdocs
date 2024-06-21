@@ -87,7 +87,8 @@ def _render_meta_content(node: RenderTreeNode, context: RenderContext) -> str:  
 
 def _render_pymd_abbr(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render an Abbreviation."""
-    return node.content
+    [inline] = node.children
+    return inline.content
 
 
 def _render_with_default_renderer(

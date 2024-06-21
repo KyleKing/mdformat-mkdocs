@@ -18,6 +18,7 @@ import re
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
+from mdformat_admon.factories import new_token
 from mdit_py_plugins.utils import is_code_block
 
 _ABBREVIATION_PATTERN = re.compile(
@@ -75,11 +76,13 @@ def _pymd_abbreviations(
             max_line += 1
             matches.append(match)
 
-    token = state.push(PYMD_ABBREVIATIONS_PREFIX, "", 0)
-    token.block = True
-    token.content = "\n".join(
-        [f'*[{match["label"]}]: {match["description"]}' for match in matches],
-    )
+    with new_token(state, PYMD_ABBREVIATIONS_PREFIX, "p"):
+        tkn_inline = state.push("inline", "", 0)
+        tkn_inline.content = "\n".join(
+            [f'*[{match["label"]}]: {match["description"]}' for match in matches],
+        )
+        tkn_inline.map = [startLine, max_line]
+        tkn_inline.children = []
 
     state.line = max_line + 1
 

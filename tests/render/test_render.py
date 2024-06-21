@@ -8,6 +8,7 @@ from mdformat_mkdocs.mdit_plugins import (
     material_admon_plugin,
     material_content_tabs_plugin,
     mkdocstrings_autorefs_plugin,
+    pymd_abbreviations_plugin,
 )
 
 from ..helpers import print_text
@@ -28,10 +29,7 @@ def with_plugin(filename, plugins):
             [material_admon_plugin, material_content_tabs_plugin],
         ),
         *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
-        *with_plugin(
-            "pymd_abbreviations.md",
-            [],  # FIXME: Test with `pymd_abbreviations_plugin`
-        ),
+        *with_plugin("pymd_abbreviations.md", [pymd_abbreviations_plugin]),
         # TODO: Test cross-reference!
     ],
 )
