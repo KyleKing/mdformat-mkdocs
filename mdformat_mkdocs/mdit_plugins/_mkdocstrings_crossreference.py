@@ -1,4 +1,4 @@
-"""Ignore reference links without definitions.
+"""Matches `mkdocstrings` cross-references.
 
 Matches:
 
@@ -6,6 +6,8 @@ Matches:
 [package.module.object][]
 [Object][package.module.object]
 ```
+
+Docs: <https://mkdocstrings.github.io/usage/#cross-references>
 
 """
 

@@ -20,7 +20,7 @@ from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
 from mdit_py_plugins.utils import is_code_block
 
-ABBREVIATION_PATTERN = re.compile(
+_ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
 )
 PYMD_ABBREVIATIONS_PREFIX = "mkdocs_abbreviation"
@@ -30,7 +30,7 @@ def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
     """Determine match between start and end lines."""
     start = state.bMarks[start_line] + state.tShift[start_line]
     maximum = state.eMarks[start_line]
-    return ABBREVIATION_PATTERN.match(state.src[start:maximum])
+    return _ABBREVIATION_PATTERN.match(state.src[start:maximum])
 
 
 def _pymd_abbreviations(
