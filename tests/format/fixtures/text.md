@@ -1541,13 +1541,6 @@ Unsupported versions of 0-indexed markdown list (Within ordered list)
 0. next
 .
 
-Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
-.
-[](){#some-anchor-name}
-.
-[](){#some-anchor-name}
-.
-
 Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/issues/31)
 .
 # Title

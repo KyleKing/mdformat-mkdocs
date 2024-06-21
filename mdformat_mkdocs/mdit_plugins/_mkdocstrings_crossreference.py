@@ -15,7 +15,7 @@ from markdown_it import MarkdownIt
 from markdown_it.rules_inline import StateInline
 
 LINK_PATTERN = re.compile(r"\[([^[|\]\n]+)\]\[([^\]\n]*)\]")
-PREFIX = "mkdocstrings_crossreference"
+MKDOCSTRINGS_CROSSREFERENCE_PREFIX = "mkdocstrings_crossreference"
 
 
 def _mkdocstrings_crossreference(state: StateInline, silent: bool) -> bool:
@@ -26,7 +26,7 @@ def _mkdocstrings_crossreference(state: StateInline, silent: bool) -> bool:
     if silent:
         return True
 
-    token = state.push(PREFIX, "", 0)
+    token = state.push(MKDOCSTRINGS_CROSSREFERENCE_PREFIX, "", 0)
     token.content = match.group()
 
     state.pos += match.end()
@@ -35,4 +35,7 @@ def _mkdocstrings_crossreference(state: StateInline, silent: bool) -> bool:
 
 
 def mkdocstrings_crossreference_plugin(md: MarkdownIt) -> None:
-    md.inline.ruler.push(PREFIX, _mkdocstrings_crossreference)
+    md.inline.ruler.push(
+        MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
+        _mkdocstrings_crossreference,
+    )

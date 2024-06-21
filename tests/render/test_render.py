@@ -4,7 +4,11 @@ import pytest
 from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 
-from mdformat_mkdocs.mdit_plugins import content_tabs_plugin, mkdocs_admon_plugin
+from mdformat_mkdocs.mdit_plugins import (
+    content_tabs_plugin,
+    mkdocs_admon_plugin,
+    mkdocs_anchors_plugin,
+)
 
 from ..helpers import print_text
 
@@ -23,7 +27,12 @@ def with_plugin(filename, plugins):
             "content-tabs.md",
             [mkdocs_admon_plugin, content_tabs_plugin],
         ),
-        *with_plugin("pymd_abbreviations.md", []),
+        *with_plugin("mkdocs_autorefs.md", [mkdocs_anchors_plugin]),
+        *with_plugin(
+            "pymd_abbreviations.md",
+            [],  # FIXME: Test with `pymd_abbreviations_plugin`
+        ),
+        # TODO: Test cross-reference!
     ],
 )
 def test_render(line, title, text, expected, plugins):
