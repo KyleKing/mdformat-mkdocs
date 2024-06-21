@@ -38,7 +38,7 @@ from mdformat_admon.factories import (
     parse_possible_whitespace_admon_factory,
 )
 
-PREFIX = "content_tab_mkdocs"
+MATERIAL_CONTENT_TAB_PREFIX = "content_tab_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
 MATERIAL_CONTENT_TAB_MARKERS = {"===", "===!", "===+"}
@@ -58,14 +58,14 @@ def format_content_tab_markup(
     """
     title = admonition.meta_text.strip().strip("'\"")
 
-    with new_token(state, PREFIX, "div") as token:
+    with new_token(state, MATERIAL_CONTENT_TAB_PREFIX, "div") as token:
         token.markup = admonition.markup
         token.block = True
         token.attrs = {"class": "content-tab"}
         token.info = admonition.meta_text
         token.map = [start_line, admonition.next_line]
 
-        with new_token(state, f"{PREFIX}_title", "p") as tkn_inner:
+        with new_token(state, f"{MATERIAL_CONTENT_TAB_PREFIX}_title", "p") as tkn_inner:
             tkn_inner.attrs = {"class": "content-tab-title"}
             tkn_inner.map = [start_line, start_line + 1]
 
@@ -101,4 +101,7 @@ def content_tab_logic(
     return result
 
 
-material_content_tabs_plugin = admon_plugin_factory(PREFIX, content_tab_logic)
+material_content_tabs_plugin = admon_plugin_factory(
+    MATERIAL_CONTENT_TAB_PREFIX,
+    content_tab_logic,
+)

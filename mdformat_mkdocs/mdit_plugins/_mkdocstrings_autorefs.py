@@ -14,6 +14,7 @@ import re
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline import StateInline
+from mdformat_admon.factories import new_token
 
 LINK_PATTERN = re.compile(r"\[\]\(<?>?\){#(?P<anchor>[^ }]+)}")
 MKDOCSTRINGS_AUTOREFS_PREFIX = "mkdocstrings_autorefs"
@@ -28,10 +29,9 @@ def _mkdocstrings_autorefs_plugin(state: StateInline, silent: bool) -> bool:
         return True
 
     anchor = match["anchor"]
-    o_token = state.push(f"{MKDOCSTRINGS_AUTOREFS_PREFIX}_open", "a", 1)
-    o_token.attrs = {"id": anchor, "href": ""}
-    o_token.meta = {"content": f"[](){{#{anchor}}}"}
-    state.push(f"{MKDOCSTRINGS_AUTOREFS_PREFIX}_close", "a", -1)
+    with new_token(state, MKDOCSTRINGS_AUTOREFS_PREFIX, "a") as open_t:
+        open_t.attrs = {"id": anchor, "href": ""}
+        open_t.meta = {"content": f"[](){{#{anchor}}}"}
 
     state.pos += match.end()
 
