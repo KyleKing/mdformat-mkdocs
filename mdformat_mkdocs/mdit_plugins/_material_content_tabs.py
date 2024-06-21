@@ -1,3 +1,35 @@
+"""Match `mkdocs-material` Content Tabs
+
+Matches:
+
+```md
+=== "C"
+
+    ``` c
+    #include <stdio.h>
+
+    int main(void) {
+      printf("Hello world!");
+      return 0;
+    }
+    ```
+
+=== "C++"
+
+    ``` c++
+    #include <iostream>
+
+    int main(void) {
+      std::cout << "Hello world!" << std::endl;
+      return 0;
+    }
+    ```
+```
+
+Docs: <https://squidfunk.github.io/mkdocs-material/reference/content-tabs>
+
+"""
+
 from markdown_it.rules_block import StateBlock
 from mdformat_admon.factories import (
     AdmonitionData,
@@ -9,7 +41,7 @@ from mdformat_admon.factories import (
 PREFIX = "content_tab_mkdocs"
 """Prefix used to differentiate the parsed output."""
 
-CONTENT_TAB_MARKERS = {"===", "===!", "===+"}
+MATERIAL_CONTENT_TAB_MARKERS = {"===", "===!", "===+"}
 """All supported content tab markers."""
 
 
@@ -60,7 +92,7 @@ def content_tab_logic(
     #   reuse admonition parsing logic
     # Supported variations from: https://facelessuser.github.io/pymdown-extensions/extensions/tabbed
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
-        markers=CONTENT_TAB_MARKERS,
+        markers=MATERIAL_CONTENT_TAB_MARKERS,
     )
     result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
     if isinstance(result, AdmonitionData):
@@ -69,4 +101,4 @@ def content_tab_logic(
     return result
 
 
-content_tabs_plugin = admon_plugin_factory(PREFIX, content_tab_logic)
+material_content_tabs_plugin = admon_plugin_factory(PREFIX, content_tab_logic)

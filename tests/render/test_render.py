@@ -5,7 +5,7 @@ from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 
 from mdformat_mkdocs.mdit_plugins import (
-    content_tabs_plugin,
+    material_content_tabs_plugin,
     mkdocs_admon_plugin,
     mkdocstrings_autorefs_plugin,
 )
@@ -24,8 +24,8 @@ def with_plugin(filename, plugins):
     [
         *with_plugin("admonitions.md", [mkdocs_admon_plugin]),
         *with_plugin(
-            "content-tabs.md",
-            [mkdocs_admon_plugin, content_tabs_plugin],
+            "material_content_tabs.md",
+            [mkdocs_admon_plugin, material_content_tabs_plugin],
         ),
         *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
         *with_plugin(

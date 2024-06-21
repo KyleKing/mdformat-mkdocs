@@ -21,7 +21,7 @@ fixtures = flatten(
     [
         read_fixture_file(Path(__file__).parent / "fixtures" / fixture_path)
         for fixture_path in (
-            "content_tabs.md",
+            "material_content_tabs.md",
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
             "text.md",
@@ -35,7 +35,7 @@ fixtures = flatten(
     fixtures,
     ids=[f[1] for f in fixtures],
 )
-def test_content_tabs_fixtures(line, title, text, expected):
+def test_material_content_tabs_fixtures(line, title, text, expected):
     output = mdformat.text(text, extensions={"mkdocs", "admon"})
     print_text(output, expected)
     assert output.rstrip() == expected.rstrip()

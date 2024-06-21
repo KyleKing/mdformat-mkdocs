@@ -17,7 +17,7 @@ from .mdit_plugins import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
-    content_tabs_plugin,
+    material_content_tabs_plugin,
     mkdocs_admon_plugin,
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
@@ -56,7 +56,7 @@ def add_cli_options(parser: argparse.ArgumentParser) -> None:
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """No changes to markdown parsing are necessary."""
-    mdit.use(content_tabs_plugin)
+    mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocs_admon_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
