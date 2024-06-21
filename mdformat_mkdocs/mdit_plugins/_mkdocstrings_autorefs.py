@@ -29,9 +29,9 @@ def _mkdocstrings_autorefs_plugin(state: StateInline, silent: bool) -> bool:
         return True
 
     anchor = match["anchor"]
-    with new_token(state, MKDOCSTRINGS_AUTOREFS_PREFIX, "a") as open_t:
-        open_t.attrs = {"id": anchor, "href": ""}
-        open_t.meta = {"content": f"[](){{#{anchor}}}"}
+    with new_token(state, MKDOCSTRINGS_AUTOREFS_PREFIX, "a") as token:
+        token.attrs = {"id": anchor, "href": ""}
+        token.meta = {"content": f"[](){{#{anchor}}}"}
 
     state.pos += match.end()
 

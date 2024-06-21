@@ -313,7 +313,7 @@ class SemanticIndent(Enum):
 
 def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
     """Conditionally evaluate when semantic indents are necessary."""
-    # TODO: This works, but is very confusing
+    # PLANNED: This works, but is very confusing
     if not line.parsed.content:
         result = SemanticIndent.EMPTY
 
@@ -375,8 +375,6 @@ def normalize_list(
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
     """Format markdown list."""
-    # FIXME: Is this filter working correctly?
-    #   If it is, the test for "Formats non-root lists" should be failing
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item

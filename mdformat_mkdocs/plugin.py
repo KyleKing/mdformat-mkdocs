@@ -85,8 +85,8 @@ def _render_meta_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.meta.get("content", "")
 
 
-def _render_pymd_abbr(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    """Render an Abbreviation."""
+def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render the node's inline content."""
     [inline] = node.children
     return inline.content
 
@@ -111,7 +111,7 @@ def _render_with_default_renderer(
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
     """Render a MkDocs crossreference link."""
     if _IGNORE_MISSING_REFERENCES:
-        return _render_node_content(node, context)
+        return _render_meta_content(node, context)
     # Default to treating the matched content as a link
     return _render_with_default_renderer(node, context, "link")
 
@@ -126,7 +126,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
-    PYMD_ABBREVIATIONS_PREFIX: _render_pymd_abbr,
+    PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
 }
 
 
