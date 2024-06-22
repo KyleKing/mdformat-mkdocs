@@ -1,10 +1,9 @@
-Anchor links (FIXME: Remove inserted newline)
+Anchor links
 .
 [](){#some-anchor-name}
 # Some Title
 .
 [](){#some-anchor-name}
-
 # Some Title
 .
 
