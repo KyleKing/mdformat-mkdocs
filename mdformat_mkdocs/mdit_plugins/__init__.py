@@ -7,7 +7,6 @@ from ._material_content_tabs import (
 )
 from ._mkdocstrings_autorefs import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
-    MKDOCSTRINGS_HEADER_AUTOREFS_PREFIX,
     mkdocstrings_autorefs_plugin,
 )
 from ._mkdocstrings_crossreference import (

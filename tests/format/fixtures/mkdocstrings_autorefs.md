@@ -1,9 +1,10 @@
-Anchor links
+Header-Anchor links, but I'm unsure how to remove the line separator (Initial attempt: https://github.com/KyleKing/mdformat-mkdocs/commit/055aca6ebadc505d60a00c3a8ae575314b11c276)
 .
 [](){#some-anchor-name}
 # Some Title
 .
 [](){#some-anchor-name}
+
 # Some Title
 .
 

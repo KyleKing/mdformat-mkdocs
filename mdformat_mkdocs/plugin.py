@@ -16,7 +16,6 @@ from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
-    MKDOCSTRINGS_HEADER_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
     material_admon_plugin,
     material_content_tabs_plugin,
@@ -87,11 +86,9 @@ def _render_meta_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.meta.get("content", "")
 
 
-def _render_inline_and_markup(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render the node's markup and inline content."""
     [inline] = node.children
-    if node.markup:
-        return f"{node.markup} {inline.content}"
     return inline.content
 
 
@@ -130,8 +127,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
-    MKDOCSTRINGS_HEADER_AUTOREFS_PREFIX: _render_inline_and_markup,
-    PYMD_ABBREVIATIONS_PREFIX: _render_inline_and_markup,
+    PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
 }
 
 
