@@ -4,7 +4,7 @@ import mdformat
 import pytest
 from markdown_it.utils import read_fixture_file
 
-from ..helpers import print_text
+from tests.helpers import print_text
 
 FIXTURE_PATH = Path(__file__).parent / "fixtures/semantic_indent.md"
 fixtures = read_fixture_file(FIXTURE_PATH)

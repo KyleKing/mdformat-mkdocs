@@ -1,4 +1,4 @@
-"""Match `mkdocs-material` Content Tabs
+"""Match `mkdocs-material` Content Tabs.
 
 Matches:
 
@@ -84,8 +84,8 @@ def format_content_tab_markup(
 
 def content_tab_logic(
     state: StateBlock,
-    startLine: int,
-    endLine: int,
+    start_line: int,
+    end_line: int,
     silent: bool,
 ) -> bool:
     # Because content-tabs look like admonitions syntactically, we can
@@ -94,9 +94,9 @@ def content_tab_logic(
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
         markers=MATERIAL_CONTENT_TAB_MARKERS,
     )
-    result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
+    result = parse_possible_whitespace_admon(state, start_line, end_line, silent)
     if isinstance(result, AdmonitionData):
-        format_content_tab_markup(state, startLine, admonition=result)
+        format_content_tab_markup(state, start_line, admonition=result)
         return True
     return result
 

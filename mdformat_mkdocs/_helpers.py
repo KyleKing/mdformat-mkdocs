@@ -17,7 +17,7 @@ FILLER_CHAR = "𝕏"  # noqa: RUF001
 
 
 def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
-    """Decorator to `rstrip` the function return."""
+    """Right-strip the decorated function's result."""
 
     @wraps(func)
     def wrapper(*args, **kwargs) -> str:

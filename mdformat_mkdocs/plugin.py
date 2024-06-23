@@ -2,13 +2,10 @@
 
 from __future__ import annotations
 
-import argparse
 from functools import partial
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
 
-from markdown_it import MarkdownIt
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Postprocess, Render
 from mdformat_admon import RENDERERS as ADMON_RENDERS
 
 from ._normalize_list import normalize_list as unbounded_normalize_list
@@ -23,6 +20,12 @@ from .mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
 )
+
+if TYPE_CHECKING:
+    import argparse
+
+    from markdown_it import MarkdownIt
+    from mdformat.renderer.typing import Postprocess, Render
 
 _IGNORE_MISSING_REFERENCES = None
 """user-specified flag to turn off bracket escaping when no link reference found.
@@ -132,7 +135,7 @@ RENDERERS: Mapping[str, Render] = {
 
 
 def check_if_align_semantic_breaks_in_lists() -> bool:
-    """Returns value of global variable."""
+    """Return value of global variable."""
     return _ALIGN_SEMANTIC_BREAKS_IN_LISTS or False
 
 

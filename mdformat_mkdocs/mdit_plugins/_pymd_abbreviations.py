@@ -15,11 +15,14 @@ https://github.com/Python-Markdown/markdown/blob/ec8c305fb14eb081bb874c917d8b91d
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
-from markdown_it import MarkdownIt
-from markdown_it.rules_block import StateBlock
 from mdformat_admon.factories import new_token
 from mdit_py_plugins.utils import is_code_block
+
+if TYPE_CHECKING:
+    from markdown_it import MarkdownIt
+    from markdown_it.rules_block import StateBlock
 
 _ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
@@ -36,11 +39,11 @@ def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
 
 def _pymd_abbreviations(
     state: StateBlock,
-    startLine: int,
-    endLine: int,
+    start_line: int,
+    end_line: int,
     silent: bool,
 ) -> bool:
-    """Identifies syntax abbreviation syntax, but generates incorrect markup.
+    """Identify syntax abbreviation syntax, but generates incorrect markup.
 
     To properly generate markup, the abbreviation descriptions would need to
     be stored in the state.env, but unlike markdown footnotes, the
@@ -57,10 +60,10 @@ def _pymd_abbreviations(
     https://github.com/Python-Markdown/markdown/blob/ec8c305fb14eb081bb874c917d8b91d3c5122334/markdown/extensions/abbr.py
 
     """
-    if is_code_block(state, startLine):
+    if is_code_block(state, start_line):
         return False
 
-    match = _new_match(state, startLine)
+    match = _new_match(state, start_line)
     if not match:
         return False
 
@@ -68,9 +71,9 @@ def _pymd_abbreviations(
         return True
 
     matches = [match]
-    max_line = startLine
+    max_line = start_line
     while match:
-        if max_line == endLine:
+        if max_line == end_line:
             break
         if match := _new_match(state, max_line + 1):
             max_line += 1
@@ -81,7 +84,7 @@ def _pymd_abbreviations(
         tkn_inline.content = "\n".join(
             [f'*[{match["label"]}]: {match["description"]}' for match in matches],
         )
-        tkn_inline.map = [startLine, max_line]
+        tkn_inline.map = [start_line, max_line]
         tkn_inline.children = []
 
     state.line = max_line + 1

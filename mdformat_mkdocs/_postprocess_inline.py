@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-from mdformat.renderer import RenderContext, RenderTreeNode
+from typing import TYPE_CHECKING
 
 from ._helpers import FILLER_CHAR, MKDOCS_INDENT_COUNT, rstrip_result
+
+if TYPE_CHECKING:
+    from mdformat.renderer import RenderContext, RenderTreeNode
 
 FILLER = FILLER_CHAR * (MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two spaces
 """A spacer that is inserted and then removed to ensure proper word wrap."""

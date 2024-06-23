@@ -6,9 +6,8 @@ import re
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import Callable, Literal, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Callable, Literal, NamedTuple, TypeVar
 
-from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
 
 from ._helpers import (
@@ -19,6 +18,9 @@ from ._helpers import (
     separate_indent,
 )
 from .mdit_plugins import MATERIAL_ADMON_MARKERS, MATERIAL_CONTENT_TAB_MARKERS
+
+if TYPE_CHECKING:
+    from mdformat.renderer import RenderContext, RenderTreeNode
 
 # ======================================================================================
 # FP Helpers
@@ -96,14 +98,14 @@ class LineResult(NamedTuple):
 
 
 def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
-    """Returns true if previous line has content and a lower indent (e.g. parent)."""
+    """Return true if previous line has content and a lower indent (e.g. parent)."""
     return bool(prev_line.parsed.content) and len(parsed.indent) > len(
         prev_line.parsed.indent,
     )
 
 
 def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
-    """Returns True if two list items share the same scope and level."""
+    """Return True if two list items share the same scope and level."""
     list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
     return (
         parsed.syntax in list_types
@@ -181,7 +183,7 @@ class BlockIndent(NamedTuple):
 
 
 def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
-    """Identify fenced or indented sections internally referred to as 'code blocks.'"""
+    """Identify fenced or indented sections internally referred to as 'code blocks'."""
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
         # On first edge, start tracking a code block

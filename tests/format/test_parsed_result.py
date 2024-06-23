@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from markdown_it.utils import read_fixture_file
 
-from mdformat_mkdocs._normalize_list import parse_text  # noqa: PLC2701
+from mdformat_mkdocs._normalize_list import parse_text
 
 FIXTURE_PATH = Path(__file__).parent / "fixtures/parsed_result.md"
 fixtures = read_fixture_file(FIXTURE_PATH)

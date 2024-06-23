@@ -11,8 +11,7 @@ from mdformat_mkdocs.mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
 )
-
-from ..helpers import print_text
+from tests.helpers import print_text
 
 FIXTURE_PATH = Path(__file__).parent / "fixtures"
 

@@ -16,9 +16,8 @@ Docs: <https://squidfunk.github.io/mkdocs-material/reference/admonitions/>
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from markdown_it.rules_block import StateBlock
 from mdformat_admon.factories import (
     AdmonitionData,
     admon_plugin_factory,
@@ -27,6 +26,9 @@ from mdformat_admon.factories import (
     parse_tag_and_title,
 )
 from mdformat_admon.mdit_plugins import format_python_markdown_admon_markup
+
+if TYPE_CHECKING:
+    from markdown_it.rules_block import StateBlock
 
 MATERIAL_ADMON_PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
@@ -84,8 +86,8 @@ def format_admon_markup(
 
 def admonition_logic(
     state: StateBlock,
-    startLine: int,
-    endLine: int,
+    start_line: int,
+    end_line: int,
     silent: bool,
 ) -> bool:
     """Parse MkDocs-style Admonitions.
@@ -102,9 +104,9 @@ def admonition_logic(
     parse_possible_whitespace_admon = parse_possible_whitespace_admon_factory(
         markers=MATERIAL_ADMON_MARKERS,
     )
-    result = parse_possible_whitespace_admon(state, startLine, endLine, silent)
+    result = parse_possible_whitespace_admon(state, start_line, end_line, silent)
     if isinstance(result, AdmonitionData):
-        format_admon_markup(state, startLine, admonition=result)
+        format_admon_markup(state, start_line, admonition=result)
         return True
     return result
 

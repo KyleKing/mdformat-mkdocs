@@ -1,7 +1,7 @@
 import mdformat
 import pytest
 
-from ..helpers import print_text
+from tests.helpers import print_text
 
 TABBED_CODE_BLOCK = '''
 1. Add a serializer class

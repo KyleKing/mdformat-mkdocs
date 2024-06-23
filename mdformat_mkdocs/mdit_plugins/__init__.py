@@ -14,3 +14,16 @@ from ._mkdocstrings_crossreference import (
     mkdocstrings_crossreference_plugin,
 )
 from ._pymd_abbreviations import PYMD_ABBREVIATIONS_PREFIX, pymd_abbreviations_plugin
+
+__all__ = (
+    "MATERIAL_ADMON_MARKERS",
+    "MATERIAL_CONTENT_TAB_MARKERS",
+    "MKDOCSTRINGS_AUTOREFS_PREFIX",
+    "MKDOCSTRINGS_CROSSREFERENCE_PREFIX",
+    "PYMD_ABBREVIATIONS_PREFIX",
+    "material_admon_plugin",
+    "material_content_tabs_plugin",
+    "mkdocstrings_autorefs_plugin",
+    "mkdocstrings_crossreference_plugin",
+    "pymd_abbreviations_plugin",
+)

@@ -1,7 +1,7 @@
 import mdformat
 import pytest
 
-from ..helpers import print_text
+from tests.helpers import print_text
 
 # FYI: indented text that starts with a number is parsed as the start of a numbered list
 

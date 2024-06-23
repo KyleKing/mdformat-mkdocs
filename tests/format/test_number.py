@@ -1,7 +1,7 @@
 import mdformat
 import pytest
 
-from ..helpers import print_text
+from tests.helpers import print_text
 
 CASE_0 = """
 0. One
