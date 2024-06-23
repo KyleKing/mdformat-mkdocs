@@ -34,7 +34,7 @@ The easiest way to write tests, is to edit `tests/fixtures.md`
 To run the code formatting and style checks:
 
 ```bash
-tox -e py38-pre-commit
+tox -e py312-pre-commit
 ```
 
 or directly

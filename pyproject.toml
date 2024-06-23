@@ -16,13 +16,14 @@ dependencies = [
   "mdformat >= 0.7.17",
   "mdformat-admon >= 2.0.3",
   "mdformat-gfm >= 0.3.6",
+  "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.2.0",
 ]
 dynamic = ["description", "version"]
-keywords = ["markdown", "markdown-it", "mdformat"]
+keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 name = "mdformat_mkdocs"
 readme = "README.md"
-requires-python = ">=3.8.0"
+requires-python = ">=3.8.12"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -51,11 +52,34 @@ test = [
 ]
 
 [project.urls]
+"Bug Tracker" = "https://github.com/kyleking/mdformat-mkdocs/issues"
+"Changelog" = "https://github.com/kyleking/mdformat-mkdocs/releases"
 homepage = "https://github.com/kyleking/mdformat-mkdocs"
 
 [tool.flit.sdist]
 exclude = [".github/", "tests/"]
 include = []
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+enable_error_code = ["ignore-without-code", "possibly-undefined", "redundant-expr", "truthy-bool"]
+extra_checks = true
+files = ["mdformat_mkdocs", "tests"]
+no_implicit_reexport = true
+python_version = "3.8"
+show_column_numbers = true
+show_error_codes = true
+strict_equality = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.pyright]
+include = ["mdformat_mkdocs", "tests"]
+pythonVersion = "3.8"
 
 [tool.pytest-watcher]
 ignore_patterns = []
@@ -63,6 +87,57 @@ now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
 runner_args = ["-e", "py312-beartype"]
+
+[tool.ruff]
+# Docs: https://github.com/charliermarsh/ruff
+# Tip: poetry run python -m ruff --explain RUF100
+line-length = 88
+target-version = 'py38'
+
+[tool.ruff.lint]
+ignore = [
+  'ANN002', # Missing type annotation for `*args`
+  'ANN003', # Missing type annotation for `**kwargs`
+  'ANN101', # Missing type annotation for `self` in method (automatically inferred)
+  'ANN102', # Missing type annotation for `cls` in classmethod (automatically inferred)
+  'BLE001', # Do not catch blind exception: `Exception`
+  'CPY001', # Missing copyright notice at top of file
+  'D203', # "1 blank line required before class docstring" (Conflicts with D211)
+  'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
+  'EM101', # Exception must not use a string literal, assign to variable first
+  'FIX001', # Line contains FIXME
+  'FIX002', # Line contains TODO
+  'FIX004', # Line contains HACK
+  'PLR0913', # Too many arguments in function definition (6 > 5)
+  'TD001', # Invalid TODO tag: `FIXME`
+  'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
+  'TD003', # Missing issue link on the line following this TODO
+  'TRY003', # Avoid specifying long messages outside the exception class
+]
+preview = true
+select = ['ALL']
+unfixable = [
+  'ERA001', # Commented out code
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ['mdformat_mkdocs']
+
+[tool.ruff.lint.per-file-ignores]
+'__init__.py' = [
+  'D104', # Missing docstring in public package
+]
+'tests/*.py' = [
+  'ANN001', # Missing type annotation for function argument
+  'ANN201', # Missing return type annotation for public function
+  'ANN202', # Missing return type annotation for private function `test_make_diffable`
+  'ARG001', # Unused function argument: `line`
+  'D100', # Missing docstring in public module
+  'D103', # Missing docstring in public function
+  'PLC2701', # Private name import `_<>` from external module
+  'PT004', # flake8-pytest-style: fixture does not return
+  'S101', # Use of `assert` detected
+]
 
 [tool.tomlsort]
 all = true
