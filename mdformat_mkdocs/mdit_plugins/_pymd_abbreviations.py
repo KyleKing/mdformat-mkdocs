@@ -27,7 +27,7 @@ _ABBREVIATION_PATTERN = re.compile(
 PYMD_ABBREVIATIONS_PREFIX = "mkdocs_abbreviation"
 
 
-def _new_match(state: StateBlock, start_line: int) -> re.Match | None:
+def _new_match(state: StateBlock, start_line: int) -> re.Match[str] | None:
     """Determine match between start and end lines."""
     start = state.bMarks[start_line] + state.tShift[start_line]
     maximum = state.eMarks[start_line]
@@ -61,7 +61,7 @@ def _pymd_abbreviations(
         return False
 
     match = _new_match(state, start_line)
-    if not match:
+    if match is None:
         return False
 
     if silent:
@@ -69,7 +69,7 @@ def _pymd_abbreviations(
 
     matches = [match]
     max_line = start_line
-    while match:
+    while match is not None:
         if max_line == end_line:
             break
         if match := _new_match(state, max_line + 1):

@@ -29,7 +29,7 @@ def _mkdocstrings_autorefs_plugin(state: StateInline, silent: bool) -> bool:
         return True
 
     anchor = match["anchor"]
-    with new_token(state, MKDOCSTRINGS_AUTOREFS_PREFIX, "a") as token:  # type: ignore[arg-type]
+    with new_token(state, MKDOCSTRINGS_AUTOREFS_PREFIX, "a") as token:
         token.attrs = {"id": anchor, "href": ""}
         token.meta = {"content": f"[](){{#{anchor}}}"}
 
