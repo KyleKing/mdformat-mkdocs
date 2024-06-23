@@ -110,6 +110,8 @@ ignore = [
   'FIX002', # Line contains TODO
   'FIX004', # Line contains HACK
   'PLR0913', # Too many arguments in function definition (6 > 5)
+  'TCH002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
+  'TCH003', # Move standard library import `argparse` into a type-checking block (for beartype)
   'TD001', # Invalid TODO tag: `FIXME`
   'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
   'TD003', # Missing issue link on the line following this TODO

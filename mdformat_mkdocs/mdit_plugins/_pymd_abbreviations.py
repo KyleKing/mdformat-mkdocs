@@ -15,14 +15,11 @@ https://github.com/Python-Markdown/markdown/blob/ec8c305fb14eb081bb874c917d8b91d
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
 
+from markdown_it import MarkdownIt
+from markdown_it.rules_block import StateBlock
 from mdformat_admon.factories import new_token
 from mdit_py_plugins.utils import is_code_block
-
-if TYPE_CHECKING:
-    from markdown_it import MarkdownIt
-    from markdown_it.rules_block import StateBlock
 
 _ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",

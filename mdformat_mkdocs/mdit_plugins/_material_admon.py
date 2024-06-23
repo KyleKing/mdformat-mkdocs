@@ -16,8 +16,9 @@ Docs: <https://squidfunk.github.io/mkdocs-material/reference/admonitions/>
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
+from markdown_it.rules_block import StateBlock
 from mdformat_admon.factories import (
     AdmonitionData,
     admon_plugin_factory,
@@ -26,9 +27,6 @@ from mdformat_admon.factories import (
     parse_tag_and_title,
 )
 from mdformat_admon.mdit_plugins import format_python_markdown_admon_markup
-
-if TYPE_CHECKING:
-    from markdown_it.rules_block import StateBlock
 
 MATERIAL_ADMON_PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
