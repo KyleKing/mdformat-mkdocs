@@ -5,15 +5,17 @@ Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
 <p><a id="some-anchor-name" href=""></a></p>
 .
 
-For header (https://github.com/DFiantHDL/DFHDL/blob/192d7e58e1107da6b0a885e54a853a88bb619f29/docs/user-guide/state/index.md?plain=1#L1-L4 & https://dfianthdl.github.io/user-guide/state/#state-initialization)
+For heading (https://github.com/DFiantHDL/DFHDL/blob/192d7e58e1107da6b0a885e54a853a88bb619f29/docs/user-guide/state/index.md?plain=1#L1-L4 & https://dfianthdl.github.io/user-guide/state/#state-initialization)
 .
 [](){#state}
 # State & Initialization
 
 Semantically, every DFiant dataflow variable references a token stream (TS).
 .
-<p><a id="state" href=""></a></p>
+<div>
+<a id="state" href=""></a>
 <h1>State &amp; Initialization</h1>
+</div>
 <p>Semantically, every DFiant dataflow variable references a token stream (TS).</p>
 .
 

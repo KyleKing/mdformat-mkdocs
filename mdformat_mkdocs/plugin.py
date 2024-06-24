@@ -16,7 +16,7 @@ from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
-    MKDOCSTRINGS_HEADER_AUTOREFS_PREFIX,
+    MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
     material_admon_plugin,
     material_content_tabs_plugin,
@@ -93,10 +93,11 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
     return inline.content
 
 
-def _tbd(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    [*autorefs, header] = node.children
-    lines = [_n.content for _n in autorefs]
-    lines.append(f"{header.markup} {header.content}")
+def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render autorefs directly above a heading."""
+    [*autorefs, heading] = node.children
+    lines = [_render_meta_content(_n, context) for _n in autorefs]
+    lines.append(f"{heading.markup} {_render_inline_content(heading, context)}")
     return "\n".join(lines)
 
 
@@ -134,7 +135,7 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": ADMON_RENDERS["admonition"],
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
-    MKDOCSTRINGS_HEADER_AUTOREFS_PREFIX: _tbd,
+    MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
 }

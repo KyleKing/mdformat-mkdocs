@@ -1,4 +1,4 @@
-Header aliases
+heading aliases
 .
 [](){#contributing}
 [](){#development-setup}
