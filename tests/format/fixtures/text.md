@@ -1577,3 +1577,42 @@ Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/is
     echo $VAR
     ```
 .
+
+Do not format yaml (https://github.com/KyleKing/mdformat-mkdocs/issues/36)
+.
+# A B C
+
+1. Create a `.pre-commit-config.yaml` file in your repository and add the desired
+   hooks. For example:
+
+    ```yaml
+    repos:
+      - repo: https://github.com/psf/black
+        rev: v24.4
+
+    ```
+
+Test
+
+```yaml
+file: abc.txt
+```
+.
+# A B C
+
+1. Create a `.pre-commit-config.yaml` file in your repository and add the desired
+   hooks. For example:
+
+    ```yaml
+    repos:
+      - repo: https://github.com/psf/black
+        rev: v24.4
+
+    ```
+
+Test
+
+```yaml
+file: abc.txt
+```
+.
