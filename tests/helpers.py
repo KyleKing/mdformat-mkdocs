@@ -8,7 +8,12 @@ _SHOW_TEXT = True
 
 
 def separate_indent(line: str) -> tuple[str, str]:
-    """Separate leading indent from content. Also used by the test suite."""
+    """Separate leading indent from content. Also used by the test suite.
+
+    Returns:
+        tuple[str, str]: pair of indent and content
+
+    """
     re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
     match = re_indent.match(line)
     assert match is not None  # for pyright

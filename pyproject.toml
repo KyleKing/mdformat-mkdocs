@@ -23,7 +23,7 @@ dynamic = ["description", "version"]
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 name = "mdformat_mkdocs"
 readme = "README.md"
-requires-python = ">=3.8.12"
+requires-python = ">=3.8.5"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -110,7 +110,10 @@ ignore = [
   'FIX001', # Line contains FIXME
   'FIX002', # Line contains TODO
   'FIX004', # Line contains HACK
+  'N803', # Argument name `startLine` should be lowercase
+  'N815', # Variable `lineMax` in class scope should not be mixedCase
   'PLR0913', # Too many arguments in function definition (6 > 5)
+  'S101', # Use of `assert` detected
   'TCH002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
   'TCH003', # Move standard library import `argparse` into a type-checking block (for beartype)
   'TD001', # Invalid TODO tag: `FIXME`

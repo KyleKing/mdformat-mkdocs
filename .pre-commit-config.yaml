@@ -38,7 +38,7 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs[recommended]>=2.1.1
+          - mdformat-mkdocs[recommended]>=3.0.0
           - mdformat-gfm-alerts>=1.0.1
         args: [--wrap=no]
         exclude: tests/.+\.md
