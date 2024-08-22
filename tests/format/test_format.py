@@ -39,3 +39,13 @@ def test_material_content_tabs_fixtures(line, title, text, expected):
     output = mdformat.text(text, extensions={"mkdocs", "admon"})
     print_text(output, expected)
     assert output.rstrip() == expected.rstrip()
+
+
+@pytest.mark.parametrize(
+    ("line", "title", "text", "expected"),
+    read_fixture_file(Path(__file__).parent / "fixtures" / "issue_37.md"),
+)
+def test_issue_37(line, title, text, expected):
+    output = mdformat.text(text, extensions={"mkdocs", "admon", "gfm"})
+    print_text(output, expected)
+    assert output.rstrip() == expected.rstrip()
