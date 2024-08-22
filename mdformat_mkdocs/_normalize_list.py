@@ -273,7 +273,8 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
 def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists.
 
-    Returns:
+    Returns
+    -------
         ParsedText: result of text parsing
 
     """
@@ -298,8 +299,8 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
     if use_sem_break:
         semantic_indents = map_lookback(
             parse_semantic_indent,
-            lines,
-            parse_semantic_indent(SemanticIndent.INITIAL, lines[0]),
+            [*zip(lines, code_indents)],
+            parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], code_indents[0])),
         )
         new_indents = starmap(
             trim_semantic_indent,
@@ -328,17 +329,21 @@ class SemanticIndent(Enum):
     TWO_LESS_SPACE = "←←"
 
 
-def _is_in_code_block(line: LineResult) -> bool:
+def _is_in_code_block(line: LineResult, code_indent) -> bool:
     print(line.parsed)
     if "rev" in line.parsed.content:
         breakpoint()
     return False
 
 
-def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
+def parse_semantic_indent(
+    last: SemanticIndent, tin: tuple[LineResult, BlockIndent | None]
+) -> SemanticIndent:
     """Conditionally evaluate when semantic indents are necessary."""
     # PLANNED: This works, but is very confusing
-    if not line.parsed.content or _is_in_code_block(line):
+    line, code_indent = tin
+
+    if not line.parsed.content or code_indent is not None:
         result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
@@ -390,7 +395,8 @@ def normalize_list(
 ) -> str:
     """Format markdown list.
 
-    Returns:
+    Returns
+    -------
         str: formatted text
 
     """
