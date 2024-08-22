@@ -87,3 +87,26 @@ Correctly identifies peers when numbering
     2. 2-B
 .
 .
+
+Do not format code (https://github.com/KyleKing/mdformat-mkdocs/issues/36). Also tested in `test_wrap` for resulting format
+.
+# A B C
+
+1. Create a `.pre-commit-config.yaml` file in your repository and add the desired
+   hooks. For example:
+
+   ```yaml
+   repos:
+     - repo: https://github.com/psf/black
+       rev: v24.4
+
+   ```
+
+   ```md
+   # Title
+   Content
+   1. Numbered List
+     * Unordered Sub-List
+   ```
+.
+.

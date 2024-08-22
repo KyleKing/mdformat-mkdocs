@@ -558,6 +558,468 @@
     ]),
   )
 # ---
+# name: test_parsed_result[Do not format code (https://github.com/KyleKing/mdformat-mkdocs/issues/36). Also tested in `test_wrap` for resulting format]
+  ParsedText(
+    debug_block_indents=list([
+      None,
+      None,
+      None,
+      None,
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=5,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=5,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=5,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=5,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=5,
+      ),
+      None,
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=12,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=12,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=12,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=12,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='   ',
+        start_line=12,
+      ),
+      None,
+    ]),
+    lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='# A B C',
+          indent='',
+          line_num=0,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=1,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+          indent='',
+          line_num=2,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='hooks. For example:',
+          indent='   ',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=4,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```yaml',
+          indent='   ',
+          line_num=5,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='repos:',
+          indent='   ',
+          line_num=6,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='repos:',
+            indent='   ',
+            line_num=6,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='- repo: https://github.com/psf/black',
+          indent='     ',
+          line_num=7,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='repos:',
+            indent='   ',
+            line_num=6,
+            syntax=None,
+          ),
+          ParsedLine(
+            content='- repo: https://github.com/psf/black',
+            indent='     ',
+            line_num=7,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='rev: v24.4',
+          indent='       ',
+          line_num=8,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=9,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```',
+          indent='   ',
+          line_num=10,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=11,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```md',
+          indent='   ',
+          line_num=12,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='# Title',
+          indent='   ',
+          line_num=13,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='Content',
+          indent='   ',
+          line_num=14,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='1. Numbered List',
+          indent='   ',
+          line_num=15,
+          syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='1. Numbered List',
+            indent='   ',
+            line_num=15,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='* Unordered Sub-List',
+          indent='     ',
+          line_num=16,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+            indent='',
+            line_num=2,
+            syntax=<Syntax.LIST_NUMBERED: 'LIST_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```',
+          indent='   ',
+          line_num=17,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '# A B C',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
+      ),
+      tuple(
+        '    ',
+        'hooks. For example:',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '```yaml',
+      ),
+      tuple(
+        '    ',
+        'repos:',
+      ),
+      tuple(
+        '      ',
+        '- repo: https://github.com/psf/black',
+      ),
+      tuple(
+        '        ',
+        'rev: v24.4',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '```',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '```md',
+      ),
+      tuple(
+        '    ',
+        '# Title',
+      ),
+      tuple(
+        '    ',
+        'Content',
+      ),
+      tuple(
+        '    ',
+        '1. Numbered List',
+      ),
+      tuple(
+        '      ',
+        '* Unordered Sub-List',
+      ),
+      tuple(
+        '    ',
+        '```',
+      ),
+    ]),
+  )
+# ---
 # name: test_parsed_result[Handle Jagged Indents 2x]
   ParsedText(
     debug_block_indents=list([
