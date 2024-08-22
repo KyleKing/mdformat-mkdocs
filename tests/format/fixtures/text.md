@@ -1577,3 +1577,43 @@ Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/is
     echo $VAR
     ```
 .
+
+Broken formatting (https://github.com/KyleKing/mdformat-mkdocs/issues/35)
+.
+# A B C
+
+1. Test
+    ```bash
+    python -m pip install foo
+    ```
+
+2. Another
+   For example:
+
+    ```yaml
+    repos:
+      - repo: https://github.com/psf/black
+        rev: v24.4
+        hooks:
+        - id: black
+    ```
+.
+# A B C
+
+1. Test
+
+    ```bash
+    python -m pip install foo
+    ```
+
+1. Another
+    For example:
+
+    ```yaml
+    repos:
+      - repo: https://github.com/psf/black
+        rev: v24.4
+        hooks:
+        - id: black
+    ```
+.
