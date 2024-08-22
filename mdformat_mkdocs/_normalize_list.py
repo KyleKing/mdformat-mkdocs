@@ -32,7 +32,12 @@ def map_lookback(
     items: list[Tin],
     initial: Tout,
 ) -> list[Tout]:
-    """Modify each item based on the result of the modification to the prior item."""
+    """Modify each item based on the result of the modification to the prior item.
+
+    Returns:
+        list[Tout]: output of the function
+
+    """
     results = [initial]
     if len(items) > 1:
         for item in items[1:]:
@@ -62,7 +67,12 @@ class Syntax(Enum):
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
-        """Determine Syntax type from string."""
+        """Determine Syntax type from string.
+
+        Returns:
+            Syntax | None: Syntax if identified
+
+        """
         if match := RE_LIST_ITEM.fullmatch(content):
             return (
                 cls.LIST_NUMBERED
@@ -95,14 +105,14 @@ class LineResult(NamedTuple):
     prev_list_peers: list[ParsedLine]  # Only applicable for lists
 
 
-def is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+def _is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     """Return true if previous line has content and a lower indent (e.g. parent)."""
     return bool(prev_line.parsed.content) and len(parsed.indent) > len(
         prev_line.parsed.indent,
     )
 
 
-def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
+def _is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     """Return True if two list items share the same scope and level."""
     list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
     return (
@@ -113,7 +123,12 @@ def is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 
 
 def parse_line(line_num: int, content: str) -> ParsedLine:
-    """Create summary object separating line from content."""
+    """Create summary object separating line from content.
+
+    Returns:
+        ParsedLine: summary object
+
+    """
     indent, content = separate_indent(content)
     syntax = Syntax.from_content(content)
     return ParsedLine(
@@ -125,6 +140,12 @@ def parse_line(line_num: int, content: str) -> ParsedLine:
 
 
 def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
+    """Accumulate ParsedLines into summary LineResults.
+
+    Returns:
+        list[LineResult]: summary object
+
+    """
     results: list[LineResult] = []
     for parsed in parsed_lines:
         parent_idx = 0
@@ -133,14 +154,14 @@ def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
             parent_idx, parent = next(
                 (len(results) - idx, line)
                 for idx, line in enumerate(results[::-1])
-                if is_parent_line(line, parsed)
+                if _is_parent_line(line, parsed)
             )
             parents = [*parent.parents, parent.parsed]
 
         prev_list_peers = [
             line.parsed
             for line in results[parent_idx:][::-1]
-            if is_peer_list_line(line, parsed)
+            if _is_peer_list_line(line, parsed)
         ]
 
         result = LineResult(
@@ -156,7 +177,7 @@ def acc_line_results(parsed_lines: list[ParsedLine]) -> list[LineResult]:
 # Block Parsing Operations
 
 
-def get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
+def _get_inner_indent(block_indent: BlockIndent, line_indent: str) -> str:
     """Return white space to the right of the outer indent block."""
     if block_indent.kind == "HTML":
         # PLANNED: Consider restoring some pretty indentation for HTML
@@ -180,7 +201,7 @@ class BlockIndent(NamedTuple):
     kind: Literal["code", "HTML"]
 
 
-def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
+def _parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     """Identify fenced or indented sections internally referred to as 'code blocks'."""
     result = last
     if line.parsed.syntax == Syntax.EDGE_CODE:
@@ -199,7 +220,7 @@ def parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent 
     return result
 
 
-def parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
+def _parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     """Identify sections of HTML."""
     result = last
     if line.parsed.syntax == Syntax.HTML:
@@ -223,13 +244,13 @@ DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
 """Default indent."""
 
 
-def format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> str:
+def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> str:
     """Normalize the list indent."""
     result = ""
     if line.parsed.content:
         if block_indent:
             depth = block_indent.indent_depth
-            extra_indent = get_inner_indent(
+            extra_indent = _get_inner_indent(
                 block_indent=block_indent,
                 line_indent=line.parsed.indent,
             )
@@ -248,7 +269,7 @@ class ParsedText(NamedTuple):
     debug_block_indents: list[BlockIndent | None]
 
 
-def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> str:
+def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> str:
     """Normalize the list bullet or number."""
     new_content = line.parsed.content
     if not is_code and line.parsed.syntax in {
@@ -270,25 +291,44 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
     return new_content
 
 
-def parse_text(text: str, inc_numbers: bool) -> ParsedText:
-    """Post-processor to normalize lists."""
+def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
+    """Post-processor to normalize lists.
+
+    Returns:
+        ParsedText: result of text parsing
+
+    """
     parsed_lines = [*starmap(parse_line, enumerate(text.rstrip().split(EOL)))]
     lines = acc_line_results(parsed_lines)
 
-    code_indents = map_lookback(parse_code_block, lines, None)
+    code_indents = map_lookback(_parse_code_block, lines, None)
     html_indents = [
         # Any indents initiated from within a `code_block_indents` should be ignored
         indent if indent and code_indents[indent.start_line] is None else None
-        for indent in map_lookback(parse_html_line, lines, None)
+        for indent in map_lookback(_parse_html_line, lines, None)
     ]
     # When both, code_indents take precedence
     block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
-    new_indents = [*starmap(format_new_indent, zip_equal(lines, block_indents))]
+    new_indents = [*starmap(_format_new_indent, zip_equal(lines, block_indents))]
 
     new_contents = [
-        format_new_content(line, inc_numbers, ci is not None)
+        _format_new_content(line, inc_numbers, ci is not None)
         for line, ci in zip_equal(lines, code_indents)
     ]
+
+    if use_sem_break:
+        semantic_indents = map_lookback(
+            _parse_semantic_indent,
+            [*zip(lines, code_indents)],
+            _parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], code_indents[0])),
+        )
+        new_indents = [
+            *starmap(
+                _trim_semantic_indent,
+                zip_equal(new_indents, semantic_indents),
+            ),
+        ]
+
     return ParsedText(
         lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
@@ -311,10 +351,15 @@ class SemanticIndent(Enum):
     TWO_LESS_SPACE = "←←"
 
 
-def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
+def _parse_semantic_indent(
+    last: SemanticIndent,
+    tin: tuple[LineResult, BlockIndent | None],
+) -> SemanticIndent:
     """Conditionally evaluate when semantic indents are necessary."""
     # PLANNED: This works, but is very confusing
-    if not line.parsed.content:
+    line, code_indent = tin
+
+    if not line.parsed.content or code_indent is not None:
         result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
@@ -332,7 +377,8 @@ def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticInd
     return result
 
 
-def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
+def _trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
+    """Removes spaces based on SemanticIndent."""
     if s_i == SemanticIndent.ONE_LESS_SPACE:
         return indent[:-1]
     if s_i == SemanticIndent.TWO_LESS_SPACE:
@@ -340,20 +386,11 @@ def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
     return indent
 
 
-def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
+def _merge_parsed_text(parsed_text: ParsedText) -> str:
+    """Merge ParsedText into a single string representation."""
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
     new_indents_iter = new_indents
-    if use_sem_break:
-        semantic_indents = map_lookback(
-            parse_semantic_indent,
-            parsed_text.lines,
-            parse_semantic_indent(SemanticIndent.INITIAL, parsed_text.lines[0]),
-        )
-        new_indents_iter = starmap(
-            trim_semantic_indent,
-            zip_equal(new_indents, semantic_indents),
-        )
 
     # Remove filler characters added by inline formatting for 'wrap'
     new_contents_iter = (
@@ -374,7 +411,12 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    """Format markdown list."""
+    """Format markdown list.
+
+    Returns:
+        str: formatted text
+
+    """
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item
@@ -383,9 +425,9 @@ def normalize_list(
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
 
-    parsed_text = parse_text(text=text, inc_numbers=inc_numbers)
-
-    return merge_parsed_text(
-        parsed_text=parsed_text,
+    parsed_text = parse_text(
+        text=text,
+        inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
+    return _merge_parsed_text(parsed_text=parsed_text)
