@@ -17,17 +17,27 @@ FILLER_CHAR = "𝕏"  # noqa: RUF001
 
 
 def rstrip_result(func: Callable[..., str]) -> Callable[..., str]:
-    """Right-strip the decorated function's result."""
+    """Right-strip the decorated function's result.
+
+    Returns:
+        Callable[..., str]: decorator
+
+    """
 
     @wraps(func)
-    def wrapper(*args, **kwargs) -> str:
+    def _wrapper(*args, **kwargs) -> str:
         return func(*args, **kwargs).rstrip()
 
-    return wrapper
+    return _wrapper
 
 
 def separate_indent(line: str) -> tuple[str, str]:
-    """Separate leading indent from content. Also used by the test suite."""
+    """Separate leading indent from content. Also used by the test suite.
+
+    Returns:
+        tuple[str, str]: separate indent and content
+
+    """
     re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
     match = re_indent.match(line)
     assert match is not None  # for pyright # noqa: S101
