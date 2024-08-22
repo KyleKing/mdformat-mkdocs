@@ -15,5 +15,5 @@ fixtures = read_fixture_file(FIXTURE_PATH)
     ids=[f[1] for f in fixtures],
 )
 def test_parsed_result(line, title, text, expected, snapshot):
-    output = parse_text(text=text, inc_numbers=False)
+    output = parse_text(text=text, inc_numbers=False, use_sem_break=True)
     assert output == snapshot

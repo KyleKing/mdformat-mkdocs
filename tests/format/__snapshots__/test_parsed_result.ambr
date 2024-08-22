@@ -958,7 +958,7 @@
         '1. Create a `.pre-commit-config.yaml` file in your repository and add the desired',
       ),
       tuple(
-        '    ',
+        '   ',
         'hooks. For example:',
       ),
       tuple(
@@ -978,7 +978,7 @@
         '- repo: https://github.com/psf/black',
       ),
       tuple(
-        '        ',
+        '      ',
         'rev: v24.4',
       ),
       tuple(
@@ -1014,7 +1014,7 @@
         '* Unordered Sub-List',
       ),
       tuple(
-        '    ',
+        '  ',
         '```',
       ),
     ]),

@@ -270,8 +270,13 @@ def format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> st
     return new_content
 
 
-def parse_text(text: str, inc_numbers: bool) -> ParsedText:
-    """Post-processor to normalize lists."""
+def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
+    """Post-processor to normalize lists.
+
+    Returns:
+        ParsedText: result of text parsing
+
+    """
     parsed_lines = [*starmap(parse_line, enumerate(text.rstrip().split(EOL)))]
     lines = acc_line_results(parsed_lines)
 
@@ -289,6 +294,18 @@ def parse_text(text: str, inc_numbers: bool) -> ParsedText:
         format_new_content(line, inc_numbers, ci is not None)
         for line, ci in zip_equal(lines, code_indents)
     ]
+
+    if use_sem_break:
+        semantic_indents = map_lookback(
+            parse_semantic_indent,
+            lines,
+            parse_semantic_indent(SemanticIndent.INITIAL, lines[0]),
+        )
+        new_indents = starmap(
+            trim_semantic_indent,
+            zip_equal(new_indents, semantic_indents),
+        )
+
     return ParsedText(
         lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
@@ -311,10 +328,17 @@ class SemanticIndent(Enum):
     TWO_LESS_SPACE = "←←"
 
 
+def _is_in_code_block(line: LineResult) -> bool:
+    print(line.parsed)
+    if "rev" in line.parsed.content:
+        breakpoint()
+    return False
+
+
 def parse_semantic_indent(last: SemanticIndent, line: LineResult) -> SemanticIndent:
     """Conditionally evaluate when semantic indents are necessary."""
     # PLANNED: This works, but is very confusing
-    if not line.parsed.content:
+    if not line.parsed.content or _is_in_code_block(line):
         result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
@@ -340,20 +364,10 @@ def trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
     return indent
 
 
-def merge_parsed_text(parsed_text: ParsedText, use_sem_break: bool) -> str:
+def merge_parsed_text(parsed_text: ParsedText) -> str:
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
     new_indents_iter = new_indents
-    if use_sem_break:
-        semantic_indents = map_lookback(
-            parse_semantic_indent,
-            parsed_text.lines,
-            parse_semantic_indent(SemanticIndent.INITIAL, parsed_text.lines[0]),
-        )
-        new_indents_iter = starmap(
-            trim_semantic_indent,
-            zip_equal(new_indents, semantic_indents),
-        )
 
     # Remove filler characters added by inline formatting for 'wrap'
     new_contents_iter = (
@@ -374,7 +388,12 @@ def normalize_list(
     context: RenderContext,
     check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
 ) -> str:
-    """Format markdown list."""
+    """Format markdown list.
+
+    Returns:
+        str: formatted text
+
+    """
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item
@@ -383,9 +402,9 @@ def normalize_list(
     # Retrieve user-options
     inc_numbers = bool(context.options["mdformat"].get("number"))
 
-    parsed_text = parse_text(text=text, inc_numbers=inc_numbers)
-
-    return merge_parsed_text(
-        parsed_text=parsed_text,
+    parsed_text = parse_text(
+        text=text,
+        inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
+    return merge_parsed_text(parsed_text=parsed_text)
