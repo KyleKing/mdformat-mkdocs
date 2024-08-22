@@ -238,6 +238,56 @@ def _parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent 
 
 
 # ======================================================================================
+# Semantic Indent Handling
+
+
+class SemanticIndent(Enum):
+    """Possible states for evaluating semantic indents. The values aren't relevant."""
+
+    INITIAL = "Hack for MyPy and map_lookack, which returns initial..."
+    EMPTY = ""
+    ONE_LESS_ON_NEXT = "⤓(←)"
+    ONE_LESS_SPACE = "←"
+    TWO_LESS_ON_NEXT = "⤓(←←)"  # Bulleted
+    TWO_LESS_SPACE = "←←"
+
+
+def _parse_semantic_indent(
+    last: SemanticIndent,
+    tin: tuple[LineResult, BlockIndent | None],
+) -> SemanticIndent:
+    """Conditionally evaluate when semantic indents are necessary."""
+    # PLANNED: This works, but is very confusing
+    line, code_indent = tin
+
+    if not line.parsed.content or code_indent is not None:
+        result = SemanticIndent.EMPTY
+
+    elif line.parsed.syntax == Syntax.LIST_BULLETED:
+        result = SemanticIndent.TWO_LESS_ON_NEXT
+    elif line.parsed.syntax == Syntax.LIST_NUMBERED:
+        result = SemanticIndent.ONE_LESS_ON_NEXT
+
+    elif last == SemanticIndent.TWO_LESS_ON_NEXT:
+        result = SemanticIndent.TWO_LESS_SPACE
+    elif last == SemanticIndent.ONE_LESS_ON_NEXT:
+        result = SemanticIndent.ONE_LESS_SPACE
+    else:
+        result = last
+
+    return result
+
+
+def _trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
+    """Removes spaces based on SemanticIndent."""
+    if s_i == SemanticIndent.ONE_LESS_SPACE:
+        return indent[:-1]
+    if s_i == SemanticIndent.TWO_LESS_SPACE:
+        return indent[:-2]
+    return indent
+
+
+# ======================================================================================
 # High-Level Accumulators
 
 DEFAULT_INDENT = " " * MKDOCS_INDENT_COUNT
@@ -277,7 +327,7 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
         Syntax.LIST_NUMBERED,
     }:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
-        assert list_match is not None  # for pyright # noqa: S101
+        assert list_match is not None  # for pyright
         new_bullet = "-"
         if line.parsed.syntax == Syntax.LIST_NUMBERED:
             first_peer = (
@@ -337,57 +387,11 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
 
 
 # ======================================================================================
-# Join Operations
+# Outputs string result
 
 
-class SemanticIndent(Enum):
-    """Possible states for evaluating semantic indents. The values aren't relevant."""
-
-    INITIAL = "Hack for MyPy and map_lookack, which returns initial..."
-    EMPTY = ""
-    ONE_LESS_ON_NEXT = "⤓(←)"
-    ONE_LESS_SPACE = "←"
-    TWO_LESS_ON_NEXT = "⤓(←←)"  # Bulleted
-    TWO_LESS_SPACE = "←←"
-
-
-def _parse_semantic_indent(
-    last: SemanticIndent,
-    tin: tuple[LineResult, BlockIndent | None],
-) -> SemanticIndent:
-    """Conditionally evaluate when semantic indents are necessary."""
-    # PLANNED: This works, but is very confusing
-    line, code_indent = tin
-
-    if not line.parsed.content or code_indent is not None:
-        result = SemanticIndent.EMPTY
-
-    elif line.parsed.syntax == Syntax.LIST_BULLETED:
-        result = SemanticIndent.TWO_LESS_ON_NEXT
-    elif line.parsed.syntax == Syntax.LIST_NUMBERED:
-        result = SemanticIndent.ONE_LESS_ON_NEXT
-
-    elif last == SemanticIndent.TWO_LESS_ON_NEXT:
-        result = SemanticIndent.TWO_LESS_SPACE
-    elif last == SemanticIndent.ONE_LESS_ON_NEXT:
-        result = SemanticIndent.ONE_LESS_SPACE
-    else:
-        result = last
-
-    return result
-
-
-def _trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
-    """Removes spaces based on SemanticIndent."""
-    if s_i == SemanticIndent.ONE_LESS_SPACE:
-        return indent[:-1]
-    if s_i == SemanticIndent.TWO_LESS_SPACE:
-        return indent[:-2]
-    return indent
-
-
-def _merge_parsed_text(parsed_text: ParsedText) -> str:
-    """Merge ParsedText into a single string representation."""
+def _join(parsed_text: ParsedText) -> str:
+    """Join ParsedText into a single string representation."""
     new_indents, new_contents = unzip(parsed_text.new_lines)
 
     new_indents_iter = new_indents
@@ -430,4 +434,4 @@ def normalize_list(
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
-    return _merge_parsed_text(parsed_text=parsed_text)
+    return _join(parsed_text=parsed_text)
