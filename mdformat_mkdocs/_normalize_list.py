@@ -59,6 +59,8 @@ RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*]|\d+\.)\s+(?P<item>.+)")
 class Syntax(Enum):
     """Non-standard line types."""
 
+    CODE_BULLETED = "CODE_BULLETED"
+    CODE_NUMBERED = "CODE_NUMBERED"
     LIST_BULLETED = "LIST_BULLETED"
     LIST_NUMBERED = "LIST_NUMBERED"
     START_MARKED = "START_MARKED"
@@ -74,11 +76,10 @@ class Syntax(Enum):
 
         """
         if match := RE_LIST_ITEM.fullmatch(content):
-            return (
-                cls.LIST_NUMBERED
-                if match["bullet"] not in {"-", "*"}
-                else cls.LIST_BULLETED
-            )
+            is_numbered = match["bullet"] not in {"-", "*"}
+            if match["item"].startswith("```"):
+                return cls.CODE_NUMBERED if is_numbered else cls.CODE_BULLETED
+            return cls.LIST_NUMBERED if is_numbered else cls.LIST_BULLETED
         if any(content.startswith(f"{marker} ") for marker in MARKERS):
             return cls.START_MARKED
         if content.startswith("```"):
@@ -114,7 +115,12 @@ def _is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 
 def _is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     """Return True if two list items share the same scope and level."""
-    list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
+    list_types = {
+        Syntax.CODE_BULLETED,
+        Syntax.CODE_NUMBERED,
+        Syntax.LIST_BULLETED,
+        Syntax.LIST_NUMBERED,
+    }
     return (
         parsed.syntax in list_types
         and prev_line.parsed.syntax in list_types
@@ -204,7 +210,11 @@ class BlockIndent(NamedTuple):
 def _parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     """Identify fenced or indented sections internally referred to as 'code blocks'."""
     result = last
-    if line.parsed.syntax == Syntax.EDGE_CODE:
+    if line.parsed.syntax in {
+        Syntax.CODE_BULLETED,
+        Syntax.CODE_NUMBERED,
+        Syntax.EDGE_CODE,
+    }:
         # On first edge, start tracking a code block
         #   on the second edge, stop tracking
         result = (
@@ -260,7 +270,11 @@ def _parse_semantic_indent(
     # PLANNED: This works, but is very confusing
     line, code_indent = tin
 
-    if not line.parsed.content or code_indent is not None:
+    if (
+        not line.parsed.content
+        or code_indent is not None
+        or line.parsed.syntax in {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
+    ):
         result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
@@ -354,7 +368,7 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
     code_indents = map_lookback(_parse_code_block, lines, None)
     html_indents = [
         # Any indents initiated from within a `code_block_indents` should be ignored
-        indent if indent and code_indents[indent.start_line] is None else None
+        indent if (indent and code_indents[indent.start_line] is None) else None
         for indent in map_lookback(_parse_html_line, lines, None)
     ]
     # When both, code_indents take precedence

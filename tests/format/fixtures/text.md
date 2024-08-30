@@ -1617,3 +1617,30 @@ Broken formatting (https://github.com/KyleKing/mdformat-mkdocs/issues/35)
         - id: black
     ```
 .
+
+Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues/40)
+.
+- ```powershell
+  iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+  ```
+
+  - ```powershell
+    iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+    ```
+
+    1. ```powershell
+       iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+       ```
+.
+- ```powershell
+  iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+  ```
+
+    - ```powershell
+      iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+      ```
+
+        1. ```powershell
+           iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+           ```
+.
