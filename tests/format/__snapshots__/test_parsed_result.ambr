@@ -1704,39 +1704,42 @@
     debug_block_indents=list([
       None,
       None,
+      None,
       BlockIndent(
         indent_depth=1,
         kind='code',
         raw_indent='  ',
-        start_line=2,
+        start_line=3,
       ),
       BlockIndent(
         indent_depth=1,
         kind='code',
         raw_indent='  ',
-        start_line=2,
+        start_line=3,
       ),
+      None,
+      None,
       None,
       None,
       BlockIndent(
         indent_depth=2,
         kind='code',
-        raw_indent='    ',
-        start_line=6,
+        raw_indent='     ',
+        start_line=9,
       ),
       BlockIndent(
         indent_depth=2,
         kind='code',
-        raw_indent='    ',
-        start_line=6,
+        raw_indent='     ',
+        start_line=9,
       ),
       None,
       None,
       BlockIndent(
         indent_depth=3,
         kind='code',
-        raw_indent='       ',
-        start_line=10,
+        raw_indent='      ',
+        start_line=13,
       ),
     ]),
     lines=list([
@@ -1744,7 +1747,7 @@
         parents=list([
         ]),
         parsed=ParsedLine(
-          content='- ```powershell',
+          content='- ```python',
           indent='',
           line_num=0,
           syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
@@ -1755,14 +1758,14 @@
       LineResult(
         parents=list([
           ParsedLine(
-            content='- ```powershell',
+            content='- ```python',
             indent='',
             line_num=0,
             syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
-          content="iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
+          content='for idx in range(10):',
           indent='  ',
           line_num=1,
           syntax=None,
@@ -1773,28 +1776,22 @@
       LineResult(
         parents=list([
           ParsedLine(
-            content='- ```powershell',
+            content='- ```python',
             indent='',
             line_num=0,
             syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
           ),
+          ParsedLine(
+            content='for idx in range(10):',
+            indent='  ',
+            line_num=1,
+            syntax=None,
+          ),
         ]),
         parsed=ParsedLine(
-          content='```',
-          indent='  ',
+          content='print(idx)',
+          indent='      ',
           line_num=2,
-          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
-        ),
-        prev_list_peers=list([
-        ]),
-      ),
-      LineResult(
-        parents=list([
-        ]),
-        parsed=ParsedLine(
-          content='',
-          indent='',
-          line_num=3,
           syntax=None,
         ),
         prev_list_peers=list([
@@ -1803,64 +1800,16 @@
       LineResult(
         parents=list([
           ParsedLine(
-            content='- ```powershell',
+            content='- ```python',
             indent='',
             line_num=0,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-        ]),
-        parsed=ParsedLine(
-          content='- ```powershell',
-          indent='  ',
-          line_num=4,
-          syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-        ),
-        prev_list_peers=list([
-        ]),
-      ),
-      LineResult(
-        parents=list([
-          ParsedLine(
-            content='- ```powershell',
-            indent='',
-            line_num=0,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-          ParsedLine(
-            content='- ```powershell',
-            indent='  ',
-            line_num=4,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-        ]),
-        parsed=ParsedLine(
-          content="iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
-          indent='    ',
-          line_num=5,
-          syntax=None,
-        ),
-        prev_list_peers=list([
-        ]),
-      ),
-      LineResult(
-        parents=list([
-          ParsedLine(
-            content='- ```powershell',
-            indent='',
-            line_num=0,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-          ParsedLine(
-            content='- ```powershell',
-            indent='  ',
-            line_num=4,
             syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='```',
-          indent='    ',
-          line_num=6,
+          indent='  ',
+          line_num=3,
           syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
         ),
         prev_list_peers=list([
@@ -1872,6 +1821,78 @@
         parsed=ParsedLine(
           content='',
           indent='',
+          line_num=4,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='1. ```bash',
+          indent='  ',
+          line_num=5,
+          syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='for match in %(ls);',
+          indent='     ',
+          line_num=6,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='for match in %(ls);',
+            indent='     ',
+            line_num=6,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='do echo match;',
+          indent='         ',
           line_num=7,
           syntax=None,
         ),
@@ -1881,52 +1902,22 @@
       LineResult(
         parents=list([
           ParsedLine(
-            content='- ```powershell',
+            content='- ```python',
             indent='',
             line_num=0,
             syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
           ),
           ParsedLine(
-            content='- ```powershell',
+            content='1. ```bash',
             indent='  ',
-            line_num=4,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-        ]),
-        parsed=ParsedLine(
-          content='1. ```powershell',
-          indent='    ',
-          line_num=8,
-          syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
-        ),
-        prev_list_peers=list([
-        ]),
-      ),
-      LineResult(
-        parents=list([
-          ParsedLine(
-            content='- ```powershell',
-            indent='',
-            line_num=0,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-          ParsedLine(
-            content='- ```powershell',
-            indent='  ',
-            line_num=4,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-          ParsedLine(
-            content='1. ```powershell',
-            indent='    ',
-            line_num=8,
+            line_num=5,
             syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
-          content="iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
-          indent='       ',
-          line_num=9,
+          content='done',
+          indent='     ',
+          line_num=8,
           syntax=None,
         ),
         prev_list_peers=list([
@@ -1935,28 +1926,118 @@
       LineResult(
         parents=list([
           ParsedLine(
-            content='- ```powershell',
+            content='- ```python',
             indent='',
             line_num=0,
             syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
           ),
           ParsedLine(
-            content='- ```powershell',
+            content='1. ```bash',
             indent='  ',
-            line_num=4,
-            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
-          ),
-          ParsedLine(
-            content='1. ```powershell',
-            indent='    ',
-            line_num=8,
+            line_num=5,
             syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
           ),
         ]),
         parsed=ParsedLine(
           content='```',
-          indent='       ',
+          indent='     ',
+          line_num=9,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
           line_num=10,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='- ```powershell',
+          indent='    ',
+          line_num=11,
+          syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='- ```powershell',
+            indent='    ',
+            line_num=11,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content="iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
+          indent='      ',
+          line_num=12,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+          ParsedLine(
+            content='- ```powershell',
+            indent='    ',
+            line_num=11,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```',
+          indent='      ',
+          line_num=13,
           syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
         ),
         prev_list_peers=list([
@@ -1966,11 +2047,15 @@
     new_lines=list([
       tuple(
         '',
-        '- ```powershell',
+        '- ```python',
       ),
       tuple(
         '    ',
-        "iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
+        'for idx in range(10):',
+      ),
+      tuple(
+        '        ',
+        'print(idx)',
       ),
       tuple(
         '    ',
@@ -1982,11 +2067,19 @@
       ),
       tuple(
         '    ',
-        '- ```powershell',
+        '1. ```bash',
       ),
       tuple(
         '        ',
-        "iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
+        'for match in %(ls);',
+      ),
+      tuple(
+        '            ',
+        'do echo match;',
+      ),
+      tuple(
+        '        ',
+        'done',
       ),
       tuple(
         '        ',
@@ -1998,7 +2091,7 @@
       ),
       tuple(
         '        ',
-        '1. ```powershell',
+        '- ```powershell',
       ),
       tuple(
         '            ',

@@ -113,16 +113,19 @@ Do not format code (https://github.com/KyleKing/mdformat-mkdocs/issues/36). Also
 
 Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues/40)
 .
-- ```powershell
-  iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+- ```python
+  for idx in range(10):
+      print(idx)
   ```
 
-  - ```powershell
-    iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
-    ```
+  1. ```bash
+     for match in %(ls);
+         do echo match;
+     done
+     ```
 
-    1. ```powershell
-       iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
-       ```
+    - ```powershell
+      iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+      ```
 .
 .
