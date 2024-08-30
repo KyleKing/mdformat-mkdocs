@@ -127,5 +127,10 @@ Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues
     - ```powershell
       iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
       ```
+
+  ```txt
+  - First Line
+    Second Line
+  ```
 .
 .

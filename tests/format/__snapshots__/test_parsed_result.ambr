@@ -1741,6 +1741,21 @@
         raw_indent='      ',
         start_line=13,
       ),
+      BlockIndent(
+        indent_depth=3,
+        kind='code',
+        raw_indent='      ',
+        start_line=13,
+      ),
+      None,
+      None,
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='  ',
+        start_line=18,
+      ),
     ]),
     lines=list([
       LineResult(
@@ -2043,6 +2058,102 @@
         prev_list_peers=list([
         ]),
       ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=14,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```txt',
+          indent='  ',
+          line_num=15,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='- First Line',
+          indent='  ',
+          line_num=16,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+          ParsedLine(
+            content='1. ```bash',
+            indent='  ',
+            line_num=5,
+            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
+          ),
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+          ParsedLine(
+            content='- First Line',
+            indent='  ',
+            line_num=16,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='Second Line',
+          indent='    ',
+          line_num=17,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- ```python',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.CODE_BULLETED: 'CODE_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='```',
+          indent='  ',
+          line_num=18,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -2099,6 +2210,26 @@
       ),
       tuple(
         '            ',
+        '```',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '    ',
+        '```txt',
+      ),
+      tuple(
+        '    ',
+        '- First Line',
+      ),
+      tuple(
+        '      ',
+        'Second Line',
+      ),
+      tuple(
+        '    ',
         '```',
       ),
     ]),
