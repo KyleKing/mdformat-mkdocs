@@ -69,7 +69,7 @@ def _pymd_abbreviations(
 
     matches = [match]
     max_line = start_line
-    while match is not None:
+    while match:
         if max_line == end_line:
             break
         if match := _new_match(state, max_line + 1):
