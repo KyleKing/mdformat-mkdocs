@@ -39,11 +39,10 @@ def map_lookback(
 
     """
     results = [initial]
-    if len(items) > 1:
-        for item in items[1:]:
-            result = func(results[-1], item)
-            results.append(result)
-    return results
+    for item in items:
+        result = func(results[-1], item)
+        results.append(result)
+    return results[1:]
 
 
 # ======================================================================================

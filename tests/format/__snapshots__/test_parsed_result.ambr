@@ -1702,15 +1702,25 @@
 # name: test_parsed_result[Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues/40)]
   ParsedText(
     debug_block_indents=list([
-      None,
-      None,
-      None,
       BlockIndent(
-        indent_depth=1,
+        indent_depth=0,
         kind='code',
-        raw_indent='  ',
-        start_line=3,
+        raw_indent='',
+        start_line=0,
       ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      None,
     ]),
     lines=list([
       LineResult(
@@ -1792,11 +1802,11 @@
         '- ```python',
       ),
       tuple(
-        '    ',
+        '  ',
         'for idx in range(10):',
       ),
       tuple(
-        '        ',
+        '      ',
         'print(idx)',
       ),
       tuple(
