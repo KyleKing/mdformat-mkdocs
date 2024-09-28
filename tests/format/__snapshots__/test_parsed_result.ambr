@@ -1756,6 +1756,22 @@
         raw_indent='  ',
         start_line=18,
       ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='  ',
+        start_line=18,
+      ),
+      None,
+      None,
+      None,
+      None,
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=24,
+      ),
     ]),
     lines=list([
       LineResult(
@@ -2154,6 +2170,96 @@
         prev_list_peers=list([
         ]),
       ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=19,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='```yaml',
+          indent='',
+          line_num=20,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='repos:',
+          indent='',
+          line_num=21,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='repos:',
+            indent='',
+            line_num=21,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='- repo: https://github.com/psf/black',
+          indent=' ',
+          line_num=22,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='repos:',
+            indent='',
+            line_num=21,
+            syntax=None,
+          ),
+          ParsedLine(
+            content='- repo: https://github.com/psf/black',
+            indent=' ',
+            line_num=22,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='rev: v24.4',
+          indent='   ',
+          line_num=23,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='```',
+          indent='',
+          line_num=24,
+          syntax=<Syntax.EDGE_CODE: 'EDGE_CODE'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
     ]),
     new_lines=list([
       tuple(
@@ -2230,6 +2336,30 @@
       ),
       tuple(
         '    ',
+        '```',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '',
+        '```yaml',
+      ),
+      tuple(
+        '',
+        'repos:',
+      ),
+      tuple(
+        '    ',
+        '- repo: https://github.com/psf/black',
+      ),
+      tuple(
+        '      ',
+        'rev: v24.4',
+      ),
+      tuple(
+        '',
         '```',
       ),
     ]),

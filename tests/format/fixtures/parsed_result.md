@@ -132,5 +132,11 @@ Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues
   - First Line
     Second Line
   ```
+
+```yaml
+repos:
+ - repo: https://github.com/psf/black
+   rev: v24.4
+```
 .
 .
