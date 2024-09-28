@@ -88,6 +88,10 @@ class Syntax(Enum):
         return None
 
 
+SYNTAX_CODE_LIST = {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
+"""The start of a code block, which is also the start of a list."""
+
+
 class ParsedLine(NamedTuple):
     """Parsed Line of text."""
 
@@ -115,8 +119,7 @@ def _is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 def _is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     """Return True if two list items share the same scope and level."""
     list_types = {
-        Syntax.CODE_BULLETED,
-        Syntax.CODE_NUMBERED,
+        *SYNTAX_CODE_LIST,
         Syntax.LIST_BULLETED,
         Syntax.LIST_NUMBERED,
     }
@@ -210,8 +213,7 @@ def _parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent
     """Identify fenced or indented sections internally referred to as 'code blocks'."""
     result = last
     if line.parsed.syntax in {
-        Syntax.CODE_BULLETED,
-        Syntax.CODE_NUMBERED,
+        *SYNTAX_CODE_LIST,
         Syntax.EDGE_CODE,
     }:
         # On first edge, start tracking a code block
@@ -272,7 +274,7 @@ def _parse_semantic_indent(
     if (
         not line.parsed.content
         or code_indent is not None
-        or line.parsed.syntax in {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
+        or line.parsed.syntax in SYNTAX_CODE_LIST
     ):
         result = SemanticIndent.EMPTY
 
@@ -318,10 +320,7 @@ def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> st
                 line_indent=line.parsed.indent,
             )
             result = DEFAULT_INDENT * depth + extra_indent
-        elif line.parents and line.parents[-1].syntax in {
-            Syntax.CODE_BULLETED,
-            Syntax.CODE_NUMBERED,
-        }:
+        elif line.parents and line.parents[-1].syntax in SYNTAX_CODE_LIST:
             depth = len(line.parents) - 1
             match = RE_LIST_ITEM.fullmatch(line.parents[-1].content)
             assert match  # for pyright
@@ -412,9 +411,9 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
 # Outputs string result
 
 
-def _join(parsed_text: ParsedText) -> str:
+def _join(*, new_lines: list[tuple[str, str]]) -> str:
     """Join ParsedText into a single string representation."""
-    new_indents, new_contents = unzip(parsed_text.new_lines)
+    new_indents, new_contents = unzip(new_lines)
 
     new_indents_iter = new_indents
 
@@ -456,4 +455,4 @@ def normalize_list(
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
-    return _join(parsed_text=parsed_text)
+    return _join(new_lines=parsed_text.new_lines)
