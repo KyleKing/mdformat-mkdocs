@@ -844,12 +844,12 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
 
     ```py
     from pathlib import Path
-
+    
     import cv2 as cv
     import numpy as np
     from ultralytics import YOLO
     ```
-
+    
     ???+ tip "Ultralytics Install"
 
         See the Ultralytics [Quickstart](../quickstart.md/#install-ultralytics) Installation section for a quick walkthrough on installing the required libraries.
@@ -863,7 +863,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
 
     # Load a model
     model = YOLO('yolov8n-seg.pt')
-
+    
     # Run inference
     result = model.predict()
     ```
@@ -880,7 +880,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
         This is helpful for rapid testing with the `predict()` method.
 
     For additional information about Segmentation Models, visit the [Segment Task](../tasks/segment.md#models) page. To learn more about `predict()` method, see [Predict Mode](../modes/predict.md) section of the Documentation.
-
+    
     ***
 
 3. Now iterate over the results and the contours. For workflows that want to save an image to file, the source image `base-name` and the detection `class-label` are retrieved for later use (optional).
@@ -1292,35 +1292,35 @@ More complex example to validate formatting when nested
 1. List Outer
 
     ???+ Note
-
+    
         === "First"
-
+    
              Markdown **content**.
-
+    
              Multiple paragraphs.
-
+        
             ??? "Second"
-
+        
                  Markdown **content**.
-
+        
                  Multiple paragraphs.
-
+        
                 ===+ "Third"
-
+            
                      - List Item
-
+            
                      - Another Item
-
+        
                         === "Fourth"
-
+                    
                              - List Item
-
+                    
                              - Another Item
-
+        
                         ===! "Lastly a new item"
-
+    
                             Markdown **content** for last item.
-
+    
                             Very last indented paragraph.
 
 2. Next
