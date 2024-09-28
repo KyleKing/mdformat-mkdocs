@@ -2310,7 +2310,7 @@
         'print(idx)',
       ),
       tuple(
-        '    ',
+        '  ',
         '```',
       ),
       tuple(
@@ -2334,7 +2334,7 @@
         'done',
       ),
       tuple(
-        '        ',
+        '       ',
         '```',
       ),
       tuple(
@@ -2350,7 +2350,7 @@
         "iex (new-object net.webclient).DownloadString('https://get.scoop.sh')",
       ),
       tuple(
-        '            ',
+        '          ',
         '```',
       ),
       tuple(
@@ -2370,7 +2370,7 @@
         'Second Line',
       ),
       tuple(
-        '    ',
+        '  ',
         '```',
       ),
       tuple(

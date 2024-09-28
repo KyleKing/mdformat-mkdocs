@@ -16,7 +16,7 @@ def separate_indent(line: str) -> tuple[str, str]:
     """
     re_indent = re.compile(r"(?P<indent>\s*)(?P<content>[^\s]?.*)")
     match = re_indent.match(line)
-    assert match is not None  # for pyright
+    assert match  # for pyright
     return (match["indent"], match["content"])
 
 

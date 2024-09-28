@@ -318,6 +318,15 @@ def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> st
                 line_indent=line.parsed.indent,
             )
             result = DEFAULT_INDENT * depth + extra_indent
+        elif line.parents and line.parents[-1].syntax in {
+            Syntax.CODE_BULLETED,
+            Syntax.CODE_NUMBERED,
+        }:
+            depth = len(line.parents) - 1
+            match = RE_LIST_ITEM.fullmatch(line.parents[-1].content)
+            assert match  # for pyright
+            extra_indent = " " * (len(match["bullet"]) + 1)
+            result = DEFAULT_INDENT * depth + extra_indent
         else:
             result = DEFAULT_INDENT * len(line.parents)
     return result
@@ -340,7 +349,7 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
         Syntax.LIST_NUMBERED,
     }:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
-        assert list_match is not None  # for pyright
+        assert list_match  # for pyright
         new_bullet = "-"
         if line.parsed.syntax == Syntax.LIST_NUMBERED:
             first_peer = (
