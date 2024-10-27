@@ -334,9 +334,9 @@ def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> st
 class ParsedText(NamedTuple):
     """Intermediary result of parsing the text."""
 
-    lines: list[LineResult]
     new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
+    debug_original_lines: list[LineResult]
     debug_block_indents: list[BlockIndent | None]
 
 
@@ -401,8 +401,8 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
         ]
 
     return ParsedText(
-        lines=lines,
         new_lines=[*zip_equal(new_indents, new_contents)],
+        debug_original_lines=lines,
         debug_block_indents=block_indents,
     )
 
