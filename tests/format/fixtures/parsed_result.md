@@ -110,3 +110,33 @@ Do not format code (https://github.com/KyleKing/mdformat-mkdocs/issues/36). Also
    ```
 .
 .
+
+Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues/40)
+.
+- ```python
+  for idx in range(10):
+      print(idx)
+  ```
+
+  1. ```bash
+     for match in %(ls);
+         do echo match;
+     done
+     ```
+
+    - ```powershell
+      iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+      ```
+
+  ```txt
+  - First Line
+    Second Line
+  ```
+
+```yaml
+repos:
+ - repo: https://github.com/psf/black
+   rev: v24.4
+```
+.
+.
