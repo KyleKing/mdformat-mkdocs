@@ -39,11 +39,10 @@ def map_lookback(
 
     """
     results = [initial]
-    if len(items) > 1:
-        for item in items[1:]:
-            result = func(results[-1], item)
-            results.append(result)
-    return results
+    for item in items:
+        result = func(results[-1], item)
+        results.append(result)
+    return results[1:]
 
 
 # ======================================================================================
@@ -59,6 +58,8 @@ RE_LIST_ITEM = re.compile(r"(?P<bullet>[\-*]|\d+\.)\s+(?P<item>.+)")
 class Syntax(Enum):
     """Non-standard line types."""
 
+    CODE_BULLETED = "CODE_BULLETED"
+    CODE_NUMBERED = "CODE_NUMBERED"
     LIST_BULLETED = "LIST_BULLETED"
     LIST_NUMBERED = "LIST_NUMBERED"
     START_MARKED = "START_MARKED"
@@ -74,11 +75,10 @@ class Syntax(Enum):
 
         """
         if match := RE_LIST_ITEM.fullmatch(content):
-            return (
-                cls.LIST_NUMBERED
-                if match["bullet"] not in {"-", "*"}
-                else cls.LIST_BULLETED
-            )
+            is_numbered = match["bullet"] not in {"-", "*"}
+            if match["item"].startswith("```"):
+                return cls.CODE_NUMBERED if is_numbered else cls.CODE_BULLETED
+            return cls.LIST_NUMBERED if is_numbered else cls.LIST_BULLETED
         if any(content.startswith(f"{marker} ") for marker in MARKERS):
             return cls.START_MARKED
         if content.startswith("```"):
@@ -86,6 +86,10 @@ class Syntax(Enum):
         if content.startswith("<"):
             return cls.HTML
         return None
+
+
+SYNTAX_CODE_LIST = {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
+"""The start of a code block, which is also the start of a list."""
 
 
 class ParsedLine(NamedTuple):
@@ -114,7 +118,11 @@ def _is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
 
 def _is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     """Return True if two list items share the same scope and level."""
-    list_types = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED}
+    list_types = {
+        *SYNTAX_CODE_LIST,
+        Syntax.LIST_BULLETED,
+        Syntax.LIST_NUMBERED,
+    }
     return (
         parsed.syntax in list_types
         and prev_line.parsed.syntax in list_types
@@ -204,7 +212,10 @@ class BlockIndent(NamedTuple):
 def _parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
     """Identify fenced or indented sections internally referred to as 'code blocks'."""
     result = last
-    if line.parsed.syntax == Syntax.EDGE_CODE:
+    if line.parsed.syntax in {
+        *SYNTAX_CODE_LIST,
+        Syntax.EDGE_CODE,
+    }:
         # On first edge, start tracking a code block
         #   on the second edge, stop tracking
         result = (
@@ -260,7 +271,11 @@ def _parse_semantic_indent(
     # PLANNED: This works, but is very confusing
     line, code_indent = tin
 
-    if not line.parsed.content or code_indent is not None:
+    if (
+        not line.parsed.content
+        or code_indent is not None
+        or line.parsed.syntax in SYNTAX_CODE_LIST
+    ):
         result = SemanticIndent.EMPTY
 
     elif line.parsed.syntax == Syntax.LIST_BULLETED:
@@ -305,6 +320,12 @@ def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> st
                 line_indent=line.parsed.indent,
             )
             result = DEFAULT_INDENT * depth + extra_indent
+        elif line.parents and line.parents[-1].syntax in SYNTAX_CODE_LIST:
+            depth = len(line.parents) - 1
+            match = RE_LIST_ITEM.fullmatch(line.parents[-1].content)
+            assert match  # for pyright
+            extra_indent = " " * (len(match["bullet"]) + 1)
+            result = DEFAULT_INDENT * depth + extra_indent
         else:
             result = DEFAULT_INDENT * len(line.parents)
     return result
@@ -313,9 +334,9 @@ def _format_new_indent(line: LineResult, block_indent: BlockIndent | None) -> st
 class ParsedText(NamedTuple):
     """Intermediary result of parsing the text."""
 
-    lines: list[LineResult]
     new_lines: list[tuple[str, str]]
     # Used only for debugging purposes
+    debug_original_lines: list[LineResult]
     debug_block_indents: list[BlockIndent | None]
 
 
@@ -327,7 +348,7 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
         Syntax.LIST_NUMBERED,
     }:
         list_match = RE_LIST_ITEM.fullmatch(line.parsed.content)
-        assert list_match is not None  # for pyright
+        assert list_match  # for pyright
         new_bullet = "-"
         if line.parsed.syntax == Syntax.LIST_NUMBERED:
             first_peer = (
@@ -339,6 +360,25 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
         new_content = f'{new_bullet} {list_match["item"]}'
 
     return new_content
+
+
+def _insert_newlines(
+    parsed_lines: list[LineResult],
+    zipped_lines: list[tuple[str, str]],
+) -> list[tuple[str, str]]:
+    """Extend zipped_lines with newlines if necessary."""
+    newline = ("", "")
+    new_lines: list[tuple[str, str]] = []
+    for line, zip_line in zip_equal(parsed_lines, zipped_lines):
+        new_lines.append(zip_line)
+        if (
+            line.parsed.syntax == Syntax.EDGE_CODE
+            and line.parents
+            and line.parents[-1].syntax in SYNTAX_CODE_LIST
+        ):
+            new_lines.append(newline)
+
+    return new_lines
 
 
 def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
@@ -354,7 +394,7 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
     code_indents = map_lookback(_parse_code_block, lines, None)
     html_indents = [
         # Any indents initiated from within a `code_block_indents` should be ignored
-        indent if indent and code_indents[indent.start_line] is None else None
+        indent if (indent and code_indents[indent.start_line] is None) else None
         for indent in map_lookback(_parse_html_line, lines, None)
     ]
     # When both, code_indents take precedence
@@ -379,9 +419,10 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
             ),
         ]
 
+    new_lines = _insert_newlines(lines, [*zip_equal(new_indents, new_contents)])
     return ParsedText(
-        lines=lines,
-        new_lines=[*zip_equal(new_indents, new_contents)],
+        new_lines=new_lines,
+        debug_original_lines=lines,
         debug_block_indents=block_indents,
     )
 
@@ -390,9 +431,9 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
 # Outputs string result
 
 
-def _join(parsed_text: ParsedText) -> str:
+def _join(*, new_lines: list[tuple[str, str]]) -> str:
     """Join ParsedText into a single string representation."""
-    new_indents, new_contents = unzip(parsed_text.new_lines)
+    new_indents, new_contents = unzip(new_lines)
 
     new_indents_iter = new_indents
 
@@ -434,4 +475,4 @@ def normalize_list(
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(),
     )
-    return _join(parsed_text=parsed_text)
+    return _join(new_lines=parsed_text.new_lines)
