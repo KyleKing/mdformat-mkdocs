@@ -1631,9 +1631,9 @@ Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues
      done
      ```
 
-    - ```powershell
-      iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
-      ```
+     - ```powershell
+       iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
+       ```
 .
 - ```python
   for idx in range(10):

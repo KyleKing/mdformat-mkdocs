@@ -362,6 +362,25 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
     return new_content
 
 
+def _insert_newlines(
+    parsed_lines: list[LineResult],
+    zipped_lines: list[tuple[str, str]],
+) -> list[tuple[str, str]]:
+    """Extend zipped_lines with newlines if necessary."""
+    newline = ("", "")
+    new_lines: list[tuple[str, str]] = []
+    for line, zip_line in zip_equal(parsed_lines, zipped_lines):
+        new_lines.append(zip_line)
+        if (
+            line.parsed.syntax == Syntax.EDGE_CODE
+            and line.parents
+            and line.parents[-1].syntax in SYNTAX_CODE_LIST
+        ):
+            new_lines.append(newline)
+
+    return new_lines
+
+
 def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
     """Post-processor to normalize lists.
 
@@ -400,8 +419,9 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
             ),
         ]
 
+    new_lines = _insert_newlines(lines, [*zip_equal(new_indents, new_contents)])
     return ParsedText(
-        new_lines=[*zip_equal(new_indents, new_contents)],
+        new_lines=new_lines,
         debug_original_lines=lines,
         debug_block_indents=block_indents,
     )
