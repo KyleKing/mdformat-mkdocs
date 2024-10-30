@@ -31,7 +31,7 @@ jobs:
         # we install with flit --pth-file,
         # so that coverage will be recorded for the module
         run: |
-          pip install flit
+          pipx install flit
           flit install --deps=production --extras=test --pth-file
       - name: Run pytest
         run: |
@@ -54,7 +54,7 @@ jobs:
           python-version: 3.12
       - name: Installation (deps and package)
         run: |
-          pip install pre-commit
+          pipx install pre-commit
           pip install .
       - name: run pre-commit with plugin
         run: |

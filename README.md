@@ -50,38 +50,56 @@ repos:
     hooks:
       - id: mdformat
         additional_dependencies:
-          - mdformat-mkdocs>=2.1.0
+          - mdformat-mkdocs
           # Or
-          # - "mdformat-mkdocs[recommended]>=2.1.0"
+          # - "mdformat-mkdocs[recommended]"
 ```
 
-### pipx
+### pipx/uv
 
 ```sh
 pipx install mdformat
 pipx inject mdformat mdformat-mkdocs
-# Or
-# pipx inject mdformat "mdformat-mkdocs[recommended]"
+```
+
+Or with uv:
+
+```sh
+uv tool run --from mdformat-mkdocs mdformat
 ```
 
 ## HTML Rendering
 
-To generate HTML output, `material_admon_plugin` can be imported from `mdit_plugins`. More plugins will be added in the future. For more guidance on `MarkdownIt`, see the docs: <https://markdown-it-py.readthedocs.io/en/latest/using.html#the-parser>
+To generate HTML output, any of the plugins can be imported from `mdit_plugins`. For more guidance on `MarkdownIt`, see the docs: <https://markdown-it-py.readthedocs.io/en/latest/using.html#the-parser>
 
 ```py
 from markdown_it import MarkdownIt
 
-from mdformat_mkdocs.mdit_plugins import material_admon_plugin
+from mdformat_mkdocs.mdit_plugins import (
+    material_admon_plugin,
+    material_content_tabs_plugin,
+    mkdocstrings_autorefs_plugin,
+    mkdocstrings_crossreference_plugin,
+    pymd_abbreviations_plugin,
+)
 
 md = MarkdownIt()
 md.use(material_admon_plugin)
+md.use(material_content_tabs_plugin)
+md.use(mkdocstrings_autorefs_plugin)
+md.use(mkdocstrings_crossreference_plugin)
+md.use(pymd_abbreviations_plugin)
 
-text = "??? note\n    content"
+text = "- Line 1\n    - `bash command`\n    - Line 3"
 md.render(text)
-# <details class="note">
-# <summary>Note</summary>
-# <p>content</p>
-# </details>
+# <ul>
+# <li>Line 1
+# <ul>
+# <li><code>bash command</code></li>
+# <li>Line 3</li>
+# </ul>
+# </li>
+# </ul>
 ```
 
 ## CLI Options
@@ -102,7 +120,7 @@ Note: the `align-semantic-breaks-in-lists` setting is not supported in the confi
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/KyleKing/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/kyleking/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
 
 [ci-badge]: https://github.com/kyleking/mdformat-mkdocs/workflows/CI/badge.svg?branch=main
 [ci-link]: https://github.com/kyleking/mdformat-mkdocs/actions?query=workflow%3ACI+branch%3Amain+event%3Apush
