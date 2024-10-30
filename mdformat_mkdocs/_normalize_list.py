@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import Any, Callable, Literal, Mapping, NamedTuple, TypeVar
+from typing import Any, Callable, Literal, NamedTuple, TypeVar
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal

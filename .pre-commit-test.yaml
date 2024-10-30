@@ -1,6 +1,6 @@
 ---
 # A pre-commit hook for testing unreleased changes
-# Run from tox with: tox -e py38-hook
+# Run from tox with: tox -e py39-hook
 repos:
   - repo: local
     hooks:
