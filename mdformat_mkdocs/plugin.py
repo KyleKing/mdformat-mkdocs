@@ -1,8 +1,8 @@
-"""`mdformat` Plugin."""
+"""Public Extension."""
 
 from __future__ import annotations
 
-import argparse
+from argparse import ArgumentParser
 from collections.abc import Mapping
 from functools import partial
 from typing import Any
@@ -48,7 +48,7 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
     return options["mdformat"].get("align_semantic_breaks_in_lists", False)
 
 
-def add_cli_options(parser: argparse.ArgumentParser) -> None:
+def add_cli_options(parser: ArgumentParser) -> None:
     """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
     parser.add_argument(
         "--align-semantic-breaks-in-lists",
@@ -122,9 +122,9 @@ def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str
     return _render_with_default_renderer(node, context, "link")
 
 
-# A mapping from `RenderTreeNode.type` to a `Render` function that can
-# render the given `RenderTreeNode` type. These override the default
-# `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
+# A mapping from syntax tree node type to a function that renders it.
+# This can be used to overwrite renderer functions of existing syntax
+# or add support for new syntax.
 RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs": ADMON_RENDERS["admonition"],
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
