@@ -17,7 +17,7 @@ dependencies = [
   "mdformat-admon >= 2.0.6",
   "mdformat-gfm >= 0.3.6",
   "mdit-py-plugins >= 0.4.1",
-  "more-itertools >= 10.2.0",
+  "more-itertools >= 10.5.0",
 ]
 dynamic = ["description", "version"]
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
@@ -33,22 +33,22 @@ dev = ["pre-commit"]
 recommended = [
   # Keep in-sync with README
   "mdformat-beautysh >= 0.1.1",
-  "mdformat-config >= 0.1.3",
+  "mdformat-config >= 0.2.1",
   "mdformat-footnote >= 0.1.1",
   "mdformat-frontmatter >= 2.0.8",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.0.1",
-  "mdformat-tables >= 0.4.1",
-  "mdformat-web >= 0.1.0",
+  "mdformat-tables >= 1.0.0",
+  "mdformat-web >= 0.2.0",
   "mdformat-wikilink >= 0.2.0",
   # Patches https://github.com/lovesegfault/beautysh/issues/248 for Python 3.12
   "setuptools",
 ]
 test = [
-  "pytest >= 7.4.4",
-  "pytest-beartype >= 0.0.2",
-  "pytest-cov >= 4.1.0",
-  "syrupy >= 4.6.0",
+  "pytest >= 8.3.3",
+  "pytest-beartype >= 0.1.0",
+  "pytest-cov >= 5.0.0",
+  "syrupy >= 4.7.2",
 ]
 
 [project.urls]
