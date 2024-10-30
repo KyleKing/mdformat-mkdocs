@@ -18,17 +18,17 @@ ______________________________________________________________________
 
 ### **Typo**
 
-# [h1] The largest heading
+# \[h1\] The largest heading
 
-## [h2] heading
+## \[h2\] heading
 
-### [h3] heading
+### \[h3\] heading
 
-#### [h4] heading
+#### \[h4\] heading
 
-##### [h5] heading
+##### \[h5\] heading
 
-###### [h6] The smallest heading
+###### \[h6\] The smallest heading
 
 ______________________________________________________________________
 
