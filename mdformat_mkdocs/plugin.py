@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import argparse
 from functools import partial
-from typing import Mapping
+from typing import Any, Mapping
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
@@ -25,20 +25,26 @@ from .mdit_plugins import (
     pymd_abbreviations_plugin,
 )
 
-_IGNORE_MISSING_REFERENCES = None
-"""user-specified flag to turn off bracket escaping when no link reference found.
+ContextOptions = Mapping[str, Any]
 
-Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/19
 
-"""
+def cli_is_ignore_missing_references(options: ContextOptions) -> bool:
+    """user-specified flag to turn off bracket escaping when no link reference found.
 
-_ALIGN_SEMANTIC_BREAKS_IN_LISTS = None
-"""user-specified flag for toggling semantic breaks.
+    Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/19
 
-- 3-spaces on subsequent lines in semantic numbered lists
-- and 2-spaces on subsequent bulleted items
+    """
+    return options["mdformat"].get("ignore_missing_references", False)
 
-"""
+
+def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
+    """user-specified flag for toggling semantic breaks.
+
+    - 3-spaces on subsequent lines in semantic numbered lists
+    - and 2-spaces on subsequent bulleted items
+
+    """
+    return options["mdformat"].get("align_semantic_breaks_in_lists", False)
 
 
 def add_cli_options(parser: argparse.ArgumentParser) -> None:
@@ -62,18 +68,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
 
-    global _ALIGN_SEMANTIC_BREAKS_IN_LISTS  # noqa: PLW0603
-    _ALIGN_SEMANTIC_BREAKS_IN_LISTS = mdit.options["mdformat"].get(
-        "align_semantic_breaks_in_lists",
-        False,
-    )
-
-    global _IGNORE_MISSING_REFERENCES  # noqa: PLW0603
-    _IGNORE_MISSING_REFERENCES = mdit.options["mdformat"].get(
-        "ignore_missing_references",
-        False,
-    )
-    if _IGNORE_MISSING_REFERENCES:
+    if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)
 
 
@@ -120,7 +115,7 @@ def _render_with_default_renderer(
 
 def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str:
     """Render a MkDocs crossreference link."""
-    if _IGNORE_MISSING_REFERENCES:
+    if cli_is_ignore_missing_references(context.options):
         return _render_meta_content(node, context)
     # Default to treating the matched content as a link
     return _render_with_default_renderer(node, context, "link")
@@ -141,14 +136,9 @@ RENDERERS: Mapping[str, Render] = {
 }
 
 
-def check_if_align_semantic_breaks_in_lists() -> bool:
-    """Return value of global variable."""
-    return _ALIGN_SEMANTIC_BREAKS_IN_LISTS or False
-
-
 normalize_list = partial(
     unbounded_normalize_list,
-    check_if_align_semantic_breaks_in_lists=check_if_align_semantic_breaks_in_lists,
+    check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
 )
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does

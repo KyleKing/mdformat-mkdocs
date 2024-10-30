@@ -6,7 +6,7 @@ import re
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import Callable, Literal, NamedTuple, TypeVar
+from typing import Any, Callable, Literal, Mapping, NamedTuple, TypeVar
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
@@ -454,7 +454,7 @@ def normalize_list(
     text: str,
     node: RenderTreeNode,
     context: RenderContext,
-    check_if_align_semantic_breaks_in_lists: Callable[[], bool],  # Attach with partial
+    check_if_align_semantic_breaks_in_lists: Callable[[Mapping[str, Any]], bool],
 ) -> str:
     """Format markdown list.
 
@@ -473,6 +473,6 @@ def normalize_list(
     parsed_text = parse_text(
         text=text,
         inc_numbers=inc_numbers,
-        use_sem_break=check_if_align_semantic_breaks_in_lists(),
+        use_sem_break=check_if_align_semantic_breaks_in_lists(context.options),
     )
     return _join(new_lines=parsed_text.new_lines)
