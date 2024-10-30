@@ -135,7 +135,7 @@ Handle Mixed Indents
 List with (what should be converted to a) code block
 .
 - item 1
-    
+
     code block
 .
 - item 1
@@ -146,7 +146,7 @@ List with (what should be converted to a) code block
 List with explicit code block (that should keep indentation)
 .
 - item 1
-        
+
     ```txt
     code block
     ```
@@ -266,7 +266,7 @@ Table
 Floating Link
 .
 > Based on [External Link]
- 
+
 [external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
 .
 > Based on [External Link]
