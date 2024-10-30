@@ -258,9 +258,9 @@ Table
 |:---------------|---------:|:---------------------|
 | Name           |         2| <!-- Comment -->     |
 .
-| Label          |   Rating | Comment              |
+| Label | Rating | Comment |
 |:---------------|---------:|:---------------------|
-| Name           |         2| <!-- Comment -->     |
+| Name | 2| <!-- Comment --> |
 .
 
 Floating Link
@@ -288,17 +288,17 @@ Headings
 
 ###### [h6] The smallest heading
 .
-# \[h1\] The largest heading
+# [h1] The largest heading
 
-## \[h2\] heading
+## [h2] heading
 
-### \[h3\] heading
+### [h3] heading
 
-#### \[h4\] heading
+#### [h4] heading
 
-##### \[h5\] heading
+##### [h5] heading
 
-###### \[h6\] The smallest heading
+###### [h6] The smallest heading
 .
 
 Task List / Check List (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
@@ -306,8 +306,8 @@ Task List / Check List (WARN: escaping is prevented by mdformat-gfm. Tested by p
 - [x] #739
   - [ ] Add delight to the experience when all tasks are complete :tada:
 .
-- \[x\] #739
-    - \[ \] Add delight to the experience when all tasks are complete :tada:
+- [x] #739
+    - [ ] Add delight to the experience when all tasks are complete :tada:
 .
 
 Footnotes (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
@@ -320,9 +320,9 @@ You can also use words, to fit your writing style more closely[^note].
   [^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
     This footnote also has been made with a different syntax using 4 spaces for new lines.
 .
-Here is a simple footnote\[^1\].
+Here is a simple footnote[^1].
 
-You can also use words, to fit your writing style more closely\[^note\].
+You can also use words, to fit your writing style more closely[^note].
 
 \[^1\]: My reference.
 \[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
