@@ -122,13 +122,29 @@ def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str
     return _render_with_default_renderer(node, context, "link")
 
 
+def add_extra_admon_newline(node: RenderTreeNode, context: RenderContext) -> str:
+    """Return admonition with additional newline after the title.
+
+    See: https://github.com/KyleKing/mdformat-admon/pull/22
+
+    """
+    result = ADMON_RENDERS["admonition"](node, context)
+    if "\n" not in result:
+        return result
+    title, *content = result.split("\n", maxsplit=1)
+    return f"{title}\n\n{''.join(content)}"
+
+
 # A mapping from syntax tree node type to a function that renders it.
 # This can be used to overwrite renderer functions of existing syntax
 # or add support for new syntax.
 RENDERERS: Mapping[str, Render] = {
-    "admonition_mkdocs": ADMON_RENDERS["admonition"],
+    # TODO: address conflict with mdformat-admon because mkdocs needs to override
+    "admonition": add_extra_admon_newline,
+    "admonition_title": ADMON_RENDERS["admonition_title"],
+    "admonition_mkdocs": add_extra_admon_newline,
     "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
-    "content_tab_mkdocs": ADMON_RENDERS["admonition"],
+    "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
