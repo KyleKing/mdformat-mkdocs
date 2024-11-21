@@ -352,12 +352,14 @@ Nested Python Classes. Resolves #13: https://github.com/KyleKing/mdformat-mkdocs
 .
 
 
-Simple admonition
+Simple admonition. Verify that the extra mkdocs newline is inserted
 .
 !!! note
+
     *content*
 .
 !!! note
+
     *content*
 .
 
@@ -365,12 +367,14 @@ Simple admonition
 Could contain block elements too
 .
 !!! note
+
     ### heading
 
     -----------
 
 .
 !!! note
+
     ### heading
 
     ______________________________________________________________________
@@ -386,6 +390,7 @@ Shows custom title
 
 .
 !!! note Custom title
+
     Some text
 
 .
@@ -398,6 +403,7 @@ Shows no title
 
 .
 !!! note ""
+
     Some text
 
 .
@@ -410,6 +416,7 @@ Removes extra quotes from the title
 
 .
 !!! danger "Don't try this at home"
+
     ...
 
 .
@@ -422,6 +429,7 @@ Parse additional classes to support Python markdown (https://github.com/executab
 
 .
 !!! a b c d inline-classes   "Note: note about "foo""
+
     ...
 
 .
@@ -436,6 +444,7 @@ Closes block after 2 empty lines
     A code block
 .
 !!! note
+
     Some text
 
 ```
@@ -453,7 +462,9 @@ Nested blocks
             code block
 .
 !!! note
+
     !!! note
+
         Some text
 
         ```
@@ -480,6 +491,7 @@ Marker may be indented up to 3 chars
        content
 .
 !!! note
+
     content
 .
 
@@ -520,8 +532,8 @@ Type could be adjacent to marker
 
 .
 !!! note
-    xxx
 
+    xxx
 .
 
 
@@ -532,6 +544,7 @@ Type could be adjacent to marker and content may be shifted up to 3 chars
 
 .
 !!! note
+
     xxx
 
 .
@@ -543,6 +556,7 @@ Or several spaces apart
         xxx
 .
 !!! note
+
     xxx
 .
 
@@ -553,11 +567,12 @@ Admonitions self-close at the end of the document
     xxx
 .
 !!! note
+
     xxx
 .
 
 
-These are not admonitions
+or in a list somehow?
 .
 - !!! note
       - a
@@ -567,9 +582,11 @@ These are not admonitions
       - d
 .
 - !!! note
+
     - a
     - b
 - !!! warning
+
     - c
     - d
 .
@@ -584,6 +601,7 @@ Or in blockquotes
 >
 .
 > !!! note
+>
 >     xxx
 >
 >     > yyy
@@ -597,17 +615,28 @@ Renders unknown admonition type
     content
 .
 !!! unknown title
+
     content
 .
 
 
-Does not render
+Does not render as admonition
 .
 !!!
+    content
+
+!!!
+
     content
 .
 !!!
 content
+
+!!!
+
+```
+content
+```
 .
 
 
@@ -617,6 +646,7 @@ MkDocs Closed Collapsible Sections
      content
 .
 ??? note
+
     content
 .
 
@@ -627,6 +657,7 @@ MkDocs Open Collapsible Sections
      content
 .
 ???+ note
+
     content
 .
 
@@ -640,6 +671,7 @@ Formats non-root lists
             1. d
 .
 !!! note
+
     1. a
         1. b
         1. c
@@ -674,12 +706,15 @@ Ultralytics commands use the following syntax:
 Ultralytics commands use the following syntax:
 
 !!! Example
+
     === "CLI"
+
         ```bash
         yolo TASK MODE ARGS
         ```
 
     === "Python"
+
         ```python
         from ultralytics import YOLO
 
@@ -721,6 +756,7 @@ Ultralytics commands use the following syntax:
 ### 优化和压缩数据集的示例代码
 
 !!! Example "优化和压缩数据集"
+
     === "Python"
 
     ```python
@@ -772,7 +808,9 @@ Ultralytics commands use the following syntax:
 ### 优化和压缩数据集的示例代码
 
 !!! Example "优化和压缩数据集"
+
     === "Python"
+
         ```python
         from pathlib import Path
         from ultralytics.data.utils import compress_one_image
@@ -820,7 +858,9 @@ If you use the Caltech-101 dataset in your research or development work, please 
 If you use the Caltech-101 dataset in your research or development work, please cite the following paper:
 
 !!! Quote ""
+
     === "BibTeX"
+
         ```bibtex
         @article{fei2007learning,
           title={Learning generative visual models from few training examples: An incremental Bayesian approach tested on 101 object categories},
@@ -898,6 +938,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
     ```
 
     ???+ tip "Ultralytics Install"
+
         See the Ultralytics [Quickstart](../quickstart.md/#install-ultralytics) Installation section for a quick walkthrough on installing the required libraries.
 
     ______________________________________________________________________
@@ -915,6 +956,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
     ```
 
     ??? question "No Prediction Arguments?"
+
         Without specifying a source, the example images from the library will be used:
 
         ```
@@ -1054,7 +1096,9 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
     ### Object Isolation Options
 
     !!! example ""
+
         === "Black Background Pixels"
+
             ```py
             # Create 3-channel mask
             mask3ch = cv.cvtColor(b_mask, cv.COLOR_GRAY2BGR)
@@ -1065,6 +1109,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
             ```
 
             ??? question "How does this work?"
+
                 - First, the binary mask is first converted from a single-channel image to a three-channel image. This conversion is necessary for the subsequent step where the mask and the original image are combined. Both images must have the same number of channels to be compatible with the blending operation.
 
                 - The original image and the three-channel binary mask are merged using the OpenCV function `bitwise_and()`. This operation retains <u>only</u> pixel values that are greater than zero `(> 0)` from both images. Since the mask pixels are greater than zero `(> 0)` <u>only</u> within the contour region, the pixels remaining from the original image are those that overlap with the contour.
@@ -1072,6 +1117,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
             ### Isolate with Black Pixels: Sub-options
 
             ??? info "Full-size Image"
+
                 There are no additional steps required if keeping full size image.
 
                 <figure markdown>
@@ -1080,6 +1126,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                 </figure>
 
             ??? info "Cropped object Image"
+
                 Additional steps required to crop image to only include object region.
 
                 ![Example Crop Isolated Object Image Black Background](https://github.com/ultralytics/ultralytics/assets/62214284/103dbf90-c169-4f77-b791-76cdf09c6f22){ align="right" }
@@ -1095,6 +1142,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                 1. For more information on bounding box results, see [Boxes Section from Predict Mode](../modes/predict.md/#boxes)
 
                 ??? question "What does this code do?"
+
                     - The `c.boxes.xyxy.cpu().numpy()` call retrieves the bounding boxes as a NumPy array in the `xyxy` format, where `xmin`, `ymin`, `xmax`, and `ymax` represent the coordinates of the bounding box rectangle. See [Boxes Section from Predict Mode](../modes/predict.md/#boxes) for more details.
 
                     - The `squeeze()` operation removes any unnecessary dimensions from the NumPy array, ensuring it has the expected shape.
@@ -1104,6 +1152,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                     - Finally, the bounding box region is cropped from the image using index slicing. The bounds are defined by the `[ymin:ymax, xmin:xmax]` coordinates of the detection bounding box.
 
         === "Transparent Background Pixels"
+
             ```py
             # Isolate object with transparent background (when saved as PNG)
             isolated = np.dstack([img, b_mask])
@@ -1111,11 +1160,13 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
             ```
 
             ??? question "How does this work?"
+
                 - Using the NumPy `dstack()` function (array stacking along depth-axis) in conjunction with the binary mask generated, will create an image with four channels. This allows for all pixels outside of the object contour to be transparent when saving as a `PNG` file.
 
             ### Isolate with Transparent Pixels: Sub-options
 
             ??? info "Full-size Image"
+
                 There are no additional steps required if keeping full size image.
 
                 <figure markdown>
@@ -1124,6 +1175,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                 </figure>
 
             ??? info "Cropped object Image"
+
                 Additional steps required to crop image to only include object region.
 
                 ![Example Crop Isolated Object Image No Background](https://github.com/ultralytics/ultralytics/assets/62214284/5910244f-d1e1-44af-af7f-6dea4c688da8){ align="right" }
@@ -1139,6 +1191,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                 1. For more information on bounding box results, see [Boxes Section from Predict Mode](../modes/predict.md/#boxes)
 
                 ??? question "What does this code do?"
+
                     - When using `c.boxes.xyxy.cpu().numpy()`, the bounding boxes are returned as a NumPy array, using the `xyxy` box coordinates format, which correspond to the points `xmin, ymin, xmax, ymax` for the bounding box (rectangle), see [Boxes Section from Predict Mode](../modes/predict.md/#boxes) for more information.
 
                     - Adding `squeeze()` ensures that any extraneous dimensions are removed from the NumPy array.
@@ -1148,6 +1201,7 @@ Example from Ultralytics Documentation (https://github.com/ultralytics/ultralyti
                     - Finally the image region for the bounding box is cropped using index slicing, where the bounds are set using the `[ymin:ymax, xmin:xmax]` coordinates of the detection bounding box.
 
     ??? question "What if I want the cropped object **including** the background?"
+
         This is a built in feature for the Ultralytics library. See the `save_crop` argument for [Predict Mode Inference Arguments](../modes/predict.md/#inference-arguments) for details.
 
     ______________________________________________________________________
@@ -1169,11 +1223,13 @@ Example of non-code content from Material-MkDocs documentation without admonitio
     3. Nulla tempor lobortis orci
 .
 === "Unordered list"
+
     - Sed sagittis eleifend rutrum
     - Donec vitae suscipit est
     - Nulla tempor lobortis orci
 
 === "Ordered list"
+
     1. Sed sagittis eleifend rutrum
     1. Donec vitae suscipit est
     1. Nulla tempor lobortis orci
@@ -1198,7 +1254,9 @@ Example from Material-MkDocs documentation within an admonition
         ```
 .
 !!! example
+
     === "Unordered List"
+
         ```markdown
         * Sed sagittis eleifend rutrum
         * Donec vitae suscipit est
@@ -1206,6 +1264,7 @@ Example from Material-MkDocs documentation within an admonition
         ```
 
     === "Ordered List"
+
         ```markdown
         1. Sed sagittis eleifend rutrum
         2. Donec vitae suscipit est
@@ -1235,20 +1294,24 @@ Example with '===!' (break) from <https://facelessuser.github.io/pymdown-extensi
     ```
 .
 === "Tab 1"
+
     Markdown **content**.
 
     Multiple paragraphs.
 
 === "Tab 2"
+
     More Markdown **content**.
 
     - list item a
     - list item b
 
 ===! "Tab A"
+
     Different tab set.
 
 === "Tab B"
+
     ```
     More content.
     ```
@@ -1272,17 +1335,20 @@ Example with '===+' (active) from <https://facelessuser.github.io/pymdown-extens
      Another Tab
 .
 === "Not Me"
+
     Markdown **content**.
 
     Multiple paragraphs.
 
 ===+ "Select Me"
+
     More Markdown **content**.
 
     - list item a
     - list item b
 
 === "Not Me Either"
+
     Another Tab
 .
 
@@ -1292,33 +1358,25 @@ More complex example to validate formatting when nested
 1. List Outer
 
     ???+ Note
-
         === "First"
-
              Markdown **content**.
 
              Multiple paragraphs.
 
             ??? "Second"
-
                  Markdown **content**.
 
                  Multiple paragraphs.
 
                 ===+ "Third"
-
                      - List Item
-
                      - Another Item
 
                         === "Fourth"
-
                              - List Item
-
                              - Another Item
 
                         ===! "Lastly a new item"
-
                             Markdown **content** for last item.
 
                             Very last indented paragraph.
@@ -1328,27 +1386,31 @@ More complex example to validate formatting when nested
 1. List Outer
 
     ???+ Note
+
         === "First"
+
             Markdown **content**.
 
             Multiple paragraphs.
 
             ??? "Second"
+
                 Markdown **content**.
 
                 Multiple paragraphs.
 
                 ===+ "Third"
-                    - List Item
 
+                    - List Item
                     - Another Item
 
                         === "Fourth"
-                            - List Item
 
+                            - List Item
                             - Another Item
 
                         ===! "Lastly a new item"
+
                             Markdown **content** for last item.
 
                             Very last indented paragraph.
@@ -1376,6 +1438,7 @@ Deterministic indents for HTML
     ### Object Isolation Options
 
     ??? info "Full-size Image"
+
         There are no additional steps required if keeping full size image.
 
         <figure markdown>
