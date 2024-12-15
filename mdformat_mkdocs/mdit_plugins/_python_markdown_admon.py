@@ -6,7 +6,7 @@ Copied from: https://github.com/KyleKing/mdformat-admon/blob/a5c965f867cda2256b3
 
 from markdown_it.rules_block import StateBlock
 
-from mdformat_admon._synced.admon_factories import (
+from mdformat_mkdocs._synced.admon_factories import (
     AdmonitionData,
     admon_plugin_factory,
     new_token,

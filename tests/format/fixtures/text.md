@@ -1402,6 +1402,7 @@ More complex example to validate formatting when nested
                 ===+ "Third"
 
                     - List Item
+
                     - Another Item
 
                         === "Fourth"

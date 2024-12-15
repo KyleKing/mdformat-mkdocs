@@ -31,7 +31,8 @@ Docs: <https://squidfunk.github.io/mkdocs-material/reference/content-tabs>
 """
 
 from markdown_it.rules_block import StateBlock
-from mdformat_admon.factories import (
+
+from mdformat_mkdocs._synced.admon_factories import (
     AdmonitionData,
     admon_plugin_factory,
     new_token,

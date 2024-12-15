@@ -14,7 +14,6 @@ classifiers = [
 ]
 dependencies = [
   "mdformat >= 0.7.19",
-  "mdformat-admon >= 2.0.6",
   "mdformat-gfm >= 0.3.6",
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
@@ -85,7 +84,7 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-runner_args = ["-e", "py312-beartype"]
+runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
 
 [tool.ruff]
 # Docs: https://github.com/charliermarsh/ruff
@@ -152,21 +151,19 @@ all = true
 in_place = true
 trailing_comma_inline_array = true
 
+[tool.tomlsort.overrides."tool.pytest-watcher.*"]
+inline_arrays = false
+
 [tool.tomlsort.overrides."tool.tox.env.*"]
 inline_arrays = false
 
 [tool.tox]
 # Docs: https://tox.wiki/en/4.23.2/config.html#core
 basepython = ["python3.12", "python3.9"]
-env_list = ["py12-test", "py312-pre-commit", "py312-ruff", "py312-type", "py39-hook", "py39-test"]
+env_list = ["py312-pre-commit", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
 isolated_build = true
 requires = ["tox>=4.20.0"]
 skip_missing_interpreters = false
-
-[tool.tox.env."py12-test"]
-commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-deps = ["--requirement=tests/requirements.txt"]
-description = "Optionally, specify: '--exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs'"
 
 [tool.tox.env."py312-pre-commit"]
 commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
@@ -182,6 +179,11 @@ deps = "ruff>=0.8.3"
 description = "Optionally, specify: '--unsafe-fixes'"
 skip_install = true
 
+[tool.tox.env."py312-test"]
+commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
+description = "Optionally, specify: '--exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update"
+extras = ["test"]
+
 [tool.tox.env."py312-type"]
 commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
 deps = ["mypy>=1.13.0"]
@@ -189,11 +191,10 @@ deps = ["mypy>=1.13.0"]
 [tool.tox.env."py39-hook"]
 commands = [["pre-commit", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
 deps = "pre-commit>=4.0.1"
-skip_install = true
 
 [tool.tox.env."py39-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs"]]
-deps = ["--requirement=tests/requirements.txt"]
+extras = ["test"]
 
 [tool.tox.env_run_base]
 # Validates that commands are set

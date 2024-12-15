@@ -157,11 +157,7 @@ def render_admon_title(
 
 
 def add_extra_admon_newline(node: RenderTreeNode, context: RenderContext) -> str:
-    """Return admonition with additional newline after the title.
-
-    See: https://github.com/KyleKing/mdformat-admon/pull/22
-
-    """
+    """Return admonition with additional newline after the title for mkdocs."""
     result = render_admon(node, context)
     if "\n" not in result:
         return result

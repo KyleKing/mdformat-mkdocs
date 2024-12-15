@@ -18,7 +18,8 @@ from re import Match
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
 from markdown_it.rules_inline import StateInline
-from mdformat_admon.factories import new_token
+
+from mdformat_mkdocs._synced.admon_factories import new_token
 
 _AUTOREFS_PATTERN = re.compile(r"\[\]\(<?>?\){#(?P<anchor>[^ }]+)}")
 _HEADING_PATTERN = re.compile(r"(?P<markdown>^#{1,6}) (?P<content>.+)")
