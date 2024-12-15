@@ -20,6 +20,7 @@ Do not modify multi-line code from: https://github.com/KyleKing/mdformat-mkdocs/
     ```
 .
 === "duty"
+
     ```python title="duties.py"
     @duty(silent=True)
     def coverage(ctx):

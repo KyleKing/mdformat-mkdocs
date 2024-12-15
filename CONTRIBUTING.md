@@ -15,7 +15,7 @@ To install these development dependencies:
 
 ```bash
 pipx install tox
-# or: uv tool install tox
+# or: uv tool install tox --with tox-uv
 ```
 
 To run the tests:

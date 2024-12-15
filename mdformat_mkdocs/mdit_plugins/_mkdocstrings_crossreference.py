@@ -15,7 +15,8 @@ import re
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline import StateInline
-from mdformat_admon.factories import new_token
+
+from mdformat_mkdocs._synced.admon_factories import new_token
 
 _CROSSREFERENCE_PATTERN = re.compile(r"\[(?P<link>[^[|\]\n]+)\]\[(?P<href>[^\]\n]*)\]")
 MKDOCSTRINGS_CROSSREFERENCE_PREFIX = "mkdocstrings_crossreference"

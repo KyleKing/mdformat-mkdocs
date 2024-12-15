@@ -14,7 +14,6 @@ classifiers = [
 ]
 dependencies = [
   "mdformat >= 0.7.19",
-  "mdformat-admon >= 2.0.6",
   "mdformat-gfm >= 0.3.6",
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
@@ -29,7 +28,6 @@ requires-python = ">=3.9.0"
 mkdocs = "mdformat_mkdocs"
 
 [project.optional-dependencies]
-dev = ["pre-commit"]
 recommended = [
   # Keep in-sync with README
   "mdformat-beautysh >= 0.1.1",
@@ -45,9 +43,9 @@ recommended = [
   "setuptools",
 ]
 test = [
-  "pytest >= 8.3.3",
-  "pytest-beartype >= 0.1.0",
-  "pytest-cov >= 5.0.0",
+  "pytest >= 8.3.4",
+  "pytest-beartype >= 0.1.1",
+  "pytest-cov >= 6.0.0",
   "syrupy >= 4.7.2",
 ]
 
@@ -86,7 +84,7 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-runner_args = ["-e", "py312-beartype"]
+runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
 
 [tool.ruff]
 # Docs: https://github.com/charliermarsh/ruff
@@ -98,13 +96,12 @@ target-version = 'py39'
 ignore = [
   'ANN002', # Missing type annotation for `*args`
   'ANN003', # Missing type annotation for `**kwargs`
-  'ANN101', # Missing type annotation for `self` in method (automatically inferred)
-  'ANN102', # Missing type annotation for `cls` in classmethod (automatically inferred)
   'BLE001', # Do not catch blind exception: `Exception`
   'CPY001', # Missing copyright notice at top of file
   'D203', # "1 blank line required before class docstring" (Conflicts with D211)
   'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
-  'DOC201', # PLANNED: https://github.com/astral-sh/ruff/issues/12434#issuecomment-2304325741
+  'DOC201', # `return` is not documented in docstring
+  'DOC402', # `yield` is not documented in docstring
   'EM101', # Exception must not use a string literal, assign to variable first
   'FBT001', # Boolean-typed positional argument in function definition
   'FIX001', # Line contains FIXME
@@ -114,8 +111,8 @@ ignore = [
   'N815', # Variable `lineMax` in class scope should not be mixedCase
   'PLR0913', # Too many arguments in function definition (6 > 5)
   'S101', # Use of `assert` detected
-  'TCH002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
-  'TCH003', # Move standard library import `argparse` into a type-checking block (for beartype)
+  'TC002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
+  'TC003', # Move standard library import `argparse` into a type-checking block (for beartype)
   'TD001', # Invalid TODO tag: `FIXME`
   'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
   'TD003', # Missing issue link on the line following this TODO
@@ -153,3 +150,52 @@ convention = "google"
 all = true
 in_place = true
 trailing_comma_inline_array = true
+
+[tool.tomlsort.overrides."tool.pytest-watcher.*"]
+inline_arrays = false
+
+[tool.tomlsort.overrides."tool.tox.env.*"]
+inline_arrays = false
+
+[tool.tox]
+# Docs: https://tox.wiki/en/4.23.2/config.html#core
+basepython = ["python3.12", "python3.9"]
+env_list = ["py312-pre-commit", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
+isolated_build = true
+requires = ["tox>=4.20.0"]
+skip_missing_interpreters = false
+
+[tool.tox.env."py312-pre-commit"]
+commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
+deps = "pre-commit>=4.0.1"
+skip_install = true
+
+[tool.tox.env."py312-ruff"]
+commands = [
+  ["ruff", "check", ".", "--fix", {default = [], extend = true, replace = "posargs"}],
+  ["ruff", "format", "."],
+]
+deps = "ruff>=0.8.3"
+description = "Optionally, specify: '--unsafe-fixes'"
+skip_install = true
+
+[tool.tox.env."py312-test"]
+commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
+description = "Optionally, specify: '--exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update"
+extras = ["test"]
+
+[tool.tox.env."py312-type"]
+commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
+deps = ["mypy>=1.13.0"]
+
+[tool.tox.env."py39-hook"]
+commands = [["pre-commit", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
+deps = "pre-commit>=4.0.1"
+
+[tool.tox.env."py39-test"]
+commands = [["pytest", "--cov=mdformat_mkdocs"]]
+extras = ["test"]
+
+[tool.tox.env_run_base]
+# Validates that commands are set
+commands = [["error-commands-are-not-set"]]

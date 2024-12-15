@@ -41,12 +41,12 @@ def postprocess_list_wrap(
     ):
         return text
 
-    _counter = -1
+    counter_ = -1
     parent = node.parent
     while parent and parent.type == "paragraph":
         parent = parent.parent
-        _counter += 1
-    indent_count = max(_counter, 0)
+        counter_ += 1
+    indent_count = max(counter_, 0)
 
     soft_break = "\x00"
     text = text.lstrip(soft_break).lstrip()

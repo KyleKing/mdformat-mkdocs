@@ -1,6 +1,7 @@
 Simple admonition
 .
 !!! note
+
     *content*
 .
 <div class="admonition note">
@@ -13,6 +14,7 @@ Simple admonition
 Simple admonition without title
 .
 !!! note ""
+
     *content*
 .
 <div class="admonition note">
@@ -21,19 +23,22 @@ Simple admonition without title
 .
 
 
-Does not render
+Does not render as admonition
 .
 !!!
+
     content
 .
-<p>!!!
-content</p>
+<p>!!!</p>
+<pre><code>content
+</code></pre>
 .
 
 
 MKdocs Closed Collapsible Sections
 .
 ??? note
+
     content
 .
 <details class="note">
@@ -46,6 +51,7 @@ MKdocs Closed Collapsible Sections
 MKdocs Open Collapsible Sections
 .
 ???+ note
+
     content
 .
 <details class="note" open="open">
