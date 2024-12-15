@@ -1,10 +1,12 @@
 ---
 name: CI
+
 "on":
   push:
     branches: [main]
     tags: [v*]
   pull_request: null
+
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
@@ -15,6 +17,7 @@ jobs:
         with:
           python-version: 3.12
       - uses: pre-commit/action@v3.0.1
+
   tests:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -30,22 +33,20 @@ jobs:
       - name: Installation (deps and package)
         # We install with flit --pth-file, so that coverage will be recorded for the module
         # Flit could be installed with pipx and use '--python=$(which python)', but
-        #  there are issues with the Windows Runner
+        #  there were issues with the Windows Runner
         run: |
-          pip install flit~=3.9
+          pip install flit~=3.10.1
           flit install --deps=production --extras=test --pth-file
       - name: Run pytest
         run: |
-          pytest --cov=$(ls | grep "mdformat_" | head) --cov-report=xml --cov-report=term-missing
-      # Not currently configured
-      # - name: Upload to Codecov
-      #   if: matrix.os == 'ubuntu-latest' && matrix.python-version == 3.12
-      #   uses: codecov/codecov-action@v1
+          pytest --cov
+      # # Not currently configured
+      # - name: Report coverage
+      #   if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+      #   uses: codecov/codecov-action@v4
       #   with:
-      #     name: pytests-py3.12
-      #     flags: pytests
-      #     file: ./coverage.xml
-      #     fail_ci_if_error: true
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+
   pre-commit-hook:
     runs-on: ubuntu-latest
     steps:
@@ -61,6 +62,7 @@ jobs:
       - name: run pre-commit with plugin
         run: |
           pre-commit run --config .pre-commit-test.yaml --all-files --verbose --show-diff-on-failure
+
   publish:
     name: Publish to PyPi
     needs: [pre-commit, tests, pre-commit-hook]
@@ -74,7 +76,7 @@ jobs:
         uses: actions/checkout@v4
       - name: install flit
         run: |
-          pipx install flit~=3.9
+          pipx install flit~=3.10.1
       - name: Build and publish
         run: |
           flit publish
