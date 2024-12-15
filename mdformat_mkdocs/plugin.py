@@ -1,8 +1,9 @@
-"""`mdformat` Plugin."""
+"""Public Extension."""
 
 from __future__ import annotations
 
-import argparse
+import textwrap
+from argparse import ArgumentParser
 from collections.abc import Mapping
 from functools import partial
 from typing import Any
@@ -10,7 +11,6 @@ from typing import Any
 from markdown_it import MarkdownIt
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
-from mdformat_admon import RENDERERS as ADMON_RENDERS
 
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
@@ -24,6 +24,7 @@ from .mdit_plugins import (
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    python_markdown_admon_plugin,
 )
 
 ContextOptions = Mapping[str, Any]
@@ -48,7 +49,7 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
     return options["mdformat"].get("align_semantic_breaks_in_lists", False)
 
 
-def add_cli_options(parser: argparse.ArgumentParser) -> None:
+def add_cli_options(parser: ArgumentParser) -> None:
     """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
     parser.add_argument(
         "--align-semantic-breaks-in-lists",
@@ -68,6 +69,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
+    mdit.use(python_markdown_admon_plugin)
 
     if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)
@@ -122,14 +124,57 @@ def _render_cross_reference(node: RenderTreeNode, context: RenderContext) -> str
     return _render_with_default_renderer(node, context, "link")
 
 
-# A mapping from `RenderTreeNode.type` to a `Render` function that can
-# render the given `RenderTreeNode` type. These override the default
-# `Render` funcs defined in `mdformat.renderer.DEFAULT_RENDERERS`.
+# Start: copied from mdformat-admon
+
+
+def render_admon(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render a `RenderTreeNode` of type `admonition`."""
+    prefix = node.markup.split(" ")[0]
+    title = node.info.strip()
+    title_line = f"{prefix} {title}"
+
+    elements = [render for child in node.children if (render := child.render(context))]
+    separator = "\n\n"
+
+    # Then indent to either 3 or 4 based on the length of the prefix
+    #   For reStructuredText, '..' should be indented 3-spaces
+    #       While '!!!', , '...', '???', '???+', etc. are indented 4-spaces
+    indent = " " * (min(len(prefix), 3) + 1)
+    content = textwrap.indent(separator.join(elements), indent)
+
+    return title_line + "\n" + content if content else title_line
+
+
+def render_admon_title(
+    node: RenderTreeNode,  # noqa: ARG001
+    context: RenderContext,  # noqa: ARG001
+) -> str:
+    """Skip rendering the title when called from the `node.children`."""
+    return ""
+
+
+# End: copied from mdformat-admon
+
+
+def add_extra_admon_newline(node: RenderTreeNode, context: RenderContext) -> str:
+    """Return admonition with additional newline after the title for mkdocs."""
+    result = render_admon(node, context)
+    if "\n" not in result:
+        return result
+    title, *content = result.split("\n", maxsplit=1)
+    return f"{title}\n\n{''.join(content)}"
+
+
+# A mapping from syntax tree node type to a function that renders it.
+# This can be used to overwrite renderer functions of existing syntax
+# or add support for new syntax.
 RENDERERS: Mapping[str, Render] = {
-    "admonition_mkdocs": ADMON_RENDERS["admonition"],
-    "admonition_mkdocs_title": ADMON_RENDERS["admonition_title"],
-    "content_tab_mkdocs": ADMON_RENDERS["admonition"],
-    "content_tab_mkdocs_title": ADMON_RENDERS["admonition_title"],
+    "admonition": add_extra_admon_newline,
+    "admonition_title": render_admon_title,
+    "admonition_mkdocs": add_extra_admon_newline,
+    "admonition_mkdocs_title": render_admon_title,
+    "content_tab_mkdocs": add_extra_admon_newline,
+    "content_tab_mkdocs_title": render_admon_title,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
