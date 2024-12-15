@@ -24,6 +24,6 @@ TABBED_CODE_BLOCK = '''
     ids=["TABBED_CODE_BLOCK"],
 )
 def test_tabbed_code_block(text: str, expected: str):
-    output = mdformat.text(text, extensions={"mkdocs", "admon"})
+    output = mdformat.text(text, extensions={"mkdocs"})
     print_text(output, expected)
     assert output.strip() == expected.strip()

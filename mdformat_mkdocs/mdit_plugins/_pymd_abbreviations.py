@@ -18,8 +18,9 @@ import re
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
-from mdformat_admon.factories import new_token
 from mdit_py_plugins.utils import is_code_block
+
+from mdformat_mkdocs._synced.admon_factories import new_token
 
 _ABBREVIATION_PATTERN = re.compile(
     r"\\?\*\\?\[(?P<label>[^\]\\]+)\\?\]: (?P<description>.+)",
