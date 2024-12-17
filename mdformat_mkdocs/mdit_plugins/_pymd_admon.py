@@ -18,7 +18,7 @@ PREFIX = "admonition"
 """Prefix used to differentiate the parsed output."""
 
 
-def format_python_markdown_admon_markup(
+def format_pymd_admon_markup(
     state: StateBlock,
     start_line: int,
     admonition: AdmonitionData,
@@ -77,9 +77,9 @@ def admonition_logic(
     )
     result = parse_possible_whitespace_admon(state, start_line, end_line, silent)
     if isinstance(result, AdmonitionData):
-        format_python_markdown_admon_markup(state, start_line, admonition=result)
+        format_pymd_admon_markup(state, start_line, admonition=result)
         return True
     return result
 
 
-python_markdown_admon_plugin = admon_plugin_factory(PREFIX, admonition_logic)
+pymd_admon_plugin = admon_plugin_factory(PREFIX, admonition_logic)
