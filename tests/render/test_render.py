@@ -23,7 +23,7 @@ def with_plugin(filename, plugins):
 @pytest.mark.parametrize(
     ("line", "title", "text", "expected", "plugins"),
     [
-        *with_plugin("matieral_admonitions.md", [material_admon_plugin]),
+        *with_plugin("material_admonitions.md", [material_admon_plugin]),
         *with_plugin(
             "material_content_tabs.md",
             [material_admon_plugin, material_content_tabs_plugin],

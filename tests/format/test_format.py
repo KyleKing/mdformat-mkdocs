@@ -24,6 +24,7 @@ fixtures = flatten(
             "material_content_tabs.md",
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
+            "pymd_snippet.md",
             "text.md",
         )
     ],
