@@ -10,6 +10,7 @@ from mdformat_mkdocs.mdit_plugins import (
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    pymd_snippet_plugin,
 )
 from tests.helpers import print_text
 
@@ -33,6 +34,10 @@ def with_plugin(filename, plugins):
         *with_plugin(
             "mkdocstrings_crossreference.md",
             [mkdocstrings_crossreference_plugin],
+        ),
+        *with_plugin(
+            "pymd_snippet.md",
+            [pymd_snippet_plugin],
         ),
     ],
 )
