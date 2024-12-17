@@ -25,8 +25,8 @@ from .mdit_plugins import (
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    pymd_admon_plugin,
     pymd_snippet_plugin,
-    python_markdown_admon_plugin,
 )
 
 ContextOptions = Mapping[str, Any]
@@ -72,7 +72,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
     mdit.use(pymd_snippet_plugin)
-    mdit.use(python_markdown_admon_plugin)  # FIXME: standardize pymd name
+    mdit.use(pymd_admon_plugin)
 
     if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)

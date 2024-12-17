@@ -28,7 +28,7 @@ from mdformat_mkdocs._synced.admon_factories import (
     parse_tag_and_title,
 )
 
-from ._python_markdown_admon import format_python_markdown_admon_markup
+from ._pymd_admon import format_pymd_admon_markup
 
 MATERIAL_ADMON_PREFIX = "admonition_mkdocs"
 """Prefix used to differentiate the parsed output."""
@@ -44,7 +44,7 @@ def format_admon_markup(
 ) -> None:
     """Format markup."""
     if admonition.marker == "!!!":
-        format_python_markdown_admon_markup(state, start_line, admonition)
+        format_pymd_admon_markup(state, start_line, admonition)
         return
 
     tags, title = parse_tag_and_title(admonition.meta_text)
