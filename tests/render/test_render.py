@@ -10,6 +10,7 @@ from mdformat_mkdocs.mdit_plugins import (
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    pymd_snippet_plugin,
 )
 from tests.helpers import print_text
 
@@ -23,7 +24,7 @@ def with_plugin(filename, plugins):
 @pytest.mark.parametrize(
     ("line", "title", "text", "expected", "plugins"),
     [
-        *with_plugin("matieral_admonitions.md", [material_admon_plugin]),
+        *with_plugin("material_admonitions.md", [material_admon_plugin]),
         *with_plugin(
             "material_content_tabs.md",
             [material_admon_plugin, material_content_tabs_plugin],
@@ -33,6 +34,10 @@ def with_plugin(filename, plugins):
         *with_plugin(
             "mkdocstrings_crossreference.md",
             [mkdocstrings_crossreference_plugin],
+        ),
+        *with_plugin(
+            "pymd_snippet.md",
+            [pymd_snippet_plugin],
         ),
     ],
 )

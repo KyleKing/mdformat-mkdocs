@@ -15,6 +15,7 @@ from ._mkdocstrings_crossreference import (
     mkdocstrings_crossreference_plugin,
 )
 from ._pymd_abbreviations import PYMD_ABBREVIATIONS_PREFIX, pymd_abbreviations_plugin
+from ._pymd_snippet import PYMD_SNIPPET_PREFIX, pymd_snippet_plugin
 from ._python_markdown_admon import python_markdown_admon_plugin
 
 __all__ = (
@@ -24,10 +25,12 @@ __all__ = (
     "MKDOCSTRINGS_CROSSREFERENCE_PREFIX",
     "MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX",
     "PYMD_ABBREVIATIONS_PREFIX",
+    "PYMD_SNIPPET_PREFIX",
     "material_admon_plugin",
     "material_content_tabs_plugin",
     "mkdocstrings_autorefs_plugin",
     "mkdocstrings_crossreference_plugin",
     "pymd_abbreviations_plugin",
+    "pymd_snippet_plugin",
     "python_markdown_admon_plugin",
 )

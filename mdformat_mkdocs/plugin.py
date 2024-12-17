@@ -19,11 +19,13 @@ from .mdit_plugins import (
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
+    PYMD_SNIPPET_PREFIX,
     material_admon_plugin,
     material_content_tabs_plugin,
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    pymd_snippet_plugin,
     python_markdown_admon_plugin,
 )
 
@@ -69,7 +71,8 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
-    mdit.use(python_markdown_admon_plugin)
+    mdit.use(pymd_snippet_plugin)
+    mdit.use(python_markdown_admon_plugin)  # FIXME: standardize pymd name
 
     if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)
@@ -179,6 +182,7 @@ RENDERERS: Mapping[str, Render] = {
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
+    PYMD_SNIPPET_PREFIX: _render_inline_content,
 }
 
 

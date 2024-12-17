@@ -15,13 +15,16 @@ Supports:
     - *Note*: when specifying `--align-semantic-breaks-in-lists`, the nested indent for ordered lists is three, but is otherwise a multiple of four
 - Unordered list bullets are converted to dashes (`-`) instead of `*`
 - By default, ordered lists are standardized on a single digit (`1.` or `0.`) unless `--number` is specified, then `mdformat-mkdocs` will apply consecutive numbering to ordered lists [for consistency with `mdformat`](https://github.com/executablebooks/mdformat?tab=readme-ov-file#options)
-- [MkDocs-Material Admonitions](https://squidfunk.github.io/mkdocs-material/reference/admonitions)
+- [MkDocs-Material Admonitions\*](https://squidfunk.github.io/mkdocs-material/reference/admonitions)
+    - \*Note: `mdformat-admon` will format the same admonitions, but for consistency with the mkdocs styleguide, an extra space will be added by this package ([#22](https://github.com/KyleKing/mdformat-admon/pull/22))
 - [MkDocs-Material Content Tabs\*](https://squidfunk.github.io/mkdocs-material/reference/content-tabs)
     - \*Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 - [mkdocstrings Anchors (autorefs)](https://mkdocstrings.github.io/autorefs/#markdown-anchors)
 - [mkdocstrings Cross-References](https://mkdocstrings.github.io/usage/#cross-references)
 - [Python Markdown "Abbreviations"\*](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)
     - \*Note: the markup (HTML) rendered for abbreviations is not useful for rendering. If important, I'm open to contributions because the implementation could be challenging
+- [Python Markdown "Snippets"\*](https://facelessuser.github.io/pymdown-extensions/extensions/snippets)
+    - \*Note: the markup (HTML) renders the plain text without implementing the snippet logic. I'm open to contributions if anyone needs full support for snippets
 
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 
