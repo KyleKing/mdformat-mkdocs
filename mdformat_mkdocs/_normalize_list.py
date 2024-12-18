@@ -16,6 +16,7 @@ from ._helpers import (
     EOL,
     FILLER_CHAR,
     MKDOCS_INDENT_COUNT,
+    get_conf,
     rstrip_result,
     separate_indent,
 )
@@ -469,7 +470,7 @@ def normalize_list(
         return text
 
     # Retrieve user-options
-    inc_numbers = bool(context.options["mdformat"].get("number"))
+    inc_numbers = bool(get_conf(context.options, "number"))
 
     parsed_text = parse_text(
         text=text,

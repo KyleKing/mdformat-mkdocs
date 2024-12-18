@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from mdformat.renderer import RenderContext, RenderTreeNode
 
-from ._helpers import FILLER_CHAR, MKDOCS_INDENT_COUNT, rstrip_result
+from ._helpers import FILLER_CHAR, MKDOCS_INDENT_COUNT, get_conf, rstrip_result
 
 FILLER = FILLER_CHAR * (MKDOCS_INDENT_COUNT - 2)  # `mdformat` default is two spaces
 """A spacer that is inserted and then removed to ensure proper word wrap."""
@@ -28,7 +28,7 @@ def postprocess_list_wrap(
     """
     if not context.do_wrap:
         return text
-    wrap_mode = context.options["mdformat"]["wrap"]
+    wrap_mode = get_conf(context.options, "wrap")
     if (
         not isinstance(wrap_mode, int)  # noqa: PLR0916
         or FILLER_CHAR in text

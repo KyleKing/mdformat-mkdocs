@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
+import argparse
 import textwrap
-from argparse import ArgumentParser
 from collections.abc import Mapping
 from functools import partial
-from typing import Any
 
 from markdown_it import MarkdownIt
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 from mdformat.renderer.typing import Postprocess, Render
 
+from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
@@ -29,8 +29,6 @@ from .mdit_plugins import (
     pymd_snippet_plugin,
 )
 
-ContextOptions = Mapping[str, Any]
-
 
 def cli_is_ignore_missing_references(options: ContextOptions) -> bool:
     """user-specified flag to turn off bracket escaping when no link reference found.
@@ -38,7 +36,7 @@ def cli_is_ignore_missing_references(options: ContextOptions) -> bool:
     Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/19
 
     """
-    return options["mdformat"].get("ignore_missing_references", False)
+    return bool(get_conf(options, "ignore_missing_references")) or False
 
 
 def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
@@ -48,17 +46,21 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
     - and 2-spaces on subsequent bulleted items
 
     """
-    return options["mdformat"].get("align_semantic_breaks_in_lists", False)
+    return bool(get_conf(options, "align_semantic_breaks_in_lists")) or False
 
 
-def add_cli_options(parser: ArgumentParser) -> None:
-    """Add options to the mdformat CLI, to be stored in `mdit.options["mdformat"]`."""
-    parser.add_argument(
+def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
+    """Add options to the mdformat CLI.
+
+    Stored in `mdit.options["mdformat"]["plugin"]["tables"]`
+
+    """
+    group.add_argument(
         "--align-semantic-breaks-in-lists",
         action="store_true",
         help="If specified, align semantic indents in numbered and bulleted lists to the text",  # noqa: E501
     )
-    parser.add_argument(
+    group.add_argument(
         "--ignore-missing-references",
         action="store_true",
         help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",  # noqa: E501
@@ -187,7 +189,7 @@ RENDERERS: Mapping[str, Render] = {
 
 
 normalize_list = partial(
-    unbounded_normalize_list,
+    unbounded_normalize_list,  # type: ignore[has-type]
     check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
 )
 
@@ -198,6 +200,6 @@ normalize_list = partial(
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "inline": postprocess_list_wrap,
+    "inline": postprocess_list_wrap,  # type: ignore[has-type]
     "ordered_list": normalize_list,
 }

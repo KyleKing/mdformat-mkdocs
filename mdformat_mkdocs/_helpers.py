@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from functools import wraps
-from typing import Callable
+from typing import Any, Callable
+
+from . import __plugin_name__
 
 EOL = "\n"
 """Line delimiter."""
@@ -42,3 +45,16 @@ def separate_indent(line: str) -> tuple[str, str]:
     match = re_indent.match(line)
     assert match  # for pyright
     return (match["indent"], match["content"])
+
+
+ContextOptions = Mapping[str, Any]
+
+
+def get_conf(options: ContextOptions, key: str) -> bool | str | int | None:
+    """Read setting from mdformat configuration Context."""
+    cli_or_toml = (
+        options["mdformat"].get("plugin", {}).get(__plugin_name__, {}).get(key)
+    )
+    if cli_or_toml is None:
+        return options["mdformat"].get(key)  # From API
+    return cli_or_toml

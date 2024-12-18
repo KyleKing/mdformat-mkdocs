@@ -49,7 +49,7 @@ Add this package wherever you use `mdformat` and the plugin will be auto-recogni
 ```yaml
 repos:
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.18
+    rev: 0.7.19
     hooks:
       - id: mdformat
         additional_dependencies:
@@ -105,21 +105,33 @@ md.render(text)
 # </ul>
 ```
 
-## CLI Options
+## Configuration
 
-`mdformat-mkdocs` adds the CLI argument `--align-semantic-breaks-in-lists` to optionally align line breaks in numbered lists to 3-spaces. If not specified, the default of 4-indents is followed universally.
+`mdformat-mkdocs` adds the CLI arguments:
 
-```txt
-# with: mdformat
-1. Semantic line feed where the following line is
-    three spaces deep
+- `--align-semantic-breaks-in-lists` to optionally align line breaks in numbered lists to 3-spaces. If not specified, the default of 4-indents is followed universally.
 
-# vs. with: mdformat --align-semantic-breaks-in-lists
-1. Semantic line feed where the following line is
-   three spaces deep
+    ```txt
+    # with: mdformat
+    1. Semantic line feed where the following line is
+        three spaces deep
+
+    # vs. "mdformat --align-semantic-breaks-in-lists"
+    1. Semantic line feed where the following line is
+       three spaces deep
+    ```
+
+- `--ignore-missing-references` if set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings
+
+You can also use the toml configuration (https://mdformat.readthedocs.io/en/stable/users/configuration_file.html):
+
+```toml
+# .mdformat.toml
+
+[plugin.mkdocs]
+align_semantic_breaks_in_lists = true
+ignore_missing_references = true
 ```
-
-Note: the `align-semantic-breaks-in-lists` setting is not supported in the configuration file yet (https://github.com/executablebooks/mdformat/issues/378)
 
 ## Contributing
 
