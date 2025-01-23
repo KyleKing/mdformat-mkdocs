@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import Any, Callable, Literal, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Literal, NamedTuple, TypeVar
 
-from mdformat.renderer import RenderContext, RenderTreeNode
 from more_itertools import unzip, zip_equal
 
 from ._helpers import (
@@ -21,6 +19,11 @@ from ._helpers import (
     separate_indent,
 )
 from .mdit_plugins import MATERIAL_ADMON_MARKERS, MATERIAL_CONTENT_TAB_MARKERS
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from mdformat.renderer import RenderContext, RenderTreeNode
 
 # ======================================================================================
 # FP Helpers

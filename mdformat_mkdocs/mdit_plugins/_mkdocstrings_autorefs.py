@@ -14,12 +14,14 @@ from __future__ import annotations
 
 import re
 from re import Match
-
-from markdown_it import MarkdownIt
-from markdown_it.rules_block import StateBlock
-from markdown_it.rules_inline import StateInline
+from typing import TYPE_CHECKING
 
 from mdformat_mkdocs._synced.admon_factories import new_token
+
+if TYPE_CHECKING:
+    from markdown_it import MarkdownIt
+    from markdown_it.rules_block import StateBlock
+    from markdown_it.rules_inline import StateInline
 
 _AUTOREFS_PATTERN = re.compile(r"\[\]\(<?>?\){#(?P<anchor>[^ }]+)}")
 _HEADING_PATTERN = re.compile(r"(?P<markdown>^#{1,6}) (?P<content>.+)")

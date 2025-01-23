@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import argparse
 import textwrap
-from collections.abc import Mapping
 from functools import partial
+from typing import TYPE_CHECKING
 
-from markdown_it import MarkdownIt
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Postprocess, Render
 
 from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
@@ -28,6 +25,13 @@ from .mdit_plugins import (
     pymd_admon_plugin,
     pymd_snippet_plugin,
 )
+
+if TYPE_CHECKING:
+    import argparse
+    from collections.abc import Mapping
+
+    from markdown_it import MarkdownIt
+    from mdformat.renderer.typing import Postprocess, Render
 
 
 def cli_is_ignore_missing_references(options: ContextOptions) -> bool:

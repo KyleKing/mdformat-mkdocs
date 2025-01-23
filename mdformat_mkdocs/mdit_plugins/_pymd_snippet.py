@@ -13,12 +13,15 @@ Docs: <https://facelessuser.github.io/pymd-extensions/extensions/snippets>
 from __future__ import annotations
 
 import re
+from typing import TYPE_CHECKING
 
-from markdown_it import MarkdownIt
-from markdown_it.rules_block import StateBlock
 from mdit_py_plugins.utils import is_code_block
 
 from mdformat_mkdocs._synced.admon_factories import new_token
+
+if TYPE_CHECKING:
+    from markdown_it import MarkdownIt
+    from markdown_it.rules_block import StateBlock
 
 _SNIPPET_MARKER = "--8<--"
 _ABBREVIATION_PATTERN = re.compile(rf"^{_SNIPPET_MARKER}(?P<label>.*)")
