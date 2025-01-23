@@ -176,12 +176,12 @@ commands = [
   ["ruff", "format", "."],
 ]
 deps = "ruff>=0.8.3"
-description = "Optionally, specify: '--unsafe-fixes'"
+description = "Optionally, specify: '-- --unsafe-fixes'"
 skip_install = true
 
 [tool.tox.env."py312-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-description = "Optionally, specify: '--exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update"
+description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
 extras = ["test"]
 
 [tool.tox.env."py312-type"]

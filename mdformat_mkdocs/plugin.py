@@ -68,7 +68,7 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
-    """No changes to markdown parsing are necessary."""
+    """Update the parser."""
     mdit.use(material_admon_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
