@@ -56,17 +56,19 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
 def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
     """Add options to the mdformat CLI.
 
-    Stored in `mdit.options["mdformat"]["plugin"]["tables"]`
+    Stored in `mdit.options["mdformat"]["plugin"]["mkdocs"]`
 
     """
     group.add_argument(
         "--align-semantic-breaks-in-lists",
-        action="store_true",
+        action="store_const",
+        const=True,
         help="If specified, align semantic indents in numbered and bulleted lists to the text",  # noqa: E501
     )
     group.add_argument(
         "--ignore-missing-references",
-        action="store_true",
+        action="store_const",
+        const=True,
         help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",  # noqa: E501
     )
 
