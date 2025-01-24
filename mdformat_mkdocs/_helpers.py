@@ -52,9 +52,8 @@ ContextOptions = Mapping[str, Any]
 
 def get_conf(options: ContextOptions, key: str) -> bool | str | int | None:
     """Read setting from mdformat configuration Context."""
-    cli_or_toml = (
+    if (api := options["mdformat"].get(key)) is not None:
+        return api  # From API
+    return (
         options["mdformat"].get("plugin", {}).get(__plugin_name__, {}).get(key)
-    )
-    if cli_or_toml is None:
-        return options["mdformat"].get(key)  # From API
-    return cli_or_toml
+    )  # from cli_or_toml
