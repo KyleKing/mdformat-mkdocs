@@ -17,6 +17,7 @@ from .mdit_plugins import (
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
+    PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
     material_admon_plugin,
     material_content_tabs_plugin,
     mkdocstrings_autorefs_plugin,
@@ -24,6 +25,7 @@ from .mdit_plugins import (
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
     pymd_snippet_plugin,
+    python_markdown_attr_list_plugin,
 )
 
 if TYPE_CHECKING:
@@ -79,8 +81,9 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
-    mdit.use(pymd_snippet_plugin)
     mdit.use(pymd_admon_plugin)
+    mdit.use(pymd_snippet_plugin)
+    mdit.use(python_markdown_attr_list_plugin)
 
     if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)
@@ -187,10 +190,11 @@ RENDERERS: Mapping[str, Render] = {
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
-    MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
+    MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
     PYMD_SNIPPET_PREFIX: _render_inline_content,
+    PYTHON_MARKDOWN_ATTR_LIST_PREFIX: _render_meta_content,
 }
 
 

@@ -25,6 +25,7 @@ fixtures = flatten(
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
             "pymd_snippet.md",
+            "python_markdown_attr_list.md",
             "text.md",
         )
     ],

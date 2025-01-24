@@ -1,4 +1,4 @@
-"""Python-Markdown Snippets.
+"""Python-Markdown Extensions: Snippets.
 
 WARNING: matches only the "scissors" portion, leaving the rest unparsed
 
@@ -6,7 +6,7 @@ WARNING: matches only the "scissors" portion, leaving the rest unparsed
 --8<-- ...
 ```
 
-Docs: <https://facelessuser.github.io/pymd-extensions/extensions/snippets>
+Docs: <https://facelessuser.github.io/pymdown-extensions/extensions/snippets>
 
 """
 

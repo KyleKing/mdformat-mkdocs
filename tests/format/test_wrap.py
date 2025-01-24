@@ -147,6 +147,38 @@ FYI: See `test_parsed` for debugging internal representation.
 
 """
 
+WITH_ATTR_LIST = r"""
+{: #someid .someclass somekey='some value' #id1 .class1 id=id2 class="class2 class3" .class4 }
+
+\\{ not an attribute list and should be wrapped at 80 characters and not kept inline }
+
+This is a long paragraph that is more than 80 characters long and should be wrapped.
+{: #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class }
+
+A setext style header {: #setext}
+=================================
+
+### A hash style header ### {: #hash }
+
+[link](http://example.com){: class="foo bar" title="Some title!" .a_class1 .a_class2 .a_class1 .a_class2 .a_class1 .a_class2 }
+"""
+WITH_ATTR_LIST_TRUE_80 = r"""
+{: #someid .someclass somekey='some value' #id1 .class1 id=id2 class="class2 class3" .class4 }
+
+\\{ not an attribute list and should be wrapped at 80 characters and not kept
+inline }
+
+This is a long paragraph that is more than 80 characters long and should be
+wrapped.
+{: #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class  #an_id .a_class }
+
+# A setext style header {: #setext}
+
+### A hash style header ### {: #hash }
+
+[link](http://example.com){: class="foo bar" title="Some title!" .a_class1 .a_class2 .a_class1 .a_class2 .a_class1 .a_class2 }
+"""
+
 
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
@@ -157,6 +189,7 @@ FYI: See `test_parsed` for debugging internal representation.
         (CASE_1, CASE_1_TRUE_80, True, 80),
         (TICKET_020, TICKET_020_TRUE_79, True, 79),
         (WITH_CODE, WITH_CODE_TRUE_80, True, 80),
+        (WITH_ATTR_LIST, WITH_ATTR_LIST_TRUE_80, True, 80),
     ],
     ids=[
         "CASE_1_FALSE_40",
@@ -165,6 +198,7 @@ FYI: See `test_parsed` for debugging internal representation.
         "CASE_1_TRUE_80",
         "TICKET_020_TRUE_79",
         "WITH_CODE_TRUE_80",
+        "WITH_ATTR_LIST_TRUE_80",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):

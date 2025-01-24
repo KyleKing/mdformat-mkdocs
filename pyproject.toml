@@ -140,6 +140,9 @@ known-first-party = ['mdformat_mkdocs', 'tests']
   'PT004', # flake8-pytest-style: fixture does not return
   'S101', # Use of `assert` detected
 ]
+'tests/format/test_wrap.py' = [
+  'E501', # Line too long (122 > 88)
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
