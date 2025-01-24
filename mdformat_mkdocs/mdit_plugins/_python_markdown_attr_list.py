@@ -1,6 +1,7 @@
-"""Python-Markdown: Attribute List.
+r"""Python-Markdown: Attribute List.
 
-WARNING: does not properly render HTML with the attributes and does not respect escaping '\{ '
+WARNING: does not properly render HTML with the attributes and does not
+respect escaping '\\{ '
 
 Docs: <https://python-markdown.github.io/extensions/attr_list>
 
