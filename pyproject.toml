@@ -43,8 +43,9 @@ recommended = [
   "setuptools",
 ]
 test = [
+  # "beartype >= 0.20.0rc0", # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
   "pytest >= 8.3.4",
-  "pytest-beartype >= 0.1.1",
+  # "pytest-beartype >= 0.1.1",
   "pytest-cov >= 6.0.0",
   "syrupy >= 4.7.2",
 ]
@@ -84,7 +85,10 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
+# FIXME: requires
+# PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
+# runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
+runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--snapshot-update"]
 
 [tool.ruff]
 # Docs: https://github.com/charliermarsh/ruff
@@ -182,7 +186,9 @@ skip_install = true
 
 [tool.tox.env."py312-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
+# PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
+# description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
+description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --snapshot-update'"
 extras = ["test"]
 
 [tool.tox.env."py312-type"]
