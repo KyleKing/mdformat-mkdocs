@@ -179,6 +179,13 @@ wrapped.
 [link](http://example.com){: class="foo bar" title="Some title!" .a_class1 .a_class2 .a_class1 .a_class2 .a_class1 .a_class2 }
 """
 
+CASE_ATTR_LIST_WRAP = """
+This is a paragraph with a long attribute list that should not be wrapped {: .class1 .class2 .class3 .class4 .class5 .class6 .class7 .class8 .class9 .class10 .class11 .class12 .class13 .class14 .class15 .class16 .class17 .class18 .class19 .class20 }
+"""
+
+CASE_ATTR_LIST_WRAP_TRUE_80 = """
+This is a paragraph with a long attribute list that should not be wrapped {: .class1 .class2 .class3 .class4 .class5 .class6 .class7 .class8 .class9 .class10 .class11 .class12 .class13 .class14 .class15 .class16 .class17 .class18 .class19 .class20 }
+"""
 
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
@@ -190,6 +197,7 @@ wrapped.
         (TICKET_020, TICKET_020_TRUE_79, True, 79),
         (WITH_CODE, WITH_CODE_TRUE_80, True, 80),
         (WITH_ATTR_LIST, WITH_ATTR_LIST_TRUE_80, True, 80),
+        (CASE_ATTR_LIST_WRAP, CASE_ATTR_LIST_WRAP_TRUE_80, True, 80),
     ],
     ids=[
         "CASE_1_FALSE_40",
@@ -199,6 +207,7 @@ wrapped.
         "TICKET_020_TRUE_79",
         "WITH_CODE_TRUE_80",
         "WITH_ATTR_LIST_TRUE_80",
+        "CASE_ATTR_LIST_WRAP_TRUE_80",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):

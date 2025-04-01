@@ -41,6 +41,7 @@ def postprocess_list_wrap(
             and node.parent.parent
             and node.parent.parent.type != "list_item"
         )
+        or "{:" in text  # Prevent wrapping when attribute list is present
     ):
         return text
 
