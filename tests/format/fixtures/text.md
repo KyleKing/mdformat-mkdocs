@@ -1714,3 +1714,12 @@ Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues
           iex (new-object net.webclient).DownloadString('https://get.scoop.sh')
           ```
 .
+
+Don't wrap long URLs (fixes: https://github.com/KyleKing/mdformat-mkdocs/issues/49)
+.
+- a https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols
+- b
+.
+- a https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols
+- b
+.

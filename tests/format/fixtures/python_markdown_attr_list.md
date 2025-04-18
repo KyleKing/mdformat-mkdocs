@@ -48,9 +48,9 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 
 <!-- FIXME: override link handling when contains attr list. Otherwise hangs -->
 
-[:material-account-box:+ .lg .middle +&nbsp; **About** &nbsp;](about/index.md){ .md-button style="text-align: center; display: block;" }
+[:material-account-box:+ .lg .middle +  **About**  ](about/index.md){ .md-button style="text-align: center; display: block;" }
 
-[:fontawesome-brands-blogger-b:+ .lg .middle +&nbsp; **Blogs** &nbsp;](blog/index.md){ .md-button style="text-align: center; display: block;" }
+[:fontawesome-brands-blogger-b:+ .lg .middle +  **Blogs**  ](blog/index.md){ .md-button style="text-align: center; display: block;" }
 
 </div>
 .
