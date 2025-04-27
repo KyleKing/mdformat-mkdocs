@@ -11,7 +11,7 @@ from mdformat_mkdocs.mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
     pymd_snippet_plugin,
-    # python_markdown_attr_list_plugin,
+    python_markdown_attr_list_plugin,
 )
 from tests.helpers import print_text
 
@@ -40,11 +40,10 @@ def with_plugin(filename, plugins):
             "pymd_snippet.md",
             [pymd_snippet_plugin],
         ),
-        # TODO: Add expected HTML
-        # *with_plugin(
-        #     "python_markdown_attr_list.md",
-        #     [python_markdown_attr_list_plugin],
-        # ),
+        *with_plugin(
+            "python_markdown_attr_list.md",
+            [python_markdown_attr_list_plugin],
+        ),
     ],
 )
 def test_render(line, title, text, expected, plugins):
