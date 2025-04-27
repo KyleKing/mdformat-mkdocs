@@ -1719,7 +1719,19 @@ Don't wrap long URLs (fixes: https://github.com/KyleKing/mdformat-mkdocs/issues/
 .
 - a https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols
 - b
+- a <https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols>
+- b
+- a [long-text](https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols)
+- b
+- a [with space](https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols)
+- b
 .
 - a https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols
+- b
+- a <https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols>
+- b
+- a [long-text](https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols)
+- b
+- a [with space](https://github.com/python/mypy/blob/a3ce6d5307e99a1b6c181eaa7c5cf134c53b7d/test-data/check-protocols)
 - b
 .
