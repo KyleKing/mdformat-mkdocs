@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from mdformat.renderer import WRAP_POINT
 
 from ._helpers import FILLER_CHAR, MKDOCS_INDENT_COUNT, get_conf, rstrip_result
 
@@ -51,15 +52,14 @@ def postprocess_list_wrap(
         counter_ += 1
     indent_count = max(counter_, 0)
 
-    soft_break = "\x00"
-    text = text.lstrip(soft_break).lstrip()
+    text = text.lstrip(WRAP_POINT).lstrip()
     filler = (FILLER * indent_count)[:-1] if indent_count else ""
     newline_filler = filler + FILLER if indent_count else FILLER[:-1]
     if len(text) > wrap_mode:
         indent_length = MKDOCS_INDENT_COUNT * indent_count
         wrapped_length = -123
         words: list[str] = []
-        for word in text.split(soft_break):
+        for word in text.split(WRAP_POINT):
             next_length = wrapped_length + len(word)
             if not words:
                 words = [filler, word]
@@ -70,5 +70,5 @@ def postprocess_list_wrap(
             else:
                 words.append(word)
                 wrapped_length = next_length + 1
-        return soft_break.join(_w for _w in words if _w)
-    return f"{filler}{soft_break}{text}" if filler else text
+        return WRAP_POINT.join(_w for _w in words if _w)
+    return f"{filler}{WRAP_POINT}{text}" if filler else text
