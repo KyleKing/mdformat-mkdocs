@@ -58,7 +58,7 @@ def postprocess_list_wrap(
     newline_filler = filler + FILLER if indent_count else FILLER[:-1]
     if len(text) > wrap_mode:
         indent_length = MKDOCS_INDENT_COUNT * indent_count
-        wrapped_length = -123
+        wrapped_length = -1 * wrap_mode
         words: list[str] = []
         for word in text.split(WRAP_POINT):
             next_length = wrapped_length + len(word)
