@@ -169,6 +169,10 @@ isolated_build = true
 requires = ["tox>=4.20.0"]
 skip_missing_interpreters = false
 
+[tool.tox.env."py312-mdformat"]
+commands = [["mdformat", {default = [], extend = true, replace = "posargs"}]]
+description = "Run development extension with arbitrary mdformat args (e.g. `tox run -e py312-mdformat -- --wrap=80 tmp.md`)"
+
 [tool.tox.env."py312-pre-commit"]
 commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
 deps = "pre-commit>=4.0.1"
