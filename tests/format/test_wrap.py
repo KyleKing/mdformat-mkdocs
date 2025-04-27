@@ -188,6 +188,7 @@ This is a paragraph with a long attribute list that should not be wrapped
 {: .class1 .class2 .class3 .class4 .class5 .class6 .class7 .class8 .class9 .class10 .class11 .class12 .class13 .class14 .class15 .class16 .class17 .class18 .class19 .class20 }
 """
 
+
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
     [

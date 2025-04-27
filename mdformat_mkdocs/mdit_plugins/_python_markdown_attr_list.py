@@ -41,7 +41,7 @@ def _python_markdown_attr_list(state: StateInline, silent: bool) -> bool:
     state.pos += 1
     state.posMax = state.pos + (match.end() - len(" }"))
     with new_token(state, PYTHON_MARKDOWN_ATTR_LIST_PREFIX, "span") as token:
-        token.attrs = {"attributes": match["attrs"].split(" ")}
+        token.attrs = {"attributes": match["attrs"].split(" ")}  # type: ignore[dict-item]
         token.meta = {"content": match.group()}
 
         state.md.inline.tokenize(state)

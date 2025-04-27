@@ -362,7 +362,7 @@ def _format_new_content(line: LineResult, inc_numbers: bool, is_code: bool) -> s
             base_num = 0 if first_peer.content.startswith("0.") else 1
             counter = len(line.prev_list_peers) + base_num if inc_numbers else base_num
             new_bullet = f"{counter}."
-        new_content = f'{new_bullet} {list_match["item"]}'
+        new_content = f"{new_bullet} {list_match['item']}"
 
     return new_content
 

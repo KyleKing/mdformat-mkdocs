@@ -83,7 +83,7 @@ def _pymd_abbreviations(
     with new_token(state, PYMD_ABBREVIATIONS_PREFIX, "p"):
         tkn_inline = state.push("inline", "", 0)
         tkn_inline.content = "\n".join(
-            [f'*[{match["label"]}]: {match["description"]}' for match in matches],
+            [f"*[{match['label']}]: {match['description']}" for match in matches],
         )
         tkn_inline.map = [start_line, max_line]
         tkn_inline.children = []

@@ -85,7 +85,6 @@ ignore_patterns = []
 now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
-# FIXME: requires
 # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
 # runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
 runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--snapshot-update"]

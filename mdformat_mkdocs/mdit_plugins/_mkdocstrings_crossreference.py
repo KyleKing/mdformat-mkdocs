@@ -35,7 +35,7 @@ def _mkdocstrings_crossreference(state: StateInline, silent: bool) -> bool:
     state.pos += 1
     state.posMax = state.pos + len(match["link"])
     with new_token(state, MKDOCSTRINGS_CROSSREFERENCE_PREFIX, "a") as token:
-        token.attrs = {"href": f'#{match["href"] or match["link"]}'}
+        token.attrs = {"href": f"#{match['href'] or match['link']}"}
         token.meta = {"content": match.group()}
 
         state.linkLevel += 1
