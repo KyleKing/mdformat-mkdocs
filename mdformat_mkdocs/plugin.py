@@ -16,6 +16,7 @@ from .mdit_plugins import (
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
+    PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
     material_admon_plugin,
@@ -24,6 +25,7 @@ from .mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
+    pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
 )
@@ -78,6 +80,7 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
     mdit.use(material_admon_plugin)
+    mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
@@ -179,6 +182,17 @@ def add_extra_admon_newline(node: RenderTreeNode, context: RenderContext) -> str
     return f"{title}\n\n{''.join(content)}"
 
 
+def render_material_caption(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render caption with normalized format."""
+    caption_type = node.info or "caption"
+    attrs = node.meta.get("attrs")
+    number = node.meta.get("number")
+    rendered_content = "".join(child.render(context) for child in node.children)
+    caption_number = f" | {number}" if number else ""
+    caption_attrs = f"\n    {attrs}" if attrs else ""
+    return f"/// {caption_type}{caption_number}{caption_attrs}\n{rendered_content}\n///"
+
+
 # A mapping from syntax tree node type to a function that renders it.
 # This can be used to overwrite renderer functions of existing syntax
 # or add support for new syntax.
@@ -189,6 +203,7 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": render_admon_title,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
+    PYMD_CAPTIONS_PREFIX: render_material_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
