@@ -182,7 +182,7 @@ def add_extra_admon_newline(node: RenderTreeNode, context: RenderContext) -> str
     return f"{title}\n\n{''.join(content)}"
 
 
-def render_material_caption(node: RenderTreeNode, context: RenderContext) -> str:
+def render_pymd_caption(node: RenderTreeNode, context: RenderContext) -> str:
     """Render caption with normalized format."""
     caption_type = node.info or "caption"
     attrs = node.meta.get("attrs")
@@ -203,7 +203,7 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": render_admon_title,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
-    PYMD_CAPTIONS_PREFIX: render_material_caption,
+    PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
