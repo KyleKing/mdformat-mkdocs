@@ -233,7 +233,7 @@ Greatest common divisor algorithm.
         (WITH_CODE, WITH_CODE_TRUE_80, True, 80),
         (WITH_ATTR_LIST, WITH_ATTR_LIST_TRUE_80, True, 80),
         (CASE_ATTR_LIST_WRAP, CASE_ATTR_LIST_WRAP_TRUE_80, True, 80),
-        (CASE_CAPTION_WRAP, CASE_CAPTION_WRAP_TRUE_40, False, 40),
+        (CASE_CAPTION_WRAP, CASE_CAPTION_WRAP_TRUE_40, True, 40),
     ],
     ids=[
         "CASE_1_FALSE_40",
