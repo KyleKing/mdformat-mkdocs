@@ -187,7 +187,9 @@ def render_pymd_caption(node: RenderTreeNode, context: RenderContext) -> str:
     caption_type = node.info or "caption"
     attrs = node.meta.get("attrs")
     number = node.meta.get("number")
-    rendered_content = "".join(child.render(context) for child in node.children)
+    rendered_content = "".join(
+        child.render(context) for child in node.children[0].children
+    )
     caption_number = f" | {number}" if number else ""
     caption_attrs = f"\n    {attrs}" if attrs else ""
     return f"/// {caption_type}{caption_number}{caption_attrs}\n{rendered_content}\n///"

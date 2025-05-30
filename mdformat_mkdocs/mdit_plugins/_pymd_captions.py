@@ -30,12 +30,10 @@ if TYPE_CHECKING:
     from markdown_it.rules_block import StateBlock
 
 _CAPTION_START_PATTERN = re.compile(
-    r"\s*///\s*(figure-|table-|)caption\s*(\|\s*([\d\.]+))?",
+    r"\s*///\s*(?P<type>figure-|table-|)caption\s*(\|\s*(?P<number>[\d\.]+))?",
 )
-_CAPTION_TYPE_GROUP = 1
-_CAPTION_NUMBER_GROUP = 3
 _CAPTION_END_PATTERN = re.compile(r"^\s*///\s*$")
-_CAPTION_ATTRS_PATTERN = re.compile(r"^s*(attrs:\s*\{[^}]*\})\s*$")
+_CAPTION_ATTRS_PATTERN = re.compile(r"^s*(?P<attrs>attrs:\s*\{[^}]*\})\s*$")
 PYMD_CAPTIONS_PREFIX = "mkdocs_caption"
 
 
@@ -61,7 +59,9 @@ def _parse(
     content_start_pos = (
         first_line_max_pos + 1 if caption_attrs_match is None else attrs_max_pos + 1
     )
-    attrs = caption_attrs_match.group(1) if caption_attrs_match is not None else None
+    attrs = (
+        caption_attrs_match.group("attrs") if caption_attrs_match is not None else None
+    )
     if not isinstance(attrs, str):
         attrs = None
 
@@ -95,13 +95,16 @@ def _material_captions(
 
     max_line, content, attrs = _parse(state, first_line_max_pos, start_line, end_line)
 
-    with new_token(state, PYMD_CAPTIONS_PREFIX, "p") as token:
-        token.info = start_match.group(_CAPTION_TYPE_GROUP) + "caption"
-        token.meta = {"number": start_match.group(_CAPTION_NUMBER_GROUP)}
+    with (
+        new_token(state, PYMD_CAPTIONS_PREFIX, "figcaption") as token,
+        new_token(state, "", "p"),
+    ):
+        token.info = start_match.group("type") + "caption"
+        token.meta = {"number": start_match.group("number")}
         if attrs is not None:
             token.meta["attrs"] = attrs
         tkn_inline = state.push("inline", "", 0)
-        tkn_inline.content = content
+        tkn_inline.content = content.strip()
         tkn_inline.map = [start_line, max_line]
         tkn_inline.children = []
 
@@ -115,5 +118,5 @@ def pymd_captions_plugin(md: MarkdownIt) -> None:
         "fence",
         PYMD_CAPTIONS_PREFIX,
         _material_captions,
-        {"alt": ["paragraph", "reference", "blockquote", "list", "hr", "fence"]},
+        {"alt": ["paragraph"]},
     )
