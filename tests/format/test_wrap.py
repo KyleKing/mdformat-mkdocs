@@ -188,6 +188,39 @@ This is a paragraph with a long attribute list that should not be wrapped
 {: .class1 .class2 .class3 .class4 .class5 .class6 .class7 .class8 .class9 .class10 .class11 .class12 .class13 .class14 .class15 .class16 .class17 .class18 .class19 .class20 }
 """
 
+CASE_CAPTION_WRAP = """
+This line is longer than 40 characters and should be wrapped.
+
+```
+def gcd(a, b):
+  if a == 0: return b
+  elif b == 0: return a
+  if a > b: return gcd(a % b, b)
+  else: return gcd(a, b % a)
+```
+
+///   caption
+Greatest common divisor algorithm.
+///
+"""
+
+CASE_CAPTION_WRAP_TRUE_40 = """
+This line is longer than 40 characters
+and should be wrapped.
+
+```
+def gcd(a, b):
+  if a == 0: return b
+  elif b == 0: return a
+  if a > b: return gcd(a % b, b)
+  else: return gcd(a, b % a)
+```
+
+/// caption
+Greatest common divisor algorithm.
+///
+"""
+
 
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
@@ -200,6 +233,7 @@ This is a paragraph with a long attribute list that should not be wrapped
         (WITH_CODE, WITH_CODE_TRUE_80, True, 80),
         (WITH_ATTR_LIST, WITH_ATTR_LIST_TRUE_80, True, 80),
         (CASE_ATTR_LIST_WRAP, CASE_ATTR_LIST_WRAP_TRUE_80, True, 80),
+        (CASE_CAPTION_WRAP, CASE_CAPTION_WRAP_TRUE_40, True, 40),
     ],
     ids=[
         "CASE_1_FALSE_40",
@@ -210,6 +244,7 @@ This is a paragraph with a long attribute list that should not be wrapped
         "WITH_CODE_TRUE_80",
         "WITH_ATTR_LIST_TRUE_80",
         "CASE_ATTR_LIST_WRAP_TRUE_80",
+        "CASE_CAPTION_WRAP_TRUE_40",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
