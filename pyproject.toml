@@ -43,11 +43,11 @@ recommended = [
   "setuptools",
 ]
 test = [
-  # "beartype >= 0.20.0rc0", # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
+  "beartype >= 0.21.0",
   "pytest >= 8.3.4",
-  # "pytest-beartype >= 0.1.1",
-  "pytest-cov >= 6.0.0",
-  "syrupy >= 4.7.2",
+  "pytest-beartype >= 0.2.0",
+  "pytest-cov >= 6.2.1",
+  "syrupy >= 4.9.1",
 ]
 
 [project.urls]
@@ -196,7 +196,7 @@ extras = ["test"]
 
 [tool.tox.env."py312-type"]
 commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-deps = ["mypy>=1.13.0"]
+deps = ["mypy>=1.17.1"]
 
 [tool.tox.env."py39-hook"]
 commands = [["pre-commit", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
