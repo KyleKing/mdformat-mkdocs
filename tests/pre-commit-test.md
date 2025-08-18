@@ -331,8 +331,6 @@ graph TD;
     C-->D;
 ```
 
-[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
-
 ______________________________________________________________________
 
 # Deflist Test
@@ -343,16 +341,18 @@ paragraph
 
 Term 1
 
-: Definition 1
+:   Definition 1
 
 Term 2 with *inline markup*
 
-: Definition 2
+:   Definition 2
 
-  ```
-  { some code, part of Definition 2 }
-  ```
+    ```
+    { some code, part of Definition 2 }
+    ```
 
-  Third paragraph of definition 2.
+    Third paragraph of definition 2.
 
 paragraph
+
+[external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46

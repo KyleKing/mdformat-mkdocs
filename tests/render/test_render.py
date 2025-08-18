@@ -32,7 +32,7 @@ def with_plugin(filename, plugins):
             "material_content_tabs.md",
             [material_admon_plugin, material_content_tabs_plugin],
         ),
-        *with_plugin("mkdocs_deflist.md", [material_deflist_plugin]),
+        *with_plugin("material_deflist.md", [material_deflist_plugin]),
         *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
         *with_plugin("pymd_abbreviations.md", [pymd_abbreviations_plugin]),
         *with_plugin("pymd_captions.md", [pymd_captions_plugin]),

@@ -7,6 +7,7 @@ from ._material_content_tabs import (
 )
 from ._material_deflist import (
     escape_deflist,
+    material_deflist_plugin,
     render_material_definition_body,
     render_material_definition_list,
     render_material_definition_term,
@@ -42,6 +43,7 @@ __all__ = (
     "escape_deflist",
     "material_admon_plugin",
     "material_content_tabs_plugin",
+    "material_deflist_plugin",
     "mkdocstrings_autorefs_plugin",
     "mkdocstrings_crossreference_plugin",
     "pymd_abbreviations_plugin",

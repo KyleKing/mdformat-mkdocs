@@ -7,7 +7,6 @@ from functools import partial
 from typing import TYPE_CHECKING
 
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
-from mdit_py_plugins.deflist import deflist_plugin
 
 from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
@@ -20,8 +19,10 @@ from .mdit_plugins import (
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
+    escape_deflist,
     material_admon_plugin,
     material_content_tabs_plugin,
+    material_deflist_plugin,
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
@@ -86,7 +87,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_admon_plugin)
     mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
-    mdit.use(deflist_plugin)  # TODO: convert material_deflist to normal plugin
+    mdit.use(material_deflist_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
     mdit.use(pymd_admon_plugin)

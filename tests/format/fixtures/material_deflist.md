@@ -20,37 +20,36 @@ paragraph
 
 Term 1
 
-: Definition 1
+:   Definition 1
 
 Term 2 with *inline markup*
 
-: Definition 2
+:   Definition 2
 
-  ```
-  { some code, part of Definition 2 }
-  ```
+    ```
+    { some code, part of Definition 2 }
+    ```
 
-  Third paragraph of definition 2.
+    Third paragraph of definition 2.
 
 paragraph
 .
 
 Pandoc 2:
-
-.
-Term 1
-
-:   Definition
-with lazy continuation.
-
-    Second paragraph of the definition.
 .
 Term 1
 
 : Definition
-  with lazy continuation.
+with lazy continuation.
 
   Second paragraph of the definition.
+.
+Term 1
+
+:   Definition
+    with lazy continuation.
+
+    Second paragraph of the definition.
 .
 
 Pandoc 3
@@ -69,11 +68,11 @@ paragraph
 paragraph
 
 Term 1
-: Definition 1
+:   Definition 1
 
 Term 2
-: Definition 2a
-: Definition 2b
+:   Definition 2a
+:   Definition 2b
 
 paragraph
 .
@@ -87,12 +86,12 @@ Term 2
   :     code block
 .
 Term 1
-: paragraph
+:   paragraph
 
 Term 2
-: ```
-  code block
-  ```
+:   ```
+    code block
+    ```
 .
 
 List is tight, only if all dts are tight:
@@ -108,15 +107,15 @@ Term 2
 .
 Term 1
 
-: foo
+:   foo
 
-: bar
+:   bar
 
 Term 2
 
-: foo
+:   foo
 
-: bar
+:   bar
 .
 
 
@@ -132,13 +131,13 @@ Term 2
 .
 Term 1
 
-: foo
+:   foo
 
-  bar
+    bar
 
 Term 2
 
-: foo
+:   foo
 .
 
 Nested definition lists:
@@ -152,11 +151,11 @@ test
   : foo
 .
 test
-: foo
-  : bar
-    : baz
-  : bar
-: foo
+:   foo
+    :   bar
+        :   baz
+    :   bar
+:   foo
 .
 
 Regression test (blockquote inside deflist)
@@ -166,12 +165,11 @@ foo
 : baz
 .
 foo
-: > bar
-: baz
+:   > bar
+:   baz
 .
 
 Escaped deflist
-
 .
 Term 1
 \: Definition

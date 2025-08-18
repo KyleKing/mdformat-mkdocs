@@ -28,8 +28,20 @@ Docs:
 
 from __future__ import annotations
 
-from mdformat.renderer import RenderContext, RenderTreeNode
-from mdformat.renderer.typing import Render
+from typing import TYPE_CHECKING
+
+from markdown_it import MarkdownIt
+from mdit_py_plugins.deflist import deflist_plugin
+
+if TYPE_CHECKING:
+    from markdown_it import MarkdownIt
+    from mdformat.renderer import RenderContext, RenderTreeNode
+    from mdformat.renderer.typing import Render
+
+
+def material_deflist_plugin(md: MarkdownIt) -> None:
+    """Add mkdocs-material definition list support to markdown-it parser."""
+    md.use(deflist_plugin)
 
 
 def make_render_children(separator: str) -> Render:
@@ -44,14 +56,20 @@ def make_render_children(separator: str) -> Render:
     return render_children
 
 
-def render_material_definition_list() -> str:
+def render_material_definition_list(
+    node: RenderTreeNode,
+    context: RenderContext,
+) -> str:
     """Render Material Definition List."""
-    return make_render_children("\n")
+    return make_render_children("\n")(node, context)
 
 
-def render_material_definition_term() -> str:
+def render_material_definition_term(
+    node: RenderTreeNode,
+    context: RenderContext,
+) -> str:
     """Render Material Definition Term."""
-    return make_render_children("\n")
+    return make_render_children("\n")(node, context)
 
 
 def render_material_definition_body(
