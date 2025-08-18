@@ -7,6 +7,7 @@ from functools import partial
 from typing import TYPE_CHECKING
 
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
+from mdit_py_plugins.deflist import deflist_plugin
 
 from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
@@ -28,6 +29,9 @@ from .mdit_plugins import (
     pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
+    render_material_definition_body,
+    render_material_definition_list,
+    render_material_definition_term,
 )
 
 if TYPE_CHECKING:
@@ -82,6 +86,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_admon_plugin)
     mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
+    mdit.use(deflist_plugin)  # TODO: convert material_deflist to normal plugin
     mdit.use(mkdocstrings_autorefs_plugin)
     mdit.use(pymd_abbreviations_plugin)
     mdit.use(pymd_admon_plugin)
@@ -205,6 +210,9 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_mkdocs_title": render_admon_title,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
+    "dl": render_material_definition_list,
+    "dt": render_material_definition_term,
+    "dd": render_material_definition_body,
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
@@ -229,4 +237,5 @@ POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
     "inline": postprocess_list_wrap,  # type: ignore[has-type]
     "ordered_list": normalize_list,
+    "paragraph": escape_deflist,
 }

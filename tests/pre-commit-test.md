@@ -332,3 +332,27 @@ graph TD;
 ```
 
 [external link]: https://github.com/czuli/github-markdown-example/tree/7326f19c94be992319394e5bfeaa07b30f858e46
+
+______________________________________________________________________
+
+# Deflist Test
+
+From [`mdformat-deflist`](https://github.com/executablebooks/mdformat-deflist/blob/bbcf9ed4f80847db58b6f932ed95e2c7a6c49ae5/tests/pre-commit-test.md)
+
+paragraph
+
+Term 1
+
+: Definition 1
+
+Term 2 with *inline markup*
+
+: Definition 2
+
+  ```
+  { some code, part of Definition 2 }
+  ```
+
+  Third paragraph of definition 2.
+
+paragraph
