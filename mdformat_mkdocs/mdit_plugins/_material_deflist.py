@@ -91,9 +91,9 @@ def render_material_definition_body(
         indented_lines = [f"{marker}{lines[0]}"] + [
             f"{' ' * indent_width}{line}" if line else "" for line in lines[1:]
         ]
-        indented_lines = ("" if tight_list else "\n") + "\n".join(indented_lines)
+        joined_lines = ("" if tight_list else "\n") + "\n".join(indented_lines)
         next_sibling = node.next_sibling
-        return indented_lines + (
+        return joined_lines + (
             "\n" if (next_sibling and next_sibling.type == "dt") else ""
         )
     finally:
