@@ -22,6 +22,7 @@ fixtures = flatten(
         read_fixture_file(Path(__file__).parent / "fixtures" / fixture_path)
         for fixture_path in (
             "material_content_tabs.md",
+            "material_deflist.md",
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
             "pymd_snippet.md",
