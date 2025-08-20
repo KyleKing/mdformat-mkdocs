@@ -169,11 +169,11 @@ foo
 :   baz
 .
 
-Escaped deflist
+Escaped deflist (supported by the deflist plugin, but not mdformat-mkdocs for now - see https://github.com/KyleKing/mdformat-mkdocs/issues/56)
 .
 Term 1
 \: Definition
 .
 Term 1
-\: Definition
+: Definition
 .

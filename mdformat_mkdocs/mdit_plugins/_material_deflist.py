@@ -98,14 +98,3 @@ def render_material_definition_body(
         )
     finally:
         context.env["indent_width"] -= indent_width
-
-
-def escape_deflist(
-    text: str,
-    node: RenderTreeNode,  # noqa: ARG001
-    context: RenderContext,  # noqa: ARG001
-) -> str:
-    """Escape line starting ":" which would otherwise be parsed as a definition list."""
-    return "\n".join(
-        "\\" + line if line.startswith(":") else line for line in text.split("\n")
-    )
