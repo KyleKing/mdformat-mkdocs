@@ -146,6 +146,10 @@ known-first-party = ['mdformat_mkdocs', 'tests']
 'tests/format/test_wrap.py' = [
   'E501', # Line too long (122 > 88)
 ]
+'mdformat_mkdocs/mdit_plugins/_mdit_py_plugins/deflist.py' = [
+  'FBT003', # Boolean positional value in function call
+  'N806', # Variable `itemLines` in function should be lowercase
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

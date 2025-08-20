@@ -1,5 +1,7 @@
 """Process definition lists."""
 
+from contextlib import suppress
+
 from markdown_it import MarkdownIt
 from markdown_it.rules_block import StateBlock
 
@@ -41,6 +43,11 @@ def deflist_plugin(md: MarkdownIt) -> None:
             return -1
 
         pos = state.skipSpaces(start)
+
+        # Skip if character is repeated
+        with suppress(IndexError):
+            if state.src[start] == state.src[start - 1]:
+                return -1
 
         # require space after ":"
         if start == pos:
