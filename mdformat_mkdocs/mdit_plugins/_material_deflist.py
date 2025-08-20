@@ -31,7 +31,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from markdown_it import MarkdownIt
-from ._mdit_py_plugins.deflist import deflist_plugin
+from mdit_py_plugins.deflist import deflist_plugin
 
 if TYPE_CHECKING:
     from markdown_it import MarkdownIt
