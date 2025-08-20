@@ -17,7 +17,7 @@ Example:
     ut eros sed sapien ullamcorper consequat. Nunc ligula ante.
 
     Duis mollis est eget nibh volutpat, fermentum aliquet dui mollis.
-    Nam vulputate tincidunt fringilla.
+    Vulputate tincidunt fringilla.
     Nullam dignissim ultrices urna non auctor.
 ```
 
