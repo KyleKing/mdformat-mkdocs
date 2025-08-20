@@ -17,7 +17,7 @@ Example:
     ut eros sed sapien ullamcorper consequat. Nunc ligula ante.
 
     Duis mollis est eget nibh volutpat, fermentum aliquet dui mollis.
-    Nam vulputate tincidunt fringilla.
+    Vulputate tincidunt fringilla.
     Nullam dignissim ultrices urna non auctor.
 ```
 
@@ -28,6 +28,7 @@ Docs:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 from markdown_it import MarkdownIt
@@ -106,6 +107,7 @@ def escape_deflist(
     context: RenderContext,  # noqa: ARG001
 ) -> str:
     """Escape line starting ":" which would otherwise be parsed as a definition list."""
+    pattern = re.compile(r"^[:~] ")
     return "\n".join(
-        "\\" + line if line.startswith(":") else line for line in text.split("\n")
+        "\\" + line if pattern.match(line) else line for line in text.split("\n")
     )

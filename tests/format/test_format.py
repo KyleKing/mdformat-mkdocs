@@ -27,6 +27,7 @@ fixtures = flatten(
             "pymd_abbreviations.md",
             "pymd_snippet.md",
             "python_markdown_attr_list.md",
+            "regression.md",
             "text.md",
         )
     ],
