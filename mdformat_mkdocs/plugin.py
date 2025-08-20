@@ -19,6 +19,7 @@ from .mdit_plugins import (
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
+    escape_deflist,
     material_admon_plugin,
     material_content_tabs_plugin,
     material_deflist_plugin,
@@ -237,4 +238,5 @@ POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
     "inline": postprocess_list_wrap,  # type: ignore[has-type]
     "ordered_list": normalize_list,
+    "paragraph": escape_deflist,
 }

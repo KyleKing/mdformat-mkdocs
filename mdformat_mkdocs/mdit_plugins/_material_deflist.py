@@ -28,6 +28,7 @@ Docs:
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 from markdown_it import MarkdownIt
@@ -98,3 +99,15 @@ def render_material_definition_body(
         )
     finally:
         context.env["indent_width"] -= indent_width
+
+
+def escape_deflist(
+    text: str,
+    node: RenderTreeNode,  # noqa: ARG001
+    context: RenderContext,  # noqa: ARG001
+) -> str:
+    """Escape line starting ":" which would otherwise be parsed as a definition list."""
+    pattern = re.compile(r"^[:~] ")
+    return "\n".join(
+        "\\" + line if pattern.match(line) else line for line in text.split("\n")
+    )
