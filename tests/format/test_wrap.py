@@ -1,3 +1,5 @@
+from textwrap import dedent
+
 import mdformat
 import pytest
 
@@ -221,6 +223,28 @@ Greatest common divisor algorithm.
 ///
 """
 
+DEF_LIST_WITH_NESTED_WRAP = dedent(
+    """\
+    term
+
+    :   Definition starts with a paragraph, followed by an unordered list:
+
+        - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
+            foo bar foo bar foo bar foo bar.
+    """,
+)
+
+DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
+    """\
+    term
+
+    :   Definition starts with a paragraph, followed by an unordered list:
+
+        - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
+          foo bar foo bar foo bar foo bar.
+    """,
+)
+
 
 @pytest.mark.parametrize(
     ("text", "expected", "align_lists", "wrap"),
@@ -255,3 +279,13 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
     )
     print_text(output, expected)
     assert output.lstrip() == expected.lstrip()
+
+
+def test_definition_list_wrap_with_gfm():
+    output = mdformat.text(
+        DEF_LIST_WITH_NESTED_WRAP,
+        options={"wrap": 80},
+        extensions={"mkdocs", "gfm"},
+    )
+    print_text(output, DEF_LIST_WITH_NESTED_WRAP_EXPECTED)
+    assert output == DEF_LIST_WITH_NESTED_WRAP_EXPECTED

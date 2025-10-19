@@ -436,6 +436,11 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
 # Outputs string result
 
 
+def _strip_filler(text: str) -> str:
+    """Remove filler characters inserted during wrapping."""
+    return text.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "")
+
+
 def _join(*, new_lines: list[tuple[str, str]]) -> str:
     """Join ParsedText into a single string representation."""
     new_indents, new_contents = unzip(new_lines)
@@ -443,10 +448,7 @@ def _join(*, new_lines: list[tuple[str, str]]) -> str:
     new_indents_iter = new_indents
 
     # Remove filler characters added by inline formatting for 'wrap'
-    new_contents_iter = (
-        content.replace(f"{FILLER_CHAR} ", "").replace(FILLER_CHAR, "").rstrip()
-        for content in new_contents
-    )
+    new_contents_iter = (_strip_filler(content).rstrip() for content in new_contents)
 
     return "".join(
         f"{new_indent}{new_content}{EOL}"
@@ -470,7 +472,7 @@ def normalize_list(
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item
-        return text
+        return _strip_filler(text)
 
     # Retrieve user-options
     inc_numbers = bool(get_conf(context.options, "number"))
