@@ -36,7 +36,6 @@ recommended = [
   "mdformat-frontmatter >= 2.0.8",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.0.1",
-  "mdformat-tables >= 1.0.0",
   "mdformat-web >= 0.2.0",
   "mdformat-wikilink >= 0.2.0",
   # Patches https://github.com/lovesegfault/beautysh/issues/248 for Python 3.12
