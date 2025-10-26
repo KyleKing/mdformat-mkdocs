@@ -268,6 +268,7 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
         (WITH_ATTR_LIST, WITH_ATTR_LIST_TRUE_80, True, 80),
         (CASE_ATTR_LIST_WRAP, CASE_ATTR_LIST_WRAP_TRUE_80, True, 80),
         (CASE_CAPTION_WRAP, CASE_CAPTION_WRAP_TRUE_40, True, 40),
+        (DEF_LIST_WITH_NESTED_WRAP, DEF_LIST_WITH_NESTED_WRAP_EXPECTED, True, 80),
     ],
     ids=[
         "CASE_1_FALSE_40",
@@ -279,6 +280,7 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
         "WITH_ATTR_LIST_TRUE_80",
         "CASE_ATTR_LIST_WRAP_TRUE_80",
         "CASE_CAPTION_WRAP_TRUE_40",
+        "DEF_LIST_WITH_NESTED_WRAP",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
@@ -289,13 +291,3 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
     )
     print_text(output, expected)
     assert output.lstrip() == expected.lstrip()
-
-
-def test_definition_list_wrap_with_gfm():
-    output = mdformat.text(
-        DEF_LIST_WITH_NESTED_WRAP,
-        options={"wrap": 80},
-        extensions={"mkdocs", "gfm"},
-    )
-    print_text(output, DEF_LIST_WITH_NESTED_WRAP_EXPECTED)
-    assert output == DEF_LIST_WITH_NESTED_WRAP_EXPECTED
