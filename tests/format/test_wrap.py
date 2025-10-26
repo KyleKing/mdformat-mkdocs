@@ -229,8 +229,12 @@ DEF_LIST_WITH_NESTED_WRAP = dedent(
 
     :   Definition starts with a paragraph, followed by an unordered list:
 
-        - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
-            foo bar foo bar foo bar foo bar.
+        - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar.
+
+           - (3) bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar.
+
+                - foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
+                  (split) foo bar foo bar foo bar foo bar.
     """,
 )
 
@@ -242,6 +246,12 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
 
         - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
           foo bar foo bar foo bar foo bar.
+
+          - (3) bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
+            foo bar foo bar foo bar foo bar.
+
+            - foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo
+              bar (split) foo bar foo bar foo bar foo bar.
     """,
 )
 
