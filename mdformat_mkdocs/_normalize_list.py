@@ -456,40 +456,6 @@ def _join(*, new_lines: list[tuple[str, str]]) -> str:
     )
 
 
-def _adjust_wrapped_indent(text: str) -> str:
-    """Add 2 spaces to wrapped continuation lines (lines without list markers).
-
-    This ensures wrapped content is indented 4 spaces (nested content alignment)
-    instead of 2 spaces (text alignment after the marker).
-    """
-    lines = text.split(EOL)
-    adjusted_lines = []
-    in_code_block = False
-
-    for line in lines:
-        stripped = line.lstrip()
-
-        # Check if line is a list marker
-        # A list item starts with "- ", "* ", or a number followed by ". "
-        is_list_marker = bool(
-            stripped and
-            RE_LIST_ITEM.match(stripped),
-        )
-
-        # Don't adjust lines inside code blocks, list marker lines, or empty lines
-        if in_code_block or is_list_marker or not line or line[0] != " ":
-            adjusted_lines.append(line)
-        else:
-            # Add 2 spaces to text continuation lines
-            adjusted_lines.append("  " + line)
-
-        # Track code blocks AFTER processing the line (including when they start on a list marker line)
-        if "```" in stripped:
-            in_code_block = not in_code_block
-
-    return EOL.join(adjusted_lines)
-
-
 @rstrip_result
 def normalize_list(
     text: str,
@@ -506,9 +472,7 @@ def normalize_list(
     if node.level > 1:
         # Note: this function is called recursively,
         #   so only process the top-level item
-        # But first adjust indentation for wrapped lines
-        stripped = _strip_filler(text)
-        return _adjust_wrapped_indent(stripped)
+        return _strip_filler(text)
 
     # Retrieve user-options
     inc_numbers = bool(get_conf(context.options, "number"))
