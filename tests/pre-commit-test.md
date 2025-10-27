@@ -1,6 +1,6 @@
-# Pre-Commit Test File
+# Pre-Commit/Prek Test File
 
-Testing `mdformat-mkdocs` as a `pre-commit` hook (`tox -e py#-hook`)
+Testing `mdformat-mkdocs` as a `pre-commit`/`prek` hook (`tox -e py#-hook`)
 
 # Table
 

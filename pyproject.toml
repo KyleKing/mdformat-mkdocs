@@ -165,7 +165,7 @@ inline_arrays = false
 [tool.tox]
 # Docs: https://tox.wiki/en/4.23.2/config.html#core
 basepython = ["python3.12", "python3.9"]
-env_list = ["py312-pre-commit", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
+env_list = ["py312-prek", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
 isolated_build = true
 requires = ["tox>=4.20.0"]
 skip_missing_interpreters = false
@@ -174,9 +174,9 @@ skip_missing_interpreters = false
 commands = [["mdformat", {default = [], extend = true, replace = "posargs"}]]
 description = "Run development extension with arbitrary mdformat args (e.g. `tox run -e py312-mdformat -- --wrap=80 tmp.md`)"
 
-[tool.tox.env."py312-pre-commit"]
-commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
-deps = "pre-commit>=4.0.1"
+[tool.tox.env."py312-prek"]
+commands = [["prek", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
+deps = "prek>=0.2.11"
 skip_install = true
 
 [tool.tox.env."py312-ruff"]
@@ -200,8 +200,8 @@ commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace 
 deps = ["mypy>=1.17.1"]
 
 [tool.tox.env."py39-hook"]
-commands = [["pre-commit", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
-deps = "pre-commit>=4.0.1"
+commands = [["prek", "run", "--config=.prek-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
+deps = "prek>=0.2.11"
 
 [tool.tox.env."py39-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs"]]

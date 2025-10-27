@@ -8,7 +8,7 @@ name: CI
   pull_request: null
 
 jobs:
-  pre-commit:
+  prek:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.12
-      - uses: pre-commit/action@v3.0.1
+      - uses: j178/prek-action@v1
 
   tests:
     runs-on: ${{ matrix.os }}
@@ -47,7 +47,7 @@ jobs:
       #   with:
       #     token: ${{ secrets.CODECOV_TOKEN }}
 
-  pre-commit-hook:
+  prek-hook:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,16 +56,16 @@ jobs:
         with:
           python-version: 3.12
       - name: Installation (deps and package)
+        uses: j178/prek-action@v1
+        with:
+          install-only: true
+      - name: run prek with plugin
         run: |
-          pipx install pre-commit
-          pip install .
-      - name: run pre-commit with plugin
-        run: |
-          pre-commit run --config .pre-commit-test.yaml --all-files --verbose --show-diff-on-failure
+          prek run --config .prek-test.yaml --all-files --verbose --show-diff-on-failure
 
   publish:
     name: Publish to PyPi
-    needs: [pre-commit, tests, pre-commit-hook]
+    needs: [prek, tests, prek-hook]
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
     runs-on: ubuntu-latest
     # Fix 403 error (https://github.com/softprops/action-gh-release/issues/400)

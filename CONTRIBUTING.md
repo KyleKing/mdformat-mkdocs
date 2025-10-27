@@ -14,8 +14,7 @@ This package utilizes [flit](https://flit.readthedocs.io) as the build engine, a
 To install these development dependencies:
 
 ```bash
-pipx install tox
-# or: uv tool install tox --with tox-uv
+uv tool install tox --with tox-uv
 ```
 
 To run the tests:
@@ -35,18 +34,18 @@ The easiest way to write tests, is to edit `tests/fixtures.md`
 To run the code formatting and style checks:
 
 ```bash
-tox -e py312-pre-commit
+tox -e py312-prek
 ```
 
 or directly
 
 ```bash
-pipx install pre-commit
-# or: uv tool install pre-commit
-pre-commit run --all
+uv tool install prek
+prek install -f
+prek run --all
 ```
 
-To run the pre-commit hook test:
+To run the prek hook test:
 
 ```bash
 tox -e py39-hook
