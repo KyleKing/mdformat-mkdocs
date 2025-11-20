@@ -8,7 +8,7 @@ from enum import Enum
 from itertools import starmap
 from typing import TYPE_CHECKING, Any, Callable, Literal, NamedTuple, TypeVar
 
-from more_itertools import unzip, zip_equal
+from more_itertools import unzip
 
 from ._helpers import (
     EOL,
@@ -24,6 +24,48 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
     from mdformat.renderer import RenderContext, RenderTreeNode
+
+
+# ======================================================================================
+# Compatibility
+
+def _zip_equal_fallback(*iterables):
+    """Manual implementation of zip with equal length checking for Python 3.9."""
+    sentinel = object()
+    iterators = [iter(it) for it in iterables]
+    while True:
+        results = []
+        finished = []
+        for iterator in iterators:
+            item = next(iterator, sentinel)
+            results.append(item)
+            finished.append(item is sentinel)
+        
+        if not any(finished):
+            # All iterators have items
+            yield tuple(results)
+        elif all(finished):
+            # All iterators finished at the same time
+            return
+        else:
+            # Some finished, some didn't - length mismatch
+            msg = "Iterables have different lengths"
+            raise ValueError(msg)
+
+
+def zip_equal(*iterables):
+    """Zip iterables ensuring equal length, compatible with Python 3.9+.
+    
+    For Python 3.10+, uses builtin zip with strict=True.
+    For Python 3.9, implements length checking manually.
+    """
+    import sys
+    
+    if sys.version_info >= (3, 10):
+        return zip(*iterables, strict=True)
+    
+    return _zip_equal_fallback(*iterables)
+
 
 # ======================================================================================
 # FP Helpers
