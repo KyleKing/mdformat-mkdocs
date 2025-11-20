@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import sys
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
@@ -21,7 +22,7 @@ from ._helpers import (
 from .mdit_plugins import MATERIAL_ADMON_MARKERS, MATERIAL_CONTENT_TAB_MARKERS
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Iterable, Iterator, Mapping
 
     from mdformat.renderer import RenderContext, RenderTreeNode
 
@@ -29,8 +30,14 @@ if TYPE_CHECKING:
 # ======================================================================================
 # Compatibility
 
-def _zip_equal_fallback(*iterables):
-    """Manual implementation of zip with equal length checking for Python 3.9."""
+
+def _zip_equal_fallback(*iterables: Iterable[Any]) -> Iterator[tuple[Any, ...]]:
+    """Manual implementation of zip with equal length checking for Python 3.9.
+
+    Raises:
+        ValueError: If iterables have different lengths.
+
+    """
     sentinel = object()
     iterators = [iter(it) for it in iterables]
     while True:
@@ -40,7 +47,7 @@ def _zip_equal_fallback(*iterables):
             item = next(iterator, sentinel)
             results.append(item)
             finished.append(item is sentinel)
-        
+
         if not any(finished):
             # All iterators have items
             yield tuple(results)
@@ -53,17 +60,16 @@ def _zip_equal_fallback(*iterables):
             raise ValueError(msg)
 
 
-def zip_equal(*iterables):
+def zip_equal(*iterables: Iterable[Any]) -> Iterator[tuple[Any, ...]]:
     """Zip iterables ensuring equal length, compatible with Python 3.9+.
-    
+
     For Python 3.10+, uses builtin zip with strict=True.
     For Python 3.9, implements length checking manually.
+
     """
-    import sys
-    
     if sys.version_info >= (3, 10):
         return zip(*iterables, strict=True)
-    
+
     return _zip_equal_fallback(*iterables)
 
 
