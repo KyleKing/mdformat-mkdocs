@@ -101,11 +101,13 @@ ignore = [
   'ANN002', # Missing type annotation for `*args`
   'ANN003', # Missing type annotation for `**kwargs`
   'BLE001', # Do not catch blind exception: `Exception`
+  'COM812', # missing-trailing-comma
   'CPY001', # Missing copyright notice at top of file
   'D203', # "1 blank line required before class docstring" (Conflicts with D211)
   'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
   'DOC201', # `return` is not documented in docstring
   'DOC402', # `yield` is not documented in docstring
+  'E501', # Line too long (89 > 88)
   'EM101', # Exception must not use a string literal, assign to variable first
   'FBT001', # Boolean-typed positional argument in function definition
   'FIX001', # Line contains FIXME

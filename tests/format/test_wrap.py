@@ -340,4 +340,6 @@ def test_definition_list_nested_indentation():
         if line.strip().startswith("-"):
             spaces = len(line) - len(line.lstrip())
             # Spaces before '-' should be 4, 8, or 12 (multiples of 4)
-            assert spaces in [4, 8, 12], f"Expected 4/8/12 spaces, got {spaces} in: {line!r}"
+            assert spaces in {4, 8, 12}, (
+                f"Expected 4/8/12 spaces, got {spaces} in: {line!r}"
+            )
