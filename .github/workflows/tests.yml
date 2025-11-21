@@ -61,7 +61,7 @@ jobs:
           install-only: true
       - name: run prek with plugin
         run: |
-          prek run --config .prek-test.yaml --all-files --verbose --show-diff-on-failure
+          prek run --config .pre-commit-test.yaml --all-files --verbose --show-diff-on-failure
 
   publish:
     name: Publish to PyPi
