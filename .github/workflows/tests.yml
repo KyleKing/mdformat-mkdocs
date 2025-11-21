@@ -30,16 +30,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Create virtual environment
-        run: uv venv
-      - name: Activate virtual environment
-        run: |
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            echo "$GITHUB_WORKSPACE/.venv/Scripts" >> $GITHUB_PATH
-          else
-            echo "$GITHUB_WORKSPACE/.venv/bin" >> $GITHUB_PATH
-          fi
-        shell: bash
+          activate-environment: true
       - name: Install Package
         run: uv pip install ".[test]"
       - name: Run pytest
@@ -53,14 +44,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.12
+          activate-environment: true
       - name: Install prek
         uses: j178/prek-action@v1
         with:
           install-only: true
-      - name: Create virtual environment
-        run: uv venv
-      - name: Activate virtual environment
-        run: echo "$GITHUB_WORKSPACE/.venv/bin" >> $GITHUB_PATH
       - name: Install Package
         run: uv pip install ".[test]"
       - name: run prek with plugin
