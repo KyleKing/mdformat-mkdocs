@@ -432,7 +432,7 @@ def parse_text(
     if use_sem_break:
         semantic_indents = map_lookback(
             _parse_semantic_indent,
-            [*zip(lines, code_indents)],
+            [*zip(lines, code_indents, strict=True)],
             _parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], code_indents[0])),
         )
         new_indents = [
