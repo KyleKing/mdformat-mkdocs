@@ -30,6 +30,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
+          activate-environment: true
       - name: Install Package
         run: uv pip install ".[test]"
       - name: Run pytest
@@ -43,6 +44,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.12
+          activate-environment: true
       - name: Install prek
         uses: j178/prek-action@v1
         with:
