@@ -469,9 +469,14 @@ def normalize_list(
         str: formatted text
 
     """
-    if node.level > 1:
-        # Note: this function is called recursively,
-        #   so only process the top-level item
+    # Calculate the expected level for a top-level list in the current context
+    # Each definition body adds 2 to the level and 4 to indent_width
+    defbody_count = context.env.get("indent_width", 0) // 4
+    expected_top_level = defbody_count * 2
+
+    # Only process top-level lists (not nested within other lists)
+    # This function is called recursively, so we skip nested lists to avoid double-processing
+    if node.level > expected_top_level + 1:
         return _strip_filler(text)
 
     # Retrieve user-options
