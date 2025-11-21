@@ -22,7 +22,7 @@ dynamic = ["description", "version"]
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 name = "mdformat_mkdocs"
 readme = "README.md"
-requires-python = ">=3.9.0"
+requires-python = ">=3.10.0"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -67,7 +67,7 @@ enable_error_code = ["ignore-without-code", "possibly-undefined", "redundant-exp
 extra_checks = true
 files = ["mdformat_mkdocs", "tests"]
 no_implicit_reexport = true
-python_version = "3.9"
+python_version = "3.10"
 show_column_numbers = true
 show_error_codes = true
 strict_equality = true
@@ -79,7 +79,7 @@ warn_unused_ignores = true
 
 [tool.pyright]
 include = ["mdformat_mkdocs", "tests"]
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 
 [tool.pytest-watcher]
 ignore_patterns = []
@@ -94,7 +94,7 @@ runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new
 # Docs: https://github.com/charliermarsh/ruff
 # Tip: poetry run python -m ruff --explain RUF100
 line-length = 88
-target-version = 'py39'
+target-version = 'py310'
 
 [tool.ruff.lint]
 ignore = [
@@ -115,6 +115,8 @@ ignore = [
   'N815', # Variable `lineMax` in class scope should not be mixedCase
   'PLR0913', # Too many arguments in function definition (6 > 5)
   'S101', # Use of `assert` detected
+  'TC002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
+  'TC003', # Move standard library import `argparse` into a type-checking block (for beartype)
   'TD001', # Invalid TODO tag: `FIXME`
   'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
   'TD003', # Missing issue link on the line following this TODO
@@ -144,9 +146,6 @@ known-first-party = ['mdformat_mkdocs', 'tests']
   'PT004', # flake8-pytest-style: fixture does not return
   'S101', # Use of `assert` detected
 ]
-'tests/format/test_wrap.py' = [
-  'E501', # Line too long (122 > 88)
-]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -164,19 +163,23 @@ inline_arrays = false
 
 [tool.tox]
 # Docs: https://tox.wiki/en/4.23.2/config.html#core
-basepython = ["python3.12", "python3.9"]
-env_list = ["py312-prek", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
+basepython = ["python3.10", "python3.12"]
+env_list = ["py310-hook", "py310-test", "py312-prek", "py312-ruff", "py312-test", "py312-type"]
 isolated_build = true
-requires = ["tox>=4.20.0"]
+requires = ["tox>=4.32.0"]
 skip_missing_interpreters = false
 
-[tool.tox.env."py312-mdformat"]
-commands = [["mdformat", {default = [], extend = true, replace = "posargs"}]]
-description = "Run development extension with arbitrary mdformat args (e.g. `tox run -e py312-mdformat -- --wrap=80 tmp.md`)"
+[tool.tox.env."py310-hook"]
+commands = [["prek", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
+deps = "prek>=0.2.17"
+
+[tool.tox.env."py310-test"]
+commands = [["pytest", "--cov=mdformat_mkdocs"]]
+extras = ["test"]
 
 [tool.tox.env."py312-prek"]
 commands = [["prek", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
-deps = "prek>=0.2.11"
+deps = "prek>=0.2.17"
 skip_install = true
 
 [tool.tox.env."py312-ruff"]
@@ -184,7 +187,7 @@ commands = [
   ["ruff", "check", ".", "--fix", {default = [], extend = true, replace = "posargs"}],
   ["ruff", "format", "."],
 ]
-deps = "ruff>=0.8.3"
+deps = "ruff>=0.14.5"
 description = "Optionally, specify: '-- --unsafe-fixes'"
 skip_install = true
 
@@ -197,15 +200,7 @@ extras = ["test"]
 
 [tool.tox.env."py312-type"]
 commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-deps = ["mypy>=1.17.1"]
-
-[tool.tox.env."py39-hook"]
-commands = [["prek", "run", "--config=.prek-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
-deps = "prek>=0.2.11"
-
-[tool.tox.env."py39-test"]
-commands = [["pytest", "--cov=mdformat_mkdocs"]]
-extras = ["test"]
+deps = ["mypy>=1.18.2"]
 
 [tool.tox.env_run_base]
 # Validates that commands are set

@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
 from functools import wraps
-from typing import Any, Callable
+from typing import Any
 
 from . import __plugin_name__
 

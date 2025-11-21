@@ -4,9 +4,9 @@ Testing `mdformat-mkdocs` as a `pre-commit`/`prek` hook (`tox -e py#-hook`)
 
 # Table
 
-| Label | Rating | Comment          |
+| Label | Rating | Comment |
 | :---- | -----: | :--------------- |
-| Name  |      2 | <!-- Comment --> |
+| Name | 2 | <!-- Comment --> |
 
 ## Floating Link
 
@@ -314,8 +314,8 @@ ______________________________________________________________________
 
 | Left-aligned | Center-aligned | Right-aligned |
 | :----------- | :------------: | ------------: |
-| git status   |   git status   |    git status |
-| git diff     |    git diff    |      git diff |
+| git status | git status | git status |
+| git diff | git diff | git diff |
 
 ______________________________________________________________________
 

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import TYPE_CHECKING, Any, Callable, Literal, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, TypeVar
 
 from more_itertools import unzip, zip_equal
 

@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-executables-have-shebangs
@@ -36,12 +36,12 @@ repos:
         exclude: tests/.+\.md
         stages: ["pre-commit"]
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         stages: ["pre-commit"]
   - repo: https://github.com/pappasam/toml-sort
-    rev: v0.23.1
+    rev: v0.24.3
     hooks:
       - id: toml-sort-fix
         stages: ["pre-commit"]
