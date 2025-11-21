@@ -56,6 +56,10 @@ jobs:
         with:
           python-version: 3.12
       - name: Installation (deps and package)
+        run: |
+          pip install flit~=3.10.1
+          flit install --deps=production --pth-file
+      - name: Install prek
         uses: j178/prek-action@v1
         with:
           install-only: true
