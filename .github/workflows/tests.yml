@@ -26,67 +26,53 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Installation (deps and package)
-        # We install with flit --pth-file, so that coverage will be recorded for the module
-        # Flit could be installed with pipx and use '--python=$(which python)', but
-        #  there were issues with the Windows Runner
-        run: |
-          pip install flit~=3.10.1
-          flit install --deps=production --extras=test --pth-file
+      - name: Install Package
+        run: uv pip install --system ".[test]"
       - name: Run pytest
-        run: |
-          pytest --cov
-      # # Not currently configured
-      # - name: Report coverage
-      #   if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+        run: pytest --cov
 
   prek-hook:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.12
-      - name: Installation (deps and package)
-        run: |
-          pip install flit~=3.10.1
-          flit install --deps=production --pth-file
       - name: Install prek
         uses: j178/prek-action@v1
         with:
           install-only: true
+      - name: Install Package
+        run: uv pip install --system ".[test]"
       - name: run prek with plugin
-        run: |
-          prek run --config .prek-test.yaml --all-files --verbose --show-diff-on-failure
+        run: prek run --config .pre-commit-test.yaml --all-files --verbose --show-diff-on-failure
 
   publish:
     name: Publish to PyPi
     needs: [prek, tests, prek-hook]
     if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
     runs-on: ubuntu-latest
-    # Fix 403 error (https://github.com/softprops/action-gh-release/issues/400)
+    environment:
+      name: pypi
+      url: https://pypi.org/p/mdformat-mkdocs
     permissions:
-      contents: write
+      contents: write  # For GitHub release creation
+      id-token: write  # IMPORTANT: mandatory for PyPI trusted publishing
     steps:
-      - name: Checkout source
-        uses: actions/checkout@v5
-      - name: install flit
-        run: |
-          pipx install flit~=3.10.1
-      - name: Build and publish
-        run: |
-          flit publish
-        env:
-          FLIT_USERNAME: __token__
-          FLIT_PASSWORD: ${{ secrets.PYPI_KEY }}
+      - uses: actions/checkout@v5
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: 3.12
+      - name: Build Package
+        run: uv build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
       - name: Generate GitHub Release Notes
         uses: softprops/action-gh-release@v2
         with:

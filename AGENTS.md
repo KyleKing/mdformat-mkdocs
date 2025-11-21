@@ -112,7 +112,7 @@ Configuration can be passed via:
 
 ## Development Notes
 
-- This project uses `flit` as the build backend
+- This project uses `uv-build` as the build backend
 - Uses `tox` for test automation with multiple Python versions (3.10, 3.12)
 - Pre-commit is configured but the project now uses `prek` (faster alternative)
 - Python 3.10+ is required (see `requires-python` in `pyproject.toml`)

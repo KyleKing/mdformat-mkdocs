@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.9.0,<4"]
+build-backend = "uv_build"
+requires = ["uv_build>=0.9.10"]
 
 [project]
 authors = [
@@ -18,11 +18,13 @@ dependencies = [
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
 ]
-dynamic = ["description", "version"]
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
+license = "MIT"
+license-files = ["LICENSE"]
 name = "mdformat_mkdocs"
 readme = "README.md"
 requires-python = ">=3.10.0"
+version = "4.5.0"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -45,9 +47,9 @@ recommended = [
 ]
 test = [
   "beartype >= 0.21.0",
-  "pytest >= 8.3.4",
+  "pytest >= 9.0.1",
   "pytest-beartype >= 0.2.0",
-  "pytest-cov >= 6.2.1",
+  "pytest-cov >= 7.0.0",
   "syrupy >= 4.9.1",
 ]
 
@@ -56,9 +58,10 @@ test = [
 "Changelog" = "https://github.com/kyleking/mdformat-mkdocs/releases"
 homepage = "https://github.com/kyleking/mdformat-mkdocs"
 
-[tool.flit.sdist]
-exclude = [".github/", "tests/"]
-include = []
+[tool.commitizen]
+tag_format = "v${version}"
+version = "4.5.0"
+version_files = ["mdformat_mkdocs/__init__.py", "pyproject.toml:^version"]
 
 [tool.mypy]
 check_untyped_defs = true
@@ -166,7 +169,7 @@ inline_arrays = false
 [tool.tox]
 # Docs: https://tox.wiki/en/4.23.2/config.html#core
 basepython = ["python3.10", "python3.12"]
-env_list = ["py310-hook", "py310-test", "py312-prek", "py312-ruff", "py312-test", "py312-type"]
+env_list = ["py310-hook", "py310-test", "py312-cz", "py312-prek", "py312-ruff", "py312-test", "py312-type"]
 isolated_build = true
 requires = ["tox>=4.32.0"]
 skip_missing_interpreters = false
@@ -178,6 +181,12 @@ deps = "prek>=0.2.17"
 [tool.tox.env."py310-test"]
 commands = [["pytest", "--cov=mdformat_mkdocs"]]
 extras = ["test"]
+
+[tool.tox.env."py312-cz"]
+commands = [["cz", "bump", {default = [], extend = true, replace = "posargs"}]]
+deps = "commitizen>=4.10.0"
+description = "Bump version using commitizen. Optionally specify: '-- --increment MAJOR|MINOR|PATCH' or '-- --dry-run'"
+skip_install = true
 
 [tool.tox.env."py312-prek"]
 commands = [["prek", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
@@ -207,3 +216,6 @@ deps = ["mypy>=1.18.2"]
 [tool.tox.env_run_base]
 # Validates that commands are set
 commands = [["error-commands-are-not-set"]]
+
+[tool.uv.build-backend]
+module-root = ""

@@ -9,7 +9,7 @@ A collection of useful resources to reference when developing new features:
 
 ## Local Development
 
-This package utilizes [flit](https://flit.readthedocs.io) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
+This package utilizes [uv](https://docs.astral.sh/uv) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
 
 To install these development dependencies:
 
@@ -35,7 +35,7 @@ The easiest way to write tests, is to edit `tests/fixtures.md`
 To run the code formatting and style checks:
 
 ```bash
-tox -e py312-pre-commit
+tox -e py312-prek
 ```
 
 or directly with [prek](https://github.com/j178/prek) (or pre-commit)
@@ -79,21 +79,59 @@ Or with pipx:
 pipx install . --include-deps --force --editable
 ```
 
-## Publish to PyPi
+## Publish to PyPI
 
-First, update the version in `mdformat_mkdocs/__init__.py`
+This project uses [PyPI Trusted Publishers](https://docs.pypi.org/trusted-publishers) for secure, token-free publishing from GitHub Actions, with [uv](https://docs.astral.sh/uv) for building packages.
 
-Then, either use the Github Action by committing the new version in `__init__.py` and pushing an associated tag in format: `v#.#.#` (e.g. `v1.3.2` for `__version__ = '1.3.2'`)
+### Initial Setup (One-time)
 
-Or run flit locally:
+Before publishing for the first time, you need to configure Trusted Publishing on PyPI:
 
-```bash
-# envchain --set FLIT FLIT_PASSWORD
-export FLIT_USERNAME=__token__
-export eval $(envchain FLIT env | grep FLIT_PASSWORD=)
+1. Go to your project's page on PyPI: `https://pypi.org/manage/project/mdformat_mkdocs/settings/publishing/`
+    - If the project doesn't exist yet, go to [PyPI's publishing page](https://pypi.org/manage/account/publishing) to add a "pending" publisher
+1. Add a new Trusted Publisher with these settings:
+    - **PyPI Project Name**: `mdformat_mkdocs`
+    - **Owner**: `kyleking`
+    - **Repository name**: `mdformat-mkdocs`
+    - **Workflow name**: `tests.yml` (`.github/workflows/tests.yml`)
+    - **Environment name**: `pypi`
+1. Configure the GitHub Environment:
+    - Go to your repository's `Settings` → `Environments`
+    - Create an environment named `pypi`
+    - (Recommended) Enable "Required reviewers" for production safety
 
-flit publish
+### Publishing a Release
+
+#### Option 1: Using commitizen (Recommended)
+
+Use commitizen to automatically bump versions and create a commit with tag:
+
+```sh
+# Dry run to preview the version bump
+tox -e py312-cz -- --dry-run
+
+# Automatically bump version based on conventional commits
+tox -e py312-cz
+
+# Or manually specify the increment type
+tox -e py312-cz -- --increment PATCH  # or MINOR or MAJOR
+
+# Push the commit and tag
+git push origin main --tags
 ```
 
-> [!NOTE]
-> The Github Action requires generating an API key on PyPi and adding it to the repository `Settings/Secrets`, under the name `PYPI_KEY`
+Commitizen will automatically update versions in `pyproject.toml` and `mdformat_mkdocs/__init__.py`.
+
+#### Option 2: Manual Version Bump
+
+Update the versions in both `pyproject.toml` under `[project].version` and `mdformat_mkdocs/__init__.py` for `__version__`. Commit the change and push a tag in the form `vX.Y.Z` (for example, `v1.3.2` when the project version is `1.3.2`):
+
+```sh
+TAG=1.3.2
+git add pyproject.toml mdformat_mkdocs/__init__.py
+git commit -m "release: v$TAG"
+git tag v$TAG
+git push origin main --tags
+```
+
+The GitHub Action will automatically build and publish to PyPI using Trusted Publishers (no API tokens needed!).
