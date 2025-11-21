@@ -299,8 +299,13 @@ def _parse_semantic_indent(
     return result
 
 
-def _trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
-    """Removes spaces based on SemanticIndent."""
+def _trim_semantic_indent(indent: str, s_i: SemanticIndent, in_defbody: bool) -> str:
+    """Removes spaces based on SemanticIndent.
+
+    For definition bodies, maintain 4-space alignment by not trimming.
+    """
+    if in_defbody:
+        return indent
     if s_i == SemanticIndent.ONE_LESS_SPACE:
         return indent[:-1]
     if s_i == SemanticIndent.TWO_LESS_SPACE:
@@ -387,8 +392,20 @@ def _insert_newlines(
     return new_lines
 
 
-def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
+def parse_text(
+    *,
+    text: str,
+    inc_numbers: bool,
+    use_sem_break: bool,
+    in_defbody: bool = False,
+) -> ParsedText:
     """Post-processor to normalize lists.
+
+    Args:
+        text: The text to parse
+        inc_numbers: Whether to increment list numbers
+        use_sem_break: Whether to use semantic breaks for list alignment
+        in_defbody: Whether we're inside a definition body (affects semantic indent)
 
     Returns:
         ParsedText: result of text parsing
@@ -419,10 +436,8 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
             _parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], code_indents[0])),
         )
         new_indents = [
-            *starmap(
-                _trim_semantic_indent,
-                zip_equal(new_indents, semantic_indents),
-            ),
+            _trim_semantic_indent(indent, s_i, in_defbody)
+            for indent, s_i in zip_equal(new_indents, semantic_indents)
         ]
 
     new_lines = _insert_newlines(lines, [*zip_equal(new_indents, new_contents)])
@@ -487,5 +502,6 @@ def normalize_list(
         text=text,
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(context.options),
+        in_defbody=defbody_count > 0,
     )
     return _join(new_lines=parsed_text.new_lines)
