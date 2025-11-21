@@ -245,13 +245,13 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
     :   Definition starts with a paragraph, followed by an unordered list:
 
         - Foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
-          foo bar foo bar foo bar foo bar.
-
-          - (3) bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
             foo bar foo bar foo bar foo bar.
 
-            - foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo
-              bar (split) foo bar foo bar foo bar foo bar.
+            - (3) bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar
+                foo bar foo bar foo bar foo bar.
+
+                - foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo bar foo
+                    bar (split) foo bar foo bar foo bar foo bar.
     """,
 )
 
@@ -291,3 +291,53 @@ def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):
     )
     print_text(output, expected)
     assert output.lstrip() == expected.lstrip()
+
+
+def test_definition_list_wrap_with_gfm():
+    output = mdformat.text(
+        DEF_LIST_WITH_NESTED_WRAP,
+        options={"wrap": 80},
+        extensions={"mkdocs", "gfm"},
+    )
+    print_text(output, DEF_LIST_WITH_NESTED_WRAP_EXPECTED)
+    assert output == DEF_LIST_WITH_NESTED_WRAP_EXPECTED
+
+
+def test_definition_list_nested_indentation():
+    """Test that nested lists in definition bodies use 4-space increments.
+
+    This is a regression test for issue #63.
+    """
+    input_text = dedent(
+        """\
+        term
+
+        :   Definition with a list:
+
+            - First item
+                - Nested item
+                    - Deep nested item
+        """,
+    )
+    expected = dedent(
+        """\
+        term
+
+        :   Definition with a list:
+
+            - First item
+                - Nested item
+                    - Deep nested item
+        """,
+    )
+    output = mdformat.text(input_text, extensions={"mkdocs"})
+    print_text(output, expected)
+    assert output == expected
+
+    # Verify the indentation levels are multiples of 4
+    lines = output.split('\n')
+    for line in lines:
+        if line.strip().startswith('-'):
+            spaces = len(line) - len(line.lstrip())
+            # Spaces before '-' should be 4, 8, or 12 (multiples of 4)
+            assert spaces in [4, 8, 12], f"Expected 4/8/12 spaces, got {spaces} in: {repr(line)}"
