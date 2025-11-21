@@ -102,9 +102,7 @@ Before publishing for the first time, you need to configure Trusted Publishing o
 
 ### Publishing a Release
 
-#### Option 1: Using commitizen (Recommended)
-
-Use commitizen to automatically bump versions and create a commit with tag:
+Use `commitizen` to automatically bump versions (in `pyproject.toml` and `mdformat_mkdocs/__init__.py`) and create a commit with tag:
 
 ```sh
 # Dry run to preview the version bump
@@ -117,20 +115,6 @@ tox -e py312-cz
 tox -e py312-cz -- --increment PATCH  # or MINOR or MAJOR
 
 # Push the commit and tag
-git push origin main --tags
-```
-
-Commitizen will automatically update versions in `pyproject.toml` and `mdformat_mkdocs/__init__.py`.
-
-#### Option 2: Manual Version Bump
-
-Update the versions in both `pyproject.toml` under `[project].version` and `mdformat_mkdocs/__init__.py` for `__version__`. Commit the change and push a tag in the form `vX.Y.Z` (for example, `v1.3.2` when the project version is `1.3.2`):
-
-```sh
-TAG=1.3.2
-git add pyproject.toml mdformat_mkdocs/__init__.py
-git commit -m "release: v$TAG"
-git tag v$TAG
 git push origin main --tags
 ```
 
