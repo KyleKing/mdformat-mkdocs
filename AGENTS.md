@@ -48,10 +48,10 @@ tox -e py310-hook
 
 ### Plugin System
 
-The package implements mdformat's plugin interface with four key exports in `__init__.py`:
+The package implements mdformat's plugin interface with up to four key exports in `__init__.py`:
 
 - `update_mdit`: Registers markdown-it parser extensions
-- `add_cli_argument_group`: Adds CLI flags (`--align-semantic-breaks-in-lists`, `--ignore-missing-references`)
+- `add_cli_argument_group`: Optionally adds CLI flags
 - `RENDERERS`: Maps syntax tree node types to render functions
 - `POSTPROCESSORS`: Post-processes rendered output (list normalization, inline wrapping, deflist escaping)
 
@@ -89,12 +89,11 @@ The package implements mdformat's plugin interface with four key exports in `__i
 
 Configuration can be passed via:
 
-1. CLI arguments: `--align-semantic-breaks-in-lists`, `--ignore-missing-references`
-1. TOML config file (`.mdformat.toml`):
+1. Example CLI arguments: `--cli-argument`
+1. Example TOML config file (`.mdformat.toml`):
     ```toml
     [plugin.mkdocs]
-    align_semantic_breaks_in_lists = true
-    ignore_missing_references = true
+    cli_argument = true
     ```
 1. API: `mdformat.text(content, extensions={"mkdocs"}, options={...})`
 

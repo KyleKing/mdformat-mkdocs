@@ -40,6 +40,12 @@ repos:
     hooks:
       - id: yamllint
         stages: ["pre-commit"]
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.30.0
+    hooks:
+      - id: check-github-workflows
+        args: ["--verbose"]
+        stages: ["pre-commit"]
   - repo: https://github.com/pappasam/toml-sort
     rev: v0.24.3
     hooks:

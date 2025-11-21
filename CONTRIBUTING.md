@@ -42,9 +42,9 @@ or directly with [prek](https://github.com/j178/prek) (or pre-commit)
 
 ```bash
 uv tool install prek
-prek install -f
 # or: pipx install prek, brew install prek, etc.
 
+prek install -f
 prek run --all
 ```
 
