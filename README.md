@@ -50,7 +50,7 @@ Add this package wherever you use `mdformat` and the plugin will be auto-recogni
 - [mdformat-web](https://pypi.org/project/mdformat-web)
 - [mdformat-wikilink](https://github.com/tmr232/mdformat-wikilink)
 
-### Pre-Commit
+### pre-commit/prek
 
 ```yaml
 repos:

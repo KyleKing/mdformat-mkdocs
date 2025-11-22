@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "flit_core.buildapi"
-requires = ["flit_core >=3.9.0,<4"]
+build-backend = "uv_build"
+requires = ["uv_build>=0.9.10"]
 
 [project]
 authors = [
@@ -18,11 +18,13 @@ dependencies = [
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
 ]
-dynamic = ["description", "version"]
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
+license = "MIT"
+license-files = ["LICENSE"]
 name = "mdformat_mkdocs"
 readme = "README.md"
-requires-python = ">=3.9.0"
+requires-python = ">=3.10.0"
+version = "4.5.1"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -45,9 +47,9 @@ recommended = [
 ]
 test = [
   "beartype >= 0.21.0",
-  "pytest >= 8.3.4",
+  "pytest >= 9.0.1",
   "pytest-beartype >= 0.2.0",
-  "pytest-cov >= 6.2.1",
+  "pytest-cov >= 7.0.0",
   "syrupy >= 4.9.1",
 ]
 
@@ -56,9 +58,10 @@ test = [
 "Changelog" = "https://github.com/kyleking/mdformat-mkdocs/releases"
 homepage = "https://github.com/kyleking/mdformat-mkdocs"
 
-[tool.flit.sdist]
-exclude = [".github/", "tests/"]
-include = []
+[tool.commitizen]
+tag_format = "v${version}"
+version = "4.5.1"
+version_files = ["mdformat_mkdocs/__init__.py", "pyproject.toml:^version"]
 
 [tool.mypy]
 check_untyped_defs = true
@@ -67,7 +70,7 @@ enable_error_code = ["ignore-without-code", "possibly-undefined", "redundant-exp
 extra_checks = true
 files = ["mdformat_mkdocs", "tests"]
 no_implicit_reexport = true
-python_version = "3.9"
+python_version = "3.10"
 show_column_numbers = true
 show_error_codes = true
 strict_equality = true
@@ -79,7 +82,7 @@ warn_unused_ignores = true
 
 [tool.pyright]
 include = ["mdformat_mkdocs", "tests"]
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 
 [tool.pytest-watcher]
 ignore_patterns = []
@@ -87,25 +90,27 @@ now = true
 patterns = ["*.ambr", "*.md", "*.py"]
 runner = "tox"
 # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
-# runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs", "--snapshot-update"]
-runner_args = ["-e", "py312-test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--snapshot-update"]
+# runner_args = ["-e", "test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv", "--beartype-packages=mdformat_mkdocs"]
+runner_args = ["-e", "test", "--", "--exitfirst", "--failed-first", "--new-first", "-vv"]
 
 [tool.ruff]
 # Docs: https://github.com/charliermarsh/ruff
 # Tip: poetry run python -m ruff --explain RUF100
 line-length = 88
-target-version = 'py39'
+target-version = 'py310'
 
 [tool.ruff.lint]
 ignore = [
   'ANN002', # Missing type annotation for `*args`
   'ANN003', # Missing type annotation for `**kwargs`
   'BLE001', # Do not catch blind exception: `Exception`
+  'COM812', # missing-trailing-comma
   'CPY001', # Missing copyright notice at top of file
   'D203', # "1 blank line required before class docstring" (Conflicts with D211)
   'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
   'DOC201', # `return` is not documented in docstring
   'DOC402', # `yield` is not documented in docstring
+  'E501', # Line too long (89 > 88)
   'EM101', # Exception must not use a string literal, assign to variable first
   'FBT001', # Boolean-typed positional argument in function definition
   'FIX001', # Line contains FIXME
@@ -115,6 +120,8 @@ ignore = [
   'N815', # Variable `lineMax` in class scope should not be mixedCase
   'PLR0913', # Too many arguments in function definition (6 > 5)
   'S101', # Use of `assert` detected
+  'TC002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
+  'TC003', # Move standard library import `argparse` into a type-checking block (for beartype)
   'TD001', # Invalid TODO tag: `FIXME`
   'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
   'TD003', # Missing issue link on the line following this TODO
@@ -144,9 +151,6 @@ known-first-party = ['mdformat_mkdocs', 'tests']
   'PT004', # flake8-pytest-style: fixture does not return
   'S101', # Use of `assert` detected
 ]
-'tests/format/test_wrap.py' = [
-  'E501', # Line too long (122 > 88)
-]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -164,49 +168,61 @@ inline_arrays = false
 
 [tool.tox]
 # Docs: https://tox.wiki/en/4.23.2/config.html#core
-basepython = ["python3.12", "python3.9"]
-env_list = ["py312-pre-commit", "py312-ruff", "py312-test", "py312-type", "py39-hook", "py39-test"]
+basepython = ["py310", "py314"]
+env_list = ["hook-min", "prek", "ruff", "test-min", "type"]
 isolated_build = true
-requires = ["tox>=4.20.0"]
+requires = ["tox>=4.32.0"]
 skip_missing_interpreters = false
 
-[tool.tox.env."py312-mdformat"]
-commands = [["mdformat", {default = [], extend = true, replace = "posargs"}]]
-description = "Run development extension with arbitrary mdformat args (e.g. `tox run -e py312-mdformat -- --wrap=80 tmp.md`)"
-
-[tool.tox.env."py312-pre-commit"]
-commands = [["pre-commit", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
-deps = "pre-commit>=4.0.1"
+[tool.tox.env.cz]
+basepython = ["py314"]
+commands = [["cz", "bump", {default = [], extend = true, replace = "posargs"}]]
+deps = "commitizen>=4.10.0"
+description = "Bump version using commitizen. Optionally specify: '-- --increment MAJOR|MINOR|PATCH' or '-- --dry-run'"
 skip_install = true
 
-[tool.tox.env."py312-ruff"]
+[tool.tox.env."hook-min"]
+basepython = ["py310"]
+commands = [["prek", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
+deps = "prek>=0.2.17"
+
+[tool.tox.env.prek]
+basepython = ["py314"]
+commands = [["prek", "run", "--all-files", {default = [], extend = true, replace = "posargs"}]]
+deps = "prek>=0.2.17"
+skip_install = true
+
+[tool.tox.env.ruff]
+basepython = ["py314"]
 commands = [
   ["ruff", "check", ".", "--fix", {default = [], extend = true, replace = "posargs"}],
   ["ruff", "format", "."],
 ]
-deps = "ruff>=0.8.3"
+deps = "ruff>=0.14.5"
 description = "Optionally, specify: '-- --unsafe-fixes'"
 skip_install = true
 
-[tool.tox.env."py312-test"]
+[tool.tox.env.test]
+basepython = ["py314"]
 commands = [["pytest", "--cov=mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
 # PLANNED: requires support for TYPE_CHECKING https://github.com/beartype/beartype/issues/477
-# description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs --snapshot-update'"
-description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --snapshot-update'"
+# description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv --beartype-packages=mdformat_mkdocs"
+description = "Optionally, specify: '-- --exitfirst --failed-first --new-first -vv"
 extras = ["test"]
 
-[tool.tox.env."py312-type"]
-commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
-deps = ["mypy>=1.17.1"]
-
-[tool.tox.env."py39-hook"]
-commands = [["pre-commit", "run", "--config=.pre-commit-test.yaml", "--all-files", {default = ["--show-diff-on-failure", "--verbose"], extend = true, replace = "posargs"}]]
-deps = "pre-commit>=4.0.1"
-
-[tool.tox.env."py39-test"]
+[tool.tox.env."test-min"]
+basepython = ["py310"]
 commands = [["pytest", "--cov=mdformat_mkdocs"]]
 extras = ["test"]
+
+[tool.tox.env.type]
+basepython = ["py314"]
+commands = [["mypy", "./mdformat_mkdocs", {default = [], extend = true, replace = "posargs"}]]
+deps = ["mypy>=1.18.2"]
 
 [tool.tox.env_run_base]
 # Validates that commands are set
 commands = [["error-commands-are-not-set"]]
+
+[tool.uv.build-backend]
+module-root = ""

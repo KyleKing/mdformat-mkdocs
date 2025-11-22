@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from contextlib import suppress
 from enum import Enum
 from itertools import starmap
-from typing import TYPE_CHECKING, Any, Callable, Literal, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, Literal, NamedTuple, TypeVar
 
 from more_itertools import unzip, zip_equal
 
@@ -298,8 +299,13 @@ def _parse_semantic_indent(
     return result
 
 
-def _trim_semantic_indent(indent: str, s_i: SemanticIndent) -> str:
-    """Removes spaces based on SemanticIndent."""
+def _trim_semantic_indent(indent: str, s_i: SemanticIndent, in_defbody: bool) -> str:
+    """Removes spaces based on SemanticIndent.
+
+    For definition bodies, maintain 4-space alignment by not trimming.
+    """
+    if in_defbody:
+        return indent
     if s_i == SemanticIndent.ONE_LESS_SPACE:
         return indent[:-1]
     if s_i == SemanticIndent.TWO_LESS_SPACE:
@@ -386,8 +392,20 @@ def _insert_newlines(
     return new_lines
 
 
-def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedText:
+def parse_text(
+    *,
+    text: str,
+    inc_numbers: bool,
+    use_sem_break: bool,
+    in_defbody: bool = False,
+) -> ParsedText:
     """Post-processor to normalize lists.
+
+    Args:
+        text: The text to parse
+        inc_numbers: Whether to increment list numbers
+        use_sem_break: Whether to use semantic breaks for list alignment
+        in_defbody: Whether we're inside a definition body (affects semantic indent)
 
     Returns:
         ParsedText: result of text parsing
@@ -414,14 +432,12 @@ def parse_text(*, text: str, inc_numbers: bool, use_sem_break: bool) -> ParsedTe
     if use_sem_break:
         semantic_indents = map_lookback(
             _parse_semantic_indent,
-            [*zip(lines, code_indents)],
+            [*zip(lines, code_indents, strict=True)],
             _parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], code_indents[0])),
         )
         new_indents = [
-            *starmap(
-                _trim_semantic_indent,
-                zip_equal(new_indents, semantic_indents),
-            ),
+            _trim_semantic_indent(indent, s_i, in_defbody)
+            for indent, s_i in zip_equal(new_indents, semantic_indents)
         ]
 
     new_lines = _insert_newlines(lines, [*zip_equal(new_indents, new_contents)])
@@ -469,9 +485,14 @@ def normalize_list(
         str: formatted text
 
     """
-    if node.level > 1:
-        # Note: this function is called recursively,
-        #   so only process the top-level item
+    # Calculate the expected level for a top-level list in the current context
+    # Each definition body adds 2 to the level and 4 to indent_width
+    defbody_count = context.env.get("indent_width", 0) // 4
+    expected_top_level = defbody_count * 2
+
+    # Only process top-level lists (not nested within other lists)
+    # This function is called recursively, so we skip nested lists to avoid double-processing
+    if node.level > expected_top_level + 1:
         return _strip_filler(text)
 
     # Retrieve user-options
@@ -481,5 +502,6 @@ def normalize_list(
         text=text,
         inc_numbers=inc_numbers,
         use_sem_break=check_if_align_semantic_breaks_in_lists(context.options),
+        in_defbody=defbody_count > 0,
     )
     return _join(new_lines=parsed_text.new_lines)

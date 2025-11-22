@@ -75,13 +75,13 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
         "--align-semantic-breaks-in-lists",
         action="store_const",
         const=True,
-        help="If specified, align semantic indents in numbered and bulleted lists to the text",  # noqa: E501
+        help="If specified, align semantic indents in numbered and bulleted lists to the text",
     )
     group.add_argument(
         "--ignore-missing-references",
         action="store_const",
         const=True,
-        help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",  # noqa: E501
+        help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",
     )
 
 
