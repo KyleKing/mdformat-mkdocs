@@ -6,42 +6,42 @@
 # Run all tests using tox
 tox
 
-# Run tests with coverage (Python 3.10)
-tox -e py310-test
+# Run tests with coverage (Python 3.14 - current version)
+tox -e test
 
-# Run tests with coverage (Python 3.12)
-tox -e py312-test
+# Run tests with coverage (Python 3.10 - minimum version)
+tox -e test-min
 
 # Run specific tests with pytest flags
-tox -e py312-test -- --exitfirst --failed-first --new-first -vv --snapshot-update
+tox -e test -- --exitfirst --failed-first --new-first -vv --snapshot-update
 ```
 
 ## Linting and Formatting
 
 ```bash
 # Run all pre-commit hooks (using prek)
-tox -e py312-prek
+tox -e prek
 # Or run directly with prek
 prek run --all
 
 # Run ruff for linting and formatting
-tox -e py312-ruff
+tox -e ruff
 # With unsafe fixes
-tox -e py312-ruff -- --unsafe-fixes
+tox -e ruff -- --unsafe-fixes
 ```
 
 ## Type Checking
 
 ```bash
 # Run mypy type checking
-tox -e py312-type
+tox -e type
 ```
 
 ## Pre-commit Hook Testing
 
 ```bash
 # Test the plugin as a pre-commit hook
-tox -e py310-hook
+tox -e hook-min
 ```
 
 ## Architecture
@@ -113,7 +113,7 @@ Configuration can be passed via:
 ## Development Notes
 
 - This project uses `uv-build` as the build backend
-- Uses `tox` for test automation with multiple Python versions (3.10, 3.12)
+- Uses `tox` for test automation with multiple Python versions (3.10, 3.14)
 - Pre-commit is configured but the project now uses `prek` (faster alternative)
 - Python 3.10+ is required (see `requires-python` in `pyproject.toml`)
 - Version is defined in `mdformat_mkdocs/__init__.py` as `__version__`

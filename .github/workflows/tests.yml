@@ -15,14 +15,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: 3.12
+          python-version: 3.14
       - uses: j178/prek-action@v1
 
   tests:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ["3.10", "3.12"]
+        python-version: ["3.10", "3.14"]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: actions/checkout@v5
@@ -43,7 +43,7 @@ jobs:
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: 3.12
+          python-version: 3.14
           activate-environment: true
       - name: Install prek
         uses: j178/prek-action@v1
@@ -70,7 +70,7 @@ jobs:
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: 3.12
+          python-version: 3.14
       - name: Build Package
         run: uv build
       - name: Publish to PyPI

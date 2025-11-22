@@ -1,0 +1,23 @@
+[[tools."pipx:prek"]]
+version = "0.2.18"
+backend = "pipx:prek"
+
+[[tools."pipx:pytest-watcher"]]
+version = "0.4.3"
+backend = "pipx:pytest-watcher"
+
+[[tools."pipx:tox"]]
+version = "4.32.0"
+backend = "pipx:tox"
+
+[[tools.python]]
+version = "3.10.15"
+backend = "core:python"
+
+[[tools.python]]
+version = "3.14.0"
+backend = "core:python"
+
+[[tools.uv]]
+version = "0.9.11"
+backend = "aqua:astral-sh/uv"
