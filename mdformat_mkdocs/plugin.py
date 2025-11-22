@@ -16,6 +16,8 @@ from .mdit_plugins import (
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
+    PYMD_ARITHMATEX_BLOCK_PREFIX,
+    PYMD_ARITHMATEX_INLINE_PREFIX,
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
@@ -27,6 +29,7 @@ from .mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
+    pymd_arithmatex_plugin,
     pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
@@ -85,6 +88,7 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
     mdit.use(material_admon_plugin)
+    mdit.use(pymd_arithmatex_plugin)
     mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(material_deflist_plugin)
@@ -214,6 +218,8 @@ RENDERERS: Mapping[str, Render] = {
     "dl": render_material_definition_list,
     "dt": render_material_definition_term,
     "dd": render_material_definition_body,
+    PYMD_ARITHMATEX_INLINE_PREFIX: _render_node_content,
+    PYMD_ARITHMATEX_BLOCK_PREFIX: _render_inline_content,
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,

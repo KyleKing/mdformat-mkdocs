@@ -36,7 +36,7 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 .
 <div class="grid cards" markdown>
 
-<!-- FIXME: override link handling when contains attr list. Otherwise hangs -->
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
 
 [:material-account-box:+ .lg .middle +&nbsp; **About** &nbsp;](about/index.md){ .md-button style="text-align: center; display: block;" }
 
@@ -46,7 +46,7 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 .
 <div class="grid cards" markdown>
 
-<!-- FIXME: override link handling when contains attr list. Otherwise hangs -->
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
 
 [:material-account-box:+ .lg .middle +  **About**  ](about/index.md){ .md-button style="text-align: center; display: block;" }
 
