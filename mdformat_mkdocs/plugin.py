@@ -107,6 +107,36 @@ def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  
     return node.content
 
 
+def _render_math_inline(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render inline math with original delimiters."""
+    markup = node.markup
+    content = node.content
+    if markup == "$":
+        return f"${content}$"
+    if markup == "\\(":
+        return f"\\({content}\\)"
+    # Fallback
+    return f"${content}$"
+
+
+def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render block math with original delimiters."""
+    markup = node.markup
+    content = node.content
+    if markup == "$$":
+        return f"$$\n{content.strip()}\n$$"
+    if markup == "\\[":
+        return f"\\[\n{content.strip()}\n\\]"
+    # Fallback
+    return f"$$\n{content.strip()}\n$$"
+
+
+def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render amsmath environment."""
+    # Content already includes \begin{} and \end{}
+    return node.content
+
+
 def _render_meta_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Return node content without additional processing."""
     return node.meta.get("content", "")
@@ -218,8 +248,11 @@ RENDERERS: Mapping[str, Render] = {
     "dl": render_material_definition_list,
     "dt": render_material_definition_term,
     "dd": render_material_definition_body,
-    PYMD_ARITHMATEX_INLINE_PREFIX: _render_node_content,
-    PYMD_ARITHMATEX_BLOCK_PREFIX: _render_inline_content,
+    # Math support (from mdit-py-plugins)
+    "math_inline": _render_math_inline,
+    "math_block": _render_math_block,
+    "amsmath": _render_amsmath,
+    # Other plugins
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
