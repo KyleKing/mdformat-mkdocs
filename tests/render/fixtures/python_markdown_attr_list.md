@@ -1,5 +1,5 @@
 Examples from https://python-markdown.github.io/extensions/attr_list
-<!--FIXME: correct handling of spans..-->
+<!-- Note: HTML rendering for attribute lists is minimal (formatting only) -->
 .
 {: #someid .someclass somekey='some value' #id1 .class1 id=id2 class="class2 class3" .class4 }
 
@@ -31,7 +31,7 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 .
 <div class="grid cards" markdown>
 
-<!-- FIXME: resolve issue with link formatting -->
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
 
 [:material-account-box:+ .lg .middle +&nbsp; **About** &nbsp;](about/index.md){ .md-button style="text-align: center; display: block;" }
 
@@ -40,7 +40,7 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 </div>
 .
 <div class="grid cards" markdown>
-<!-- FIXME: resolve issue with link formatting -->
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
 <p><a href="about/index.md">:material-account-box:+ .lg .middle +  <strong>About</strong>  </a><span attributes="['.md-button', 'style=&quot;text-align:', 'center;', 'display:', 'block;&quot;']"> .md-button style=&quot;text-align: center; display: block;&quot; </span></p>
 <p><a href="blog/index.md">:fontawesome-brands-blogger-b:+ .lg .middle +  <strong>Blogs</strong>  </a><span attributes="['.md-button', 'style=&quot;text-align:', 'center;', 'display:', 'block;&quot;']"> .md-button style=&quot;text-align: center; display: block;&quot; </span></p>
 </div>

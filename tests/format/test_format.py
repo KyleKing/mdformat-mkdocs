@@ -25,6 +25,7 @@ fixtures = flatten(
             "material_deflist.md",
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
+            "pymd_arithmatex.md",
             "pymd_snippet.md",
             "python_markdown_attr_list.md",
             "regression.md",
