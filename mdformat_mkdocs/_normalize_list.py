@@ -428,7 +428,7 @@ def parse_text(
 
     new_contents = [
         _format_new_content(line, inc_numbers, ci is not None)
-        for line, ci in zip(lines, code_indents)
+        for line, ci in zip(lines, code_indents, strict=True)
     ]
 
     if use_sem_break:
@@ -470,7 +470,9 @@ def _join(*, new_lines: list[tuple[str, str]]) -> str:
 
     return "".join(
         f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in zip_equal(new_indents_iter, new_contents_iter)
+        for new_indent, new_content in zip(
+            new_indents_iter, new_contents_iter, strict=True
+        )
     )
 
 

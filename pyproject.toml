@@ -18,7 +18,7 @@ dependencies = [
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
 ]
-description = "A mdformat plugin for mkdocs and Material for MkDocs"
+description = "An mdformat plugin for mkdocs and Material for MkDocs"
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 license = "MIT"
 license-files = ["LICENSE"]
