@@ -1,4 +1,4 @@
-"""Python-Markdown Extensions: Arithmatex (Math Support).
+r"""Python-Markdown Extensions: Arithmatex (Math Support).
 
 Uses existing mdit-py-plugins for LaTeX/MathJax mathematical expressions.
 
@@ -29,13 +29,14 @@ if TYPE_CHECKING:
 # Token types from the plugins
 DOLLARMATH_INLINE = "math_inline"
 DOLLARMATH_BLOCK = "math_block"
+AMSMATH_BLOCK = "amsmath"
+# FIXME: How should these be used?
 TEXMATH_INLINE = "math_inline_double"
 TEXMATH_BLOCK = "math_block_eqno"
-AMSMATH_BLOCK = "amsmath"
 
 
 def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
-    """Register Arithmatex support using existing mdit-py-plugins.
+    r"""Register Arithmatex support using existing mdit-py-plugins.
 
     This is a convenience wrapper that configures three existing plugins:
     - dollarmath_plugin: for $...$ and $$...$$
@@ -51,9 +52,3 @@ def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
 
     # LaTeX environments: \begin{env}...\end{env}
     md.use(amsmath_plugin)
-
-
-# For backwards compatibility, export the same prefixes
-# Map to the actual token types created by the plugins
-PYMD_ARITHMATEX_INLINE_PREFIX = DOLLARMATH_INLINE  # "math_inline"
-PYMD_ARITHMATEX_BLOCK_PREFIX = DOLLARMATH_BLOCK    # "math_block"

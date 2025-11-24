@@ -26,7 +26,7 @@ Supports:
     - \*Note: the markup (HTML) rendered for abbreviations is not useful for rendering. If important, I'm open to contributions because the implementation could be challenging
 - [Python Markdown "Attribute Lists"](https://python-markdown.github.io/extensions/attr_list)
     - Preserves attribute list syntax when using `--wrap` mode
-- [PyMdown Extensions "Arithmatex" (Math/LaTeX Support)](https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex)
+- [PyMdown Extensions "Arithmatex" (Math/LaTeX Support)](https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex) ([Material for MkDocs Math](https://squidfunk.github.io/mkdocs-material/reference/math))
     - Inline math: `$E = mc^2$` or `\(x + y\)`
     - Block math: `$$...$$`, `\[...\]`, or `\begin{env}...\end{env}`
     - Supports smart dollar mode (prevents false positives like `$3.00`)

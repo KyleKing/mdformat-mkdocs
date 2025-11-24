@@ -23,6 +23,7 @@ fixtures = flatten(
         for fixture_path in (
             "material_content_tabs.md",
             "material_deflist.md",
+            "material_math.md",
             "mkdocstrings_autorefs.md",
             "pymd_abbreviations.md",
             "pymd_arithmatex.md",

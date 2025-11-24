@@ -12,12 +12,13 @@ from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
+    AMSMATH_BLOCK,
+    DOLLARMATH_BLOCK,
+    DOLLARMATH_INLINE,
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
-    PYMD_ARITHMATEX_BLOCK_PREFIX,
-    PYMD_ARITHMATEX_INLINE_PREFIX,
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
@@ -249,9 +250,9 @@ RENDERERS: Mapping[str, Render] = {
     "dt": render_material_definition_term,
     "dd": render_material_definition_body,
     # Math support (from mdit-py-plugins)
-    "math_inline": _render_math_inline,
-    "math_block": _render_math_block,
-    "amsmath": _render_amsmath,
+    DOLLARMATH_INLINE: _render_math_inline,
+    DOLLARMATH_BLOCK: _render_math_block,
+    AMSMATH_BLOCK: _render_amsmath,
     # Other plugins
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
