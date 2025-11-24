@@ -39,7 +39,7 @@ Add this package wherever you use `mdformat` and the plugin will be auto-recogni
 - [mdformat-black](https://pypi.org/project/mdformat-black)
 - [mdformat-config](https://pypi.org/project/mdformat-config)
 - [mdformat-footnote](https://pypi.org/project/mdformat-footnote)
-- [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter)
+- [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter))
 - [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
 - [mdformat-web](https://pypi.org/project/mdformat-web)
 - [mdformat-wikilink](https://github.com/tmr232/mdformat-wikilink)
@@ -49,7 +49,7 @@ Add this package wherever you use `mdformat` and the plugin will be auto-recogni
 ```yaml
 repos:
   - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.19
+    rev: 1.0.0
     hooks:
       - id: mdformat
         additional_dependencies:
@@ -58,17 +58,17 @@ repos:
           # - "mdformat-mkdocs[recommended]"
 ```
 
-### pipx/uv
+### uvx
+
+```sh
+uvx --with mdformat-mkdocs mdformat
+```
+
+Or with pipx:
 
 ```sh
 pipx install mdformat
 pipx inject mdformat mdformat-mkdocs
-```
-
-Or with uv:
-
-```sh
-uv tool run --from mdformat-mkdocs mdformat
 ```
 
 ## HTML Rendering
@@ -137,7 +137,7 @@ ignore_missing_references = true
 
 See [CONTRIBUTING.md](https://github.com/kyleking/mdformat-mkdocs/blob/main/CONTRIBUTING.md)
 
-[ci-badge]: https://github.com/kyleking/mdformat-mkdocs/workflows/CI/badge.svg?branch=main
+[ci-badge]: https://github.com/kyleking/mdformat-mkdocs/actions/workflows/tests.yml/badge.svg?branch=main
 [ci-link]: https://github.com/kyleking/mdformat-mkdocs/actions?query=workflow%3ACI+branch%3Amain+event%3Apush
 [pypi-badge]: https://img.shields.io/pypi/v/mdformat-mkdocs.svg
 [pypi-link]: https://pypi.org/project/mdformat-mkdocs

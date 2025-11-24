@@ -18,6 +18,7 @@ dependencies = [
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
 ]
+description = "A mdformat plugin for mkdocs and mkdocs-material"
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 license = "MIT"
 license-files = ["LICENSE"]
@@ -35,7 +36,7 @@ recommended = [
   "mdformat-beautysh >= 0.1.1",
   "mdformat-config >= 0.2.1",
   "mdformat-footnote >= 0.1.1",
-  "mdformat-frontmatter >= 2.0.8",
+  "mdformat-front-matters >= 0.1.0",
   "mdformat-gfm >=1.0.0; python_version >= '3.10'",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.0.1",
