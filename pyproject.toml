@@ -18,13 +18,14 @@ dependencies = [
   "mdit-py-plugins >= 0.4.1",
   "more-itertools >= 10.5.0",
 ]
+description = "A mdformat plugin for mkdocs and mkdocs-material"
 keywords = ["markdown", "markdown-it", "mdformat", "mdformat_plugin_template"]
 license = "MIT"
 license-files = ["LICENSE"]
 name = "mdformat_mkdocs"
 readme = "README.md"
 requires-python = ">=3.10.0"
-version = "4.5.1"
+version = "5.0.0"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -35,7 +36,7 @@ recommended = [
   "mdformat-beautysh >= 0.1.1",
   "mdformat-config >= 0.2.1",
   "mdformat-footnote >= 0.1.1",
-  "mdformat-frontmatter >= 2.0.8",
+  "mdformat-front-matters >= 0.1.0",
   "mdformat-gfm >=1.0.0; python_version >= '3.10'",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.0.1",
@@ -60,7 +61,7 @@ homepage = "https://github.com/kyleking/mdformat-mkdocs"
 
 [tool.commitizen]
 tag_format = "v${version}"
-version = "4.5.1"
+version = "5.0.0"
 version_files = ["mdformat_mkdocs/__init__.py", "pyproject.toml:^version"]
 
 [tool.mypy]
