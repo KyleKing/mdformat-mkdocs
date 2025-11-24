@@ -24,9 +24,9 @@ Supports:
 - [mkdocstrings Cross-References](https://mkdocstrings.github.io/usage/#cross-references)
 - [Python Markdown "Abbreviations"\*](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)
     - \*Note: the markup (HTML) rendered for abbreviations is not useful for rendering. If important, I'm open to contributions because the implementation could be challenging
-- [Python Markdown "Attribute Lists"](https://python-markdown.github.io/extensions/attr_list/)
+- [Python Markdown "Attribute Lists"](https://python-markdown.github.io/extensions/attr_list)
     - Preserves attribute list syntax when using `--wrap` mode
-- [PyMdown Extensions "Arithmatex" (Math/LaTeX Support)](https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/)
+- [PyMdown Extensions "Arithmatex" (Math/LaTeX Support)](https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex)
     - Inline math: `$E = mc^2$` or `\(x + y\)`
     - Block math: `$$...$$`, `\[...\]`, or `\begin{env}...\end{env}`
     - Supports smart dollar mode (prevents false positives like `$3.00`)
@@ -138,33 +138,6 @@ You can also use the toml configuration (https://mdformat.readthedocs.io/en/stab
 align_semantic_breaks_in_lists = true
 ignore_missing_references = true
 ```
-
-## Known Behaviors
-
-### HTML Entity Replacement
-
-`mdformat` (via `markdown-it-py`) automatically converts HTML entities like `&nbsp;` to their Unicode equivalents (U+00A0 non-breaking space). This is core `mdformat` behavior and not specific to this plugin.
-
-**Recommended alternatives**: Use CSS for spacing instead of HTML entities:
-
-```css
-/* Instead of &nbsp; for button spacing */
-.md-button svg {
-    margin-right: 0.5em;
-}
-
-.md-button {
-    padding: 0.625em 2em;
-}
-
-/* For general spacing */
-.container {
-    display: flex;
-    gap: 1em;
-}
-```
-
-This approach is more maintainable, responsive-friendly, and semantically correct.
 
 ## Contributing
 
