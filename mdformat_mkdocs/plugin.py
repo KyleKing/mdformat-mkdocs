@@ -14,6 +14,7 @@ from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
     AMSMATH_BLOCK,
     DOLLARMATH_BLOCK,
+    DOLLARMATH_BLOCK_LABEL,
     DOLLARMATH_INLINE,
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
@@ -22,6 +23,7 @@ from .mdit_plugins import (
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
+    TEXMATH_BLOCK_EQNO,
     escape_deflist,
     material_admon_plugin,
     material_content_tabs_plugin,
@@ -66,6 +68,11 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
     return bool(get_conf(options, "align_semantic_breaks_in_lists")) or False
 
 
+def cli_is_no_mkdocs_math(options: ContextOptions) -> bool:
+    """user-specified flag to disable math/LaTeX rendering."""
+    return bool(get_conf(options, "no_mkdocs_math")) or False
+
+
 def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
     """Add options to the mdformat CLI.
 
@@ -84,12 +91,19 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
         const=True,
         help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",
     )
+    group.add_argument(
+        "--no-mkdocs-math",
+        action="store_const",
+        const=True,
+        help="If set, disable math/LaTeX rendering (Arithmatex). By default, math is enabled.",
+    )
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
     mdit.use(material_admon_plugin)
-    mdit.use(pymd_arithmatex_plugin)
+    if not cli_is_no_mkdocs_math(mdit.options):
+        mdit.use(pymd_arithmatex_plugin)
     mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(material_deflist_plugin)
@@ -130,6 +144,19 @@ def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # 
         return f"\\[\n{content.strip()}\n\\]"
     # Fallback
     return f"$$\n{content.strip()}\n$$"
+
+
+def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render block math with equation label."""
+    markup = node.markup
+    content = node.content
+    label = node.info  # Label is stored in info field
+    if markup == "$$":
+        return f"$$\n{content.strip()}\n$$ ({label})"
+    if markup == "\\[":
+        return f"\\[\n{content.strip()}\n\\] ({label})"
+    # Fallback
+    return f"$$\n{content.strip()}\n$$ ({label})"
 
 
 def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
@@ -252,6 +279,8 @@ RENDERERS: Mapping[str, Render] = {
     # Math support (from mdit-py-plugins)
     DOLLARMATH_INLINE: _render_math_inline,
     DOLLARMATH_BLOCK: _render_math_block,
+    DOLLARMATH_BLOCK_LABEL: _render_math_block_eqno,
+    TEXMATH_BLOCK_EQNO: _render_math_block_eqno,
     AMSMATH_BLOCK: _render_amsmath,
     # Other plugins
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,

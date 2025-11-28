@@ -11,6 +11,7 @@ from mdformat_mkdocs.mdit_plugins import (
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
+    pymd_arithmatex_plugin,
     pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
@@ -35,6 +36,7 @@ def with_plugin(filename, plugins):
         *with_plugin("material_deflist.md", [material_deflist_plugin]),
         *with_plugin("mkdocstrings_autorefs.md", [mkdocstrings_autorefs_plugin]),
         *with_plugin("pymd_abbreviations.md", [pymd_abbreviations_plugin]),
+        *with_plugin("pymd_arithmatex.md", [pymd_arithmatex_plugin]),
         *with_plugin("pymd_captions.md", [pymd_captions_plugin]),
         *with_plugin(
             "mkdocstrings_crossreference.md",

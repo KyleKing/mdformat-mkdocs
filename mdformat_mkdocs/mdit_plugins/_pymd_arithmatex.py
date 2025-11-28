@@ -27,12 +27,14 @@ if TYPE_CHECKING:
     from markdown_it import MarkdownIt
 
 # Token types from the plugins
+# Note: dollarmath and texmath share the same token types for inline/block math:
+# - "math_inline" is used for both $...$ and \(...\)
+# - "math_block" is used for both $$...$$ and \[...\]
 DOLLARMATH_INLINE = "math_inline"
 DOLLARMATH_BLOCK = "math_block"
+DOLLARMATH_BLOCK_LABEL = "math_block_label"  # For $$...$$ (label) syntax
+TEXMATH_BLOCK_EQNO = "math_block_eqno"  # For \[...\] (label) syntax
 AMSMATH_BLOCK = "amsmath"
-# FIXME: How should these be used?
-TEXMATH_INLINE = "math_inline_double"
-TEXMATH_BLOCK = "math_block_eqno"
 
 
 def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
