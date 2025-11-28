@@ -27,9 +27,11 @@ Supports:
 - [Python Markdown "Attribute Lists"](https://python-markdown.github.io/extensions/attr_list)
     - Preserves attribute list syntax when using `--wrap` mode
 - [PyMdown Extensions "Arithmatex" (Math/LaTeX Support)](https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex) ([Material for MkDocs Math](https://squidfunk.github.io/mkdocs-material/reference/math))
-    - Inline math: `$E = mc^2$` or `\(x + y\)`
-    - Block math: `$$...$$`, `\[...\]`, or `\begin{env}...\end{env}`
-    - Supports smart dollar mode (prevents false positives like `$3.00`)
+    - This plugin combines three math rendering plugins from mdit-py-plugins:
+        1. **dollarmath**: Handles `$...$` (inline) and `$$...$$` (block) with smart dollar mode that prevents false positives (e.g., `$3.00` is not treated as math)
+        1. **texmath**: Handles `\(...\)` (inline) and `\[...\]` (block) LaTeX bracket notation
+        1. **amsmath**: Handles LaTeX environments like `\begin{align}...\end{align}`, `\begin{cases}...\end{cases}`, `\begin{matrix}...\end{matrix}`, etc.
+    - Can be deactivated entirely with the `--no-mkdocs-math` flag
 - [Python Markdown "Snippets"\*](https://facelessuser.github.io/pymdown-extensions/extensions/snippets)
     - \*Note: the markup (HTML) renders the plain text without implementing the snippet logic. I'm open to contributions if anyone needs full support for snippets
 
@@ -129,6 +131,8 @@ md.render(text)
 
 - `--ignore-missing-references` if set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings
 
+- `--no-mkdocs-math` if set, deactivate math/LaTeX rendering (Arithmatex). By default, math is enabled. This can be useful if you want to format markdown without processing math syntax.
+
 You can also use the toml configuration (https://mdformat.readthedocs.io/en/stable/users/configuration_file.html):
 
 ```toml
@@ -137,6 +141,7 @@ You can also use the toml configuration (https://mdformat.readthedocs.io/en/stab
 [plugin.mkdocs]
 align_semantic_breaks_in_lists = true
 ignore_missing_references = true
+no_mkdocs_math = true
 ```
 
 ## Contributing

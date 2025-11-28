@@ -1,3 +1,32 @@
+ReLU Function with Mixed Syntax (Issue #45)
+.
+$$
+ReLU(x) =
+     \begin{cases}
+       x &\quad\text{if } x > 0\\\
+       0 &\quad\text{otherwise}
+     \end{cases}
+  $$
+
+\[ x = \frac{4}{5} \]
+
+What about inline expressions? $\Delta_{distance}= \text{Speed} \cdot \text{Time}$
+.
+$$
+ReLU(x) =
+     \begin{cases}
+       x &\quad\text{if } x > 0\\\
+       0 &\quad\text{otherwise}
+     \end{cases}
+$$
+
+\[
+x = \frac{4}{5}
+\]
+
+What about inline expressions? $\Delta_{distance}= \text{Speed} \cdot \text{Time}$
+.
+
 AMS Math - align* (unnumbered)
 .
 The aligned equations without numbers:
