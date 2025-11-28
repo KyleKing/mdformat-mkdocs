@@ -223,6 +223,49 @@ Greatest common divisor algorithm.
 ///
 """
 
+# Regression test for issue #45 - long links with titles should not break attribute lists
+CASE_LONG_LINK_WITH_TITLE = """
+See [https://mdformat.readthedocs.io/en/stable/contributors/contributing.html#developing-code-formatter-plugins](https://mdformat.readthedocs.io/en/stable/contributors/contributing.html#developing-code-formatter-plugins "Code Formatter Plugin Link") for more information about developing code formatter plugins.
+"""
+
+CASE_LONG_LINK_WITH_TITLE_WRAP_80 = """
+See
+[https://mdformat.readthedocs.io/en/stable/contributors/contributing.html#developing-code-formatter-plugins](https://mdformat.readthedocs.io/en/stable/contributors/contributing.html#developing-code-formatter-plugins "Code Formatter Plugin Link")
+for more information about developing code formatter plugins.
+"""
+
+# Regression test for issue #45 - attribute lists wrap inline with paragraph
+CASE_PARAGRAPH_ATTR_LIST = """
+This is a very long paragraph that exceeds the wrapping limit and should be wrapped but the attribute list should stay with the paragraph.
+{:.class1 .class2}
+"""
+
+CASE_PARAGRAPH_ATTR_LIST_WRAP_80 = """
+This is a very long paragraph that exceeds the wrapping limit and should be
+wrapped but the attribute list should stay with the paragraph. {:.class1
+.class2}
+"""
+
+# Regression test for issue #45 - multiple classes in attribute list wrap inline
+CASE_MULTICLASS_ATTR_LIST = """
+Short paragraph with many classes below.
+{:.class1 .class2 .class3 .class4 .class5 .class6 .class7 .class8 .class9 .class10}
+"""
+
+CASE_MULTICLASS_ATTR_LIST_WRAP_80 = """
+Short paragraph with many classes below. {:.class1 .class2 .class3 .class4
+.class5 .class6 .class7 .class8 .class9 .class10}
+"""
+
+# Regression test for issue #45 - link with attribute list
+CASE_LINK_ATTR_LIST = """
+[A very long link text that should be wrapped when it exceeds the line limit](http://example.com){: .button .primary .large }
+"""
+
+CASE_LINK_ATTR_LIST_WRAP_80 = """
+[A very long link text that should be wrapped when it exceeds the line limit](http://example.com){: .button .primary .large }
+"""
+
 DEF_LIST_WITH_NESTED_WRAP = dedent(
     """\
     term
@@ -269,6 +312,11 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
         (CASE_ATTR_LIST_WRAP, CASE_ATTR_LIST_WRAP_TRUE_80, True, 80),
         (CASE_CAPTION_WRAP, CASE_CAPTION_WRAP_TRUE_40, True, 40),
         (DEF_LIST_WITH_NESTED_WRAP, DEF_LIST_WITH_NESTED_WRAP_EXPECTED, True, 80),
+        # Regression tests for issue #45 - attribute lists should not be wrapped
+        (CASE_LONG_LINK_WITH_TITLE, CASE_LONG_LINK_WITH_TITLE_WRAP_80, True, 80),
+        (CASE_PARAGRAPH_ATTR_LIST, CASE_PARAGRAPH_ATTR_LIST_WRAP_80, True, 80),
+        (CASE_MULTICLASS_ATTR_LIST, CASE_MULTICLASS_ATTR_LIST_WRAP_80, True, 80),
+        (CASE_LINK_ATTR_LIST, CASE_LINK_ATTR_LIST_WRAP_80, True, 80),
     ],
     ids=[
         "CASE_1_FALSE_40",
@@ -281,6 +329,10 @@ DEF_LIST_WITH_NESTED_WRAP_EXPECTED = dedent(
         "CASE_ATTR_LIST_WRAP_TRUE_80",
         "CASE_CAPTION_WRAP_TRUE_40",
         "DEF_LIST_WITH_NESTED_WRAP",
+        "CASE_LONG_LINK_WITH_TITLE_WRAP_80",
+        "CASE_PARAGRAPH_ATTR_LIST_WRAP_80",
+        "CASE_MULTICLASS_ATTR_LIST_WRAP_80",
+        "CASE_LINK_ATTR_LIST_WRAP_80",
     ],
 )
 def test_wrap(text: str, expected: str, align_lists: bool, wrap: int):

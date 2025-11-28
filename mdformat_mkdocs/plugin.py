@@ -12,6 +12,10 @@ from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
 from ._postprocess_inline import postprocess_list_wrap
 from .mdit_plugins import (
+    AMSMATH_BLOCK,
+    DOLLARMATH_BLOCK,
+    DOLLARMATH_BLOCK_LABEL,
+    DOLLARMATH_INLINE,
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
@@ -19,6 +23,7 @@ from .mdit_plugins import (
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
+    TEXMATH_BLOCK_EQNO,
     escape_deflist,
     material_admon_plugin,
     material_content_tabs_plugin,
@@ -27,6 +32,7 @@ from .mdit_plugins import (
     mkdocstrings_crossreference_plugin,
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
+    pymd_arithmatex_plugin,
     pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
@@ -62,6 +68,11 @@ def cli_is_align_semantic_breaks_in_lists(options: ContextOptions) -> bool:
     return bool(get_conf(options, "align_semantic_breaks_in_lists")) or False
 
 
+def cli_is_no_mkdocs_math(options: ContextOptions) -> bool:
+    """user-specified flag to disable math/LaTeX rendering."""
+    return bool(get_conf(options, "no_mkdocs_math")) or False
+
+
 def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
     """Add options to the mdformat CLI.
 
@@ -80,11 +91,19 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
         const=True,
         help="If set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings",
     )
+    group.add_argument(
+        "--no-mkdocs-math",
+        action="store_const",
+        const=True,
+        help="If set, disable math/LaTeX rendering (Arithmatex). By default, math is enabled.",
+    )
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
     mdit.use(material_admon_plugin)
+    if not cli_is_no_mkdocs_math(mdit.options):
+        mdit.use(pymd_arithmatex_plugin)
     mdit.use(pymd_captions_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(material_deflist_plugin)
@@ -100,6 +119,49 @@ def update_mdit(mdit: MarkdownIt) -> None:
 
 def _render_node_content(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Return node content without additional processing."""
+    return node.content
+
+
+def _render_math_inline(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render inline math with original delimiters."""
+    markup = node.markup
+    content = node.content
+    if markup == "$":
+        return f"${content}$"
+    if markup == "\\(":
+        return f"\\({content}\\)"
+    # Fallback
+    return f"${content}$"
+
+
+def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render block math with original delimiters."""
+    markup = node.markup
+    content = node.content
+    if markup == "$$":
+        return f"$$\n{content.strip()}\n$$"
+    if markup == "\\[":
+        return f"\\[\n{content.strip()}\n\\]"
+    # Fallback
+    return f"$$\n{content.strip()}\n$$"
+
+
+def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render block math with equation label."""
+    markup = node.markup
+    content = node.content
+    label = node.info  # Label is stored in info field
+    if markup == "$$":
+        return f"$$\n{content.strip()}\n$$ ({label})"
+    if markup == "\\[":
+        return f"\\[\n{content.strip()}\n\\] ({label})"
+    # Fallback
+    return f"$$\n{content.strip()}\n$$ ({label})"
+
+
+def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render amsmath environment."""
+    # Content already includes \begin{} and \end{}
     return node.content
 
 
@@ -214,6 +276,13 @@ RENDERERS: Mapping[str, Render] = {
     "dl": render_material_definition_list,
     "dt": render_material_definition_term,
     "dd": render_material_definition_body,
+    # Math support (from mdit-py-plugins)
+    DOLLARMATH_INLINE: _render_math_inline,
+    DOLLARMATH_BLOCK: _render_math_block,
+    DOLLARMATH_BLOCK_LABEL: _render_math_block_eqno,
+    TEXMATH_BLOCK_EQNO: _render_math_block_eqno,
+    AMSMATH_BLOCK: _render_amsmath,
+    # Other plugins
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,

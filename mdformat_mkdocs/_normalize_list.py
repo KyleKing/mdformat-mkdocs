@@ -9,7 +9,7 @@ from enum import Enum
 from itertools import starmap
 from typing import TYPE_CHECKING, Any, Literal, NamedTuple, TypeVar
 
-from more_itertools import unzip, zip_equal
+from more_itertools import unzip
 
 from ._helpers import (
     EOL,
@@ -380,7 +380,7 @@ def _insert_newlines(
     """Extend zipped_lines with newlines if necessary."""
     newline = ("", "")
     new_lines: list[tuple[str, str]] = []
-    for line, zip_line in zip_equal(parsed_lines, zipped_lines):
+    for line, zip_line in zip(parsed_lines, zipped_lines, strict=True):
         new_lines.append(zip_line)
         if (
             line.parsed.syntax == Syntax.EDGE_CODE
@@ -421,12 +421,14 @@ def parse_text(
         for indent in map_lookback(_parse_html_line, lines, None)
     ]
     # When both, code_indents take precedence
-    block_indents = [_c or _h for _c, _h in zip_equal(code_indents, html_indents)]
-    new_indents = [*starmap(_format_new_indent, zip_equal(lines, block_indents))]
+    block_indents = [
+        _c or _h for _c, _h in zip(code_indents, html_indents, strict=True)
+    ]
+    new_indents = [*starmap(_format_new_indent, zip(lines, block_indents, strict=True))]
 
     new_contents = [
         _format_new_content(line, inc_numbers, ci is not None)
-        for line, ci in zip_equal(lines, code_indents)
+        for line, ci in zip(lines, code_indents, strict=True)
     ]
 
     if use_sem_break:
@@ -437,10 +439,10 @@ def parse_text(
         )
         new_indents = [
             _trim_semantic_indent(indent, s_i, in_defbody)
-            for indent, s_i in zip_equal(new_indents, semantic_indents)
+            for indent, s_i in zip(new_indents, semantic_indents, strict=True)
         ]
 
-    new_lines = _insert_newlines(lines, [*zip_equal(new_indents, new_contents)])
+    new_lines = _insert_newlines(lines, [*zip(new_indents, new_contents, strict=True)])
     return ParsedText(
         new_lines=new_lines,
         debug_original_lines=lines,
@@ -468,7 +470,9 @@ def _join(*, new_lines: list[tuple[str, str]]) -> str:
 
     return "".join(
         f"{new_indent}{new_content}{EOL}"
-        for new_indent, new_content in zip_equal(new_indents_iter, new_contents_iter)
+        for new_indent, new_content in zip(
+            new_indents_iter, new_contents_iter, strict=True
+        )
     )
 
 
