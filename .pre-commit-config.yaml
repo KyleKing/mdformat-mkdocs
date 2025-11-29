@@ -25,16 +25,16 @@ repos:
         args: [--autofix, --indent=4]
       - id: trailing-whitespace
         exclude: __snapshots__/.*\.ambr
-  - repo: https://github.com/executablebooks/mdformat
-    rev: 0.7.19
-    hooks:
-      - id: mdformat
-        additional_dependencies:
-          - mdformat-mkdocs[recommended]>=3.0.0
-          - mdformat-gfm-alerts>=1.0.1
-        args: [--wrap=no]
-        exclude: tests/.+\.md
-        stages: ["pre-commit"]
+  # - repo: https://github.com/executablebooks/mdformat
+  #   rev: 1.0.0
+  #   hooks:
+  #     - id: mdformat
+  #       additional_dependencies:
+  #         - mdformat-mkdocs[recommended-mdsf]>=5.1.0
+  #         - mdformat-gfm-alerts>=1.0.1
+  #       args: [--wrap=no]
+  #       exclude: tests/.+\.md
+  #       stages: ["pre-commit"]
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.37.1
     hooks:

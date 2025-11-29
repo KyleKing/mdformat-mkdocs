@@ -1,0 +1,34 @@
+{
+    "$schema": "https://raw.githubusercontent.com/hougesen/mdsf/main/schemas/v0.11.0/mdsf.schema.json",
+    "languages": {
+        "go": "gofmt",
+        "javascript": [
+            [
+                "deno:fmt",
+                "prettier"
+            ]
+        ],
+        "json": [
+            [
+                "deno:fmt",
+                "prettier"
+            ]
+        ],
+        "python": "ruff:format",
+        "shell": [
+            [
+                "shfmt",
+                "beautysh"
+            ]
+        ],
+        "sql": "sqlfluff:format",
+        "toml": "toml-sort",
+        "typescript": [
+            [
+                "deno:fmt",
+                "prettier"
+            ]
+        ],
+        "yaml": "prettier"
+    }
+}
