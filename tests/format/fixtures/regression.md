@@ -4,3 +4,10 @@ Prevent regression with non-deflists: https://github.com/KyleKing/mdformat-mkdoc
 .
 ::: my_lib.core
 .
+Inline snippet with newline before closing backtick
+.
+`--8<-- "somesnippet.sh"
+`
+.
+`--8<-- "somesnippet.sh"`
+.
