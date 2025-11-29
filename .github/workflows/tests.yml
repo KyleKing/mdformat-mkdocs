@@ -84,9 +84,14 @@ jobs:
           uv tool install commitizen
           VERSION="${GITHUB_REF_NAME#v}"
           CHANGELOG=$(cz changelog "$VERSION" --dry-run)
+          PREV_TAG=$(git describe --tags --abbrev=0 "$GITHUB_REF^" 2>/dev/null || echo "")
           {
             echo 'body<<EOF'
             echo "$CHANGELOG"
+            if [ -n "$PREV_TAG" ]; then
+              echo ""
+              echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${GITHUB_REF_NAME}"
+            fi
             echo EOF
           } >> "$GITHUB_OUTPUT"
       - name: Generate GitHub Release Notes
