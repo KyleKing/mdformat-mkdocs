@@ -37,14 +37,22 @@ recommended = [
   "mdformat-config >= 0.2.1",
   "mdformat-footnote >= 0.1.1",
   "mdformat-front-matters >= 0.1.0",
-  "mdformat-gfm >=1.0.0; python_version >= '3.10'",
+  "mdformat-gfm >=1.0.0",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.0.1",
-  "mdformat-tables >=0.4.0; python_version < '3.10'",
   "mdformat-web >= 0.2.0",
   "mdformat-wikilink >= 0.2.0",
   # Patches https://github.com/lovesegfault/beautysh/issues/248 for Python 3.12
   "setuptools",
+]
+recommended-mdsf = [
+  # Keep in-sync with README
+  "mdformat-footnote >= 0.1.0",
+  "mdformat-front-matters >= 1.0.1",
+  "mdformat-gfm >=1.0.0",
+  "mdformat-hooks >= 0.1.1",
+  "mdformat-simple-breaks >= 0.0.1",
+  "mdformat-wikilink >= 0.2.0",
 ]
 test = [
   "beartype >= 0.21.0",

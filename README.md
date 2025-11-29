@@ -2,11 +2,6 @@
 
 [![Build Status][ci-badge]][ci-link] [![PyPI version][pypi-badge]][pypi-link]
 
-<!-- [![codecov.io][cov-badge]][cov-link]
-[cov-badge]: https://codecov.io/gh/executablebooks/mdformat-mkdocs/branch/main/graph/badge.svg
-[cov-link]: https://codecov.io/gh/executablebooks/mdformat-mkdocs
- -->
-
 An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](https://github.com/mkdocs/mkdocs) and packages commonly used with MkDocs ([mkdocs-material](https://squidfunk.github.io/mkdocs-material), [mkdocstrings](https://mkdocstrings.github.io), and [python-markdown](https://python-markdown.github.io))
 
 Supports:
@@ -41,16 +36,22 @@ See the example test files, [./tests/pre-commit-test.md](https://raw.githubuserc
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
-**Tip**: this package specifies an "extra" (`'recommended'`) for plugins that work well with typical documentation managed by `mkdocs`:
+### Optional Extras
 
-- [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
-- [mdformat-black](https://pypi.org/project/mdformat-black)
-- [mdformat-config](https://pypi.org/project/mdformat-config)
-- [mdformat-footnote](https://pypi.org/project/mdformat-footnote)
-- [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter))
-- [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
-- [mdformat-web](https://pypi.org/project/mdformat-web)
-- [mdformat-wikilink](https://github.com/tmr232/mdformat-wikilink)
+This package specifies two optional "extra" plugins (`'recommended'` and `'recommended-mdsf'` ) for plugins that work well with typical documentation managed by `mkdocs`:
+
+- For `'recommended'`:
+    - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
+    - [mdformat-config](https://pypi.org/project/mdformat-config)
+    - [mdformat-footnote](https://pypi.org/project/mdformat-footnote)
+    - [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter))
+    - [mdformat-gfm](https://github.com/hukkin/mdformat-gfm)
+    - [mdformat-ruff](https://github.com/Freed-Wu/mdformat-ruff)
+    - [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
+    - [mdformat-web](https://pypi.org/project/mdformat-web)
+    - [mdformat-wikilink](https://github.com/tmr232/mdformat-wikilink)
+- For `'recommended-mdsf'`:
+    - Instead of `mdformat-beautysh`, `mdformat-config`, `mdformat-ruff`, and `mdformat-web`, the "mdsf" extras install `mdformat-hooks`, which allows the use of `mdsf` for formatting code blocks in hundreds of languages using CLI formatters you already have installed; however, this requires extra configuration, so make sure to see the README: <https://github.com/KyleKing/mdformat-hooks>
 
 ### pre-commit/prek
 
@@ -62,6 +63,8 @@ repos:
       - id: mdformat
         additional_dependencies:
           - mdformat-mkdocs
+          # Or
+          # - "mdformat-mkdocs[recommended-mdsf]>=5.1.0"
           # Or
           # - "mdformat-mkdocs[recommended]"
 ```
