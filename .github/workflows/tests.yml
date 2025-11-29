@@ -67,6 +67,9 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for PyPI trusted publishing
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
@@ -75,7 +78,18 @@ jobs:
         run: uv build
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Generate changelog with commitizen
+        id: changelog
+        run: |
+          uv tool install commitizen
+          VERSION="${GITHUB_REF_NAME#v}"
+          CHANGELOG=$(cz changelog "$VERSION" --dry-run)
+          {
+            echo 'body<<EOF'
+            echo "$CHANGELOG"
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
       - name: Generate GitHub Release Notes
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          body: ${{ steps.changelog.outputs.body }}
