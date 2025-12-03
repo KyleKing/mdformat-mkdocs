@@ -28,6 +28,7 @@ def with_plugin(filename, plugins):
 @pytest.mark.parametrize(
     ("line", "title", "text", "expected", "plugins"),
     [
+        *with_plugin("angle_brackets_and_html.md", []),
         *with_plugin("material_admonitions.md", [material_admon_plugin]),
         *with_plugin(
             "material_content_tabs.md",
