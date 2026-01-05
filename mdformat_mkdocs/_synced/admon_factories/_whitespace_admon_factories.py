@@ -112,8 +112,8 @@ def parse_possible_whitespace_admon_factory(
     markers: set[str],
 ) -> Callable[[StateBlock, int, int, bool], AdmonitionData | bool]:
     expected_marker_len = 3  # Regardless of extra chars, block indent stays the same
-    marker_first_chars = {_m[0] for _m in markers}
-    max_marker_len = max(len(_m) for _m in markers)
+    marker_first_chars = {m_[0] for m_ in markers}
+    max_marker_len = max(len(m_) for m_ in markers)
 
     def parse_possible_whitespace_admon(
         state: StateBlock,

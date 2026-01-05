@@ -215,7 +215,7 @@ def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
 def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:
     """Render autorefs directly above a heading."""
     [*autorefs, heading] = node.children
-    lines = [_render_meta_content(_n, context) for _n in autorefs]
+    lines = [_render_meta_content(n_, context) for n_ in autorefs]
     lines.append(f"{heading.markup} {_render_inline_content(heading, context)}")
     return "\n".join(lines)
 

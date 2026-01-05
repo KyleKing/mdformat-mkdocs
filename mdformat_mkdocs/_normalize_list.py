@@ -422,7 +422,7 @@ def parse_text(
     ]
     # When both, code_indents take precedence
     block_indents = [
-        _c or _h for _c, _h in zip(code_indents, html_indents, strict=True)
+        c_ or h_ for c_, h_ in zip(code_indents, html_indents, strict=True)
     ]
     new_indents = [*starmap(_format_new_indent, zip(lines, block_indents, strict=True))]
 

@@ -14,6 +14,9 @@ backend = "pipx:pytest-watcher"
 version = "4.32.0"
 backend = "pipx:tox"
 
+[tools."pipx:tox".options]
+uvx_args = "--with tox-uv==1.29.0"
+
 [[tools.python]]
 version = "3.10.15"
 backend = "core:python"

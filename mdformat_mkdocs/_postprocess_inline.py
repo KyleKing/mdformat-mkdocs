@@ -76,5 +76,5 @@ def postprocess_list_wrap(
             else:
                 words.append(word)
                 wrapped_length = next_length + 1
-        return WRAP_POINT.join(_w for _w in words if _w)
+        return WRAP_POINT.join(w_ for w_ in words if w_)
     return f"{filler}{WRAP_POINT}{text}" if filler else text
