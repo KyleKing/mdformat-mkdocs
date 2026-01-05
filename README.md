@@ -72,7 +72,7 @@ repos:
 ### uvx
 
 ```sh
-uvx --with mdformat-mkdocs mdformat
+uvx --with=mdformat-mkdocs mdformat
 ```
 
 Or with pipx:

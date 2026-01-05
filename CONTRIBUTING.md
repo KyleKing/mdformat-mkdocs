@@ -58,7 +58,7 @@ ptw .
 Run the local code with `uv tool` (requires `uv` installed globally and first in `$PATH`, e.g. `brew install uv` or `mise use uv --global`)
 
 ```sh
-uv tool install 'mdformat>=0.7.19' --force --with=.
+uv tool install --force --with=. 'mdformat>=0.7.19'
 
 # Then navigate to a different directory and check that the editable version was installed
 cd ~
