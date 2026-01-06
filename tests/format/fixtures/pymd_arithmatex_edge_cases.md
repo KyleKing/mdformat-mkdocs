@@ -9,6 +9,62 @@ This is not math: $escaped$ and \\(also escaped\\).
 Literal dollar: I paid $5.00 for $3.00 worth.
 .
 
+Escaped Bracket Notation (Issue #72)
+.
+- \[test\]: value
+- \[label\]:content
+.
+- \[test\]: value
+- \[label\]:content
+.
+
+Escaped Brackets vs Math Brackets
+.
+Single-line escaped bracket: \[test\]: value
+
+Multi-line math block:
+
+\[
+a^2 + b^2 = c^2
+\]
+
+Math with label (space before parenthesis):
+
+\[
+E = mc^2
+\] (eq:einstein)
+
+Escaped bracket with letter: \[test\]x
+
+Math at end of line:
+
+\[
+x = y
+\]
+.
+Single-line escaped bracket: \[test\]: value
+
+Multi-line math block:
+
+\[
+a^2 + b^2 = c^2
+\]
+
+Math with label (space before parenthesis):
+
+\[
+E = mc^2
+\] (eq:einstein)
+
+Escaped bracket with letter: [test]x
+
+Math at end of line:
+
+\[
+x = y
+\]
+.
+
 Math in Lists
 .
 1. First item with math $x = y$
