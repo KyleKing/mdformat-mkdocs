@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## Fixing Issues (Test-Driven Development)
+
+1. **Add failing test** in `tests/format/fixtures/` (format: description, input, expected output separated by `.`)
+1. **Run test**: `tox -e test -- -vv`
+1. **Fix code**: implement minimal fix
+1. **Verify**: `tox -e test -- --snapshot-update`
+1. **Full suite**: `tox`
+
 ## Testing
 
 ```bash

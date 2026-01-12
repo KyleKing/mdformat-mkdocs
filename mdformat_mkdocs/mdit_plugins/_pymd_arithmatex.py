@@ -46,13 +46,21 @@ r"""Pattern to detect single-line \[...\] with content after closing bracket.
 
 This identifies escaped brackets like \[test\]: value (not math)"""
 
+_BACKTICK_IN_BRACKETS_RE = re.compile(r"^\\\[([^\n\r]*?`[^\n\r]*?)\\\]")
+r"""Pattern to detect single-line \[...\] with backticks in content.
+
+This identifies escaped brackets like \[`code`\] (not math), since backticks are not valid LaTeX."""
+
 _EXPECTED_WRAPPED_RULES = 2
 
 
 def _is_escaped_bracket(state: StateBlock, start_line: int) -> bool:
     r"""Check if \[...\] on this line is escaped brackets, not math.
 
-    Returns True if line starts with \[ and \] are on same line with non-whitespace after \].
+    Returns True if line starts with \[ and:
+    - \] are on same line with non-whitespace after \], OR
+    - Content between \[ and \] contains backticks (inline code)
+
     Only checks lines starting with \[ to avoid interfering with dollar math.
     """
     pos = state.bMarks[start_line] + state.tShift[start_line]
@@ -61,7 +69,11 @@ def _is_escaped_bracket(state: StateBlock, start_line: int) -> bool:
     line_start = state.src[pos : pos + 2]
     if line_start != r"\[":
         return False
-    return bool(_ESCAPED_BRACKET_RE.match(state.src[pos:]))
+    line_content = state.src[pos:]
+    return bool(
+        _ESCAPED_BRACKET_RE.match(line_content)
+        or _BACKTICK_IN_BRACKETS_RE.match(line_content)
+    )
 
 
 def pymd_arithmatex_plugin(md: MarkdownIt) -> None:

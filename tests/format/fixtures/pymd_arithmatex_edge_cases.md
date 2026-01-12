@@ -18,6 +18,15 @@ Escaped Bracket Notation (Issue #72)
 - \[label\]:content
 .
 
+Escaped Brackets with Inline Code (Issue #75)
+.
+- \[`pycodestyle`\] Some text
+- \[`ruff`\]: Another item
+.
+- \[`pycodestyle`\] Some text
+- \[`ruff`\]: Another item
+.
+
 Escaped Brackets vs Math Brackets
 .
 Single-line escaped bracket: \[test\]: value
