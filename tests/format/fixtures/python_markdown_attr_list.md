@@ -54,3 +54,13 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 
 </div>
 .
+Issue #74: Attribute list inside link text (icon shorthand with classes)
+.
+[:material-notebook-multiple:{ .lg .middle } Weekly Journal](journal/index.md)
+
+[:material-notebook-multiple:{: .lg .middle } Weekly Journal](journal/index.md)
+.
+[:material-notebook-multiple:{ .lg .middle } Weekly Journal](journal/index.md)
+
+[:material-notebook-multiple:{: .lg .middle } Weekly Journal](journal/index.md)
+.
