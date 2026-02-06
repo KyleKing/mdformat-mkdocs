@@ -65,14 +65,3 @@ Run `docker exec <container-name>` command
 .
 <p>Run <code>docker exec &lt;container-name&gt;</code> command</p>
 .
-
-
-Trailing space in inline code before horizontal rule
-.
-`test `
-
----
-.
-<p><code>test </code></p>
-<hr>
-.

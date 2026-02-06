@@ -22,6 +22,7 @@ fixtures = flatten(
         read_fixture_file(Path(__file__).parent / "fixtures" / fixture_path)
         for fixture_path in (
             "angle_brackets_and_html.md",
+            "inline_code_whitespace.md",
             "material_content_tabs.md",
             "material_deflist.md",
             "material_math.md",

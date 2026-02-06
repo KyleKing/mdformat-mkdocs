@@ -177,21 +177,48 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
 
 
 def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
-    r"""Render inline code.
+    r"""Render inline code, cleaning up whitespace from newline normalization.
 
-    Note: We do NOT strip trailing spaces because doing so would change the HTML
-    output, which violates mdformat's contract. Even if the trailing space comes
-    from a newline before the closing backtick (e.g., `code\n`), removing it
-    would change `<code>code </code>` to `<code>code</code>`.
+    `markdown-it` normalizes newlines in inline code to spaces. This can result in
+    unintended trailing spaces from original newlines before closing backticks.
+    Per mdformat's own logic, trailing spaces are only intentional if there are
+    also leading spaces. So we strip trailing spaces when there's no leading space.
 
-    See: https://github.com/KyleKing/mdformat-mkdocs/issues/34
+    Example: `code\n` (newline) → `code ` (parsed) → `code` (rendered)
+
+    **Important**: This is a best-effort heuristic that may change HTML output in
+    edge cases where trailing spaces are intentional (e.g., `test ` before `---`).
+    In such cases, the HTML will change from `<code>test </code>` to `<code>test</code>`.
+    If you encounter formatting failures due to HTML changes, you can use the
+    `--no-validate` CLI flag to disable HTML validation, or structure your markdown
+    differently (e.g., add a leading space to preserve trailing space: ` test `).
+
+    This resolves issues like:
+    https://github.com/KyleKing/mdformat-mkdocs/issues/34#issuecomment-3589835341
+
+    See comprehensive test coverage in tests/format/fixtures/inline_code_whitespace.md
 
     """
     default_renderer = DEFAULT_RENDERERS.get("code_inline")
     if default_renderer is None:
         return node.content
 
-    return default_renderer(node, context)
+    result = default_renderer(node, context)
+
+    # Only process single-backtick code (not double-backtick code with embedded backticks)
+    if not (result.startswith("`") and result.endswith("`") and "``" not in result):
+        return result
+
+    content = result[1:-1]  # Strip opening and closing backticks
+    has_leading_space = content.startswith(" ")
+    has_trailing_space = content.endswith(" ")
+
+    # Strip trailing space only if there's no leading space and content is not all whitespace
+    # This preserves the mdformat rule: spaces are only intentional when both are present
+    if has_trailing_space and not has_leading_space and content.strip():
+        return f"`{content.rstrip(' ')}`"
+
+    return result
 
 
 def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:

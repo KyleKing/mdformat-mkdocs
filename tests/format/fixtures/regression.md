@@ -9,15 +9,5 @@ Inline snippet with newline before closing backtick
 `--8<-- "somesnippet.sh"
 `
 .
-`--8<-- "somesnippet.sh" `
-.
-Trailing space in inline code before horizontal rule
-.
-`test `
-
----
-.
-`test `
-
-______________________________________________________________________
+`--8<-- "somesnippet.sh"`
 .
