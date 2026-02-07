@@ -177,50 +177,31 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
 
 
 def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
-    r"""Render inline code, cleaning up whitespace from newline normalization.
+    r"""Render inline code, preserving all whitespace.
 
-    `markdown-it` normalizes newlines in inline code to spaces. This can result in
-    unintended trailing spaces from original newlines before closing backticks.
-    Per mdformat's own logic, trailing spaces are only intentional if there are
-    also leading spaces. So we strip trailing spaces when there's no leading space.
+    Trailing spaces in inline code are preserved to ensure HTML stability and avoid
+    validation failures. While trailing spaces may sometimes result from markdown-it
+    normalizing newlines to spaces (e.g., `code\n` → `code `), we preserve them to
+    maintain HTML output consistency.
 
-    Example: `code\n` (newline) → `code ` (parsed) → `code` (rendered)
+    This approach prioritizes correctness over convenience:
+    - No HTML validation failures (https://github.com/KyleKing/mdformat-mkdocs/issues/77)
+    - Predictable behavior (what you write is what you get)
+    - Safe for all edge cases
 
-    **Important**: This is a best-effort heuristic that may change HTML output in
-    edge cases where trailing spaces are intentional (e.g., `test ` before `---`).
-    In such cases, the HTML will change from `<code>test </code>` to `<code>test</code>`.
-    If you encounter formatting failures due to HTML changes, you can use the
-    `--no-validate` CLI flag to disable HTML validation, or structure your markdown
-    differently (e.g., add a leading space to preserve trailing space: ` test `).
+    If unwanted trailing spaces appear (e.g., from newlines before closing backticks),
+    users should remove them manually rather than relying on automatic stripping that
+    could change HTML output unexpectedly.
 
-    Removing trailing spaces resolves issues like:
-    https://github.com/KyleKing/mdformat-mkdocs/issues/34#issuecomment-3589835341
-
-    But can cause issues with HTML validation like:
-    https://github.com/KyleKing/mdformat-mkdocs/issues/77
-
-    See comprehensive test coverage in tests/format/fixtures/inline_code_whitespace.md
+    Related issues:
+    - https://github.com/KyleKing/mdformat-mkdocs/issues/77
+    - https://github.com/KyleKing/mdformat-mkdocs/issues/34
     """
     default_renderer = DEFAULT_RENDERERS.get("code_inline")
     if default_renderer is None:
         return node.content
 
-    result = default_renderer(node, context)
-
-    # Only process single-backtick code (not double-backtick code with embedded backticks)
-    if not (result.startswith("`") and result.endswith("`") and "``" not in result):
-        return result
-
-    content = result[1:-1]  # Strip opening and closing backticks
-    has_leading_space = content.startswith(" ")
-    has_trailing_space = content.endswith(" ")
-
-    # Strip trailing space only if there's no leading space and content is not all whitespace
-    # This preserves the mdformat rule: spaces are only intentional when both are present
-    if has_trailing_space and not has_leading_space and content.strip():
-        return f"`{content.rstrip(' ')}`"
-
-    return result
+    return default_renderer(node, context)
 
 
 def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:

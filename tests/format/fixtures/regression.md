@@ -9,5 +9,5 @@ Inline snippet with newline before closing backtick
 `--8<-- "somesnippet.sh"
 `
 .
-`--8<-- "somesnippet.sh"`
+`--8<-- "somesnippet.sh" `
 .
