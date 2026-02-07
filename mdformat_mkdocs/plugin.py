@@ -193,11 +193,13 @@ def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
     `--no-validate` CLI flag to disable HTML validation, or structure your markdown
     differently (e.g., add a leading space to preserve trailing space: ` test `).
 
-    This resolves issues like:
+    Removing trailing spaces resolves issues like:
     https://github.com/KyleKing/mdformat-mkdocs/issues/34#issuecomment-3589835341
 
-    See comprehensive test coverage in tests/format/fixtures/inline_code_whitespace.md
+    But can cause issues with HTML validation like:
+    https://github.com/KyleKing/mdformat-mkdocs/issues/77
 
+    See comprehensive test coverage in tests/format/fixtures/inline_code_whitespace.md
     """
     default_renderer = DEFAULT_RENDERERS.get("code_inline")
     if default_renderer is None:
