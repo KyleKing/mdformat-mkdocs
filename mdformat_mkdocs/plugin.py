@@ -11,7 +11,7 @@ from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 
 from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
-from ._postprocess_inline import postprocess_list_wrap
+from ._postprocess_inline import postprocess_list_wrap as _postprocess_list_wrap
 from .mdit_plugins import (
     AMSMATH_BLOCK,
     DOLLARMATH_BLOCK,
@@ -395,10 +395,15 @@ RENDERERS: Mapping[str, Render] = {
 }
 
 
-normalize_list = partial(
-    unbounded_normalize_list,
-    check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
-)
+if TYPE_CHECKING:
+    normalize_list: Postprocess
+    postprocess_list_wrap: Postprocess
+else:
+    normalize_list = partial(
+        unbounded_normalize_list,
+        check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
+    )
+    postprocess_list_wrap = _postprocess_list_wrap
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike

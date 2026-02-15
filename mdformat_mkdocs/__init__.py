@@ -1,3 +1,4 @@
+# ruff: noqa: RUF067
 """An mdformat plugin for `mkdocs`."""
 
 __version__ = "5.1.4"
