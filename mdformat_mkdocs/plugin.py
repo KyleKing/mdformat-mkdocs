@@ -135,22 +135,21 @@ def _render_math_inline(node: RenderTreeNode, context: RenderContext) -> str:  #
     return f"${content}$"
 
 
-def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    """Render block math with original delimiters.
+def _strip_blockquote_markers(content: str) -> str:
+    """Strip blockquote markers from math block content.
 
-    Strips blockquote markers ("> ") from content when block math appears inside blockquotes.
-    markdown-it includes these markers in the content, but they should not be in the output.
+    markdown-it includes "> " prefixes when block math appears inside blockquotes.
     """
-    markup = node.markup
-    content = node.content
-
-    # Strip blockquote markers from each line if present
-    # When block math appears in blockquotes, markdown-it includes "> " in content
     lines = content.split("\n")
-    cleaned_lines = [
+    return "\n".join(
         line.removeprefix("> ") if line.startswith("> ") else line for line in lines
-    ]
-    cleaned_content = "\n".join(cleaned_lines).strip()
+    ).strip()
+
+
+def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
+    """Render block math with original delimiters."""
+    markup = node.markup
+    cleaned_content = _strip_blockquote_markers(node.content)
 
     if markup == "$$":
         return f"$$\n{cleaned_content}\n$$"
@@ -161,20 +160,10 @@ def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # 
 
 
 def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    """Render block math with equation label.
-
-    Strips blockquote markers ("> ") from content when block math appears inside blockquotes.
-    """
+    """Render block math with equation label."""
     markup = node.markup
-    content = node.content
-    label = node.info  # Label is stored in info field
-
-    # Strip blockquote markers from each line if present
-    lines = content.split("\n")
-    cleaned_lines = [
-        line.removeprefix("> ") if line.startswith("> ") else line for line in lines
-    ]
-    cleaned_content = "\n".join(cleaned_lines).strip()
+    label = node.info
+    cleaned_content = _strip_blockquote_markers(node.content)
 
     if markup == "$$":
         return f"$$\n{cleaned_content}\n$$ ({label})"
@@ -201,76 +190,27 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
     return inline.content
 
 
-def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
-    r"""Render inline code, preserving all whitespace.
-
-    Trailing spaces in inline code are preserved to ensure HTML stability and avoid
-    validation failures. While trailing spaces may sometimes result from markdown-it
-    normalizing newlines to spaces (e.g., `code\n` → `code `), we preserve them to
-    maintain HTML output consistency.
-
-    This approach prioritizes correctness over convenience:
-    - No HTML validation failures (https://github.com/KyleKing/mdformat-mkdocs/issues/77)
-    - Predictable behavior (what you write is what you get)
-    - Safe for all edge cases
-
-    If unwanted trailing spaces appear (e.g., from newlines before closing backticks),
-    users should remove them manually rather than relying on automatic stripping that
-    could change HTML output unexpectedly.
-
-    Related issues:
-    - https://github.com/KyleKing/mdformat-mkdocs/issues/77
-    - https://github.com/KyleKing/mdformat-mkdocs/issues/34
-    """
-    default_renderer = DEFAULT_RENDERERS.get("code_inline")
-    if default_renderer is None:
-        return node.content
-
-    return default_renderer(node, context)
-
-
 def _render_text(node: RenderTreeNode, context: RenderContext) -> str:
-    r"""Render text node, preserving escaped dollar signs when math is enabled.
+    r"""Re-escape dollar signs that mdformat core stripped.
 
-    When math support is enabled, dollar signs ($) become special delimiters. However,
-    mdformat core removes "unnecessary" backslash escapes during normalization. This
-    causes escaped dollar signs (\$) to become unescaped ($), which are then incorrectly
-    parsed as math delimiters instead of literal dollar signs.
-
-    This custom text renderer detects originally-escaped dollar signs by comparing the
-    text token content (escapes removed by mdformat) with the parent inline token
-    content (escapes preserved), and re-escapes them to prevent math parsing.
-
-    Example:
-        Input:     \$escaped\$
-        mdformat:  $escaped$  (escapes removed)
-        HTML:      <eq>escaped</eq>  (parsed as math - WRONG!)
-
-        With fix:  \$escaped\$  (escapes re-added)
-        HTML:      $escaped$  (literal text - CORRECT!)
+    mdformat removes "unnecessary" backslash escapes (\$ -> $), but with math enabled
+    those bare $ become math delimiters. Compares text content against the parent
+    inline token (which preserves backslashes) to detect and restore the escapes.
 
     Related: https://github.com/KyleKing/mdformat-mkdocs/issues/77
     """
-    # Use default renderer as baseline
     default_renderer = DEFAULT_RENDERERS.get("text")
     if default_renderer is None:
         return node.content
 
     text = default_renderer(node, context)
 
-    # Only process if math is enabled
     if cli_is_no_mkdocs_math(context.options):
         return text
 
-    # Detect originally-escaped dollar signs by comparing with parent inline token
-    # The parent inline token preserves backslashes, while the text token has them removed
     if node.parent and node.parent.type == "inline":
         parent_content = node.parent.content
-        # Find positions where $ appears in text but \$ appears in parent
-        # This indicates an originally-escaped dollar sign
         if "$" in text and r"\$" in parent_content:
-            # Re-escape dollar signs that were originally escaped
-            # Use negative lookbehind to avoid double-escaping
             text = re.sub(r"(?<!\\)\$", r"\$", text)
 
     return text
@@ -371,7 +311,6 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_title": render_admon_title,
     "admonition_mkdocs": add_extra_admon_newline,
     "admonition_mkdocs_title": render_admon_title,
-    "code_inline": _render_code_inline,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
     "dd": render_material_definition_body,

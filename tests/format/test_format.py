@@ -12,16 +12,15 @@ from markdown_it.utils import read_fixture_file
 from mdformat_mkdocs.plugin import update_mdit
 from tests.helpers import print_text
 
-# Known HTML stability limitations (not worth fixing)
-KNOWN_HTML_STABILITY_LIMITATIONS = {
-    "ReLU Function with Mixed Syntax (Issue #45)": "Cosmetic: Extra blank lines in math blocks",
-    "Math with Leading/Trailing Whitespace": "Cosmetic: Whitespace normalization around math delimiters",
-    "Examples from https://python-markdown.github.io/extensions/attr_list": "Structural: Attribute list rendering differences",
-    "Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https://github.com/KyleKing/mdformat-mkdocs/issues/4)": "Known mdformat core limitation (issue #371)",
-    "Table (squished by mdformat>=0.7.19)": "Known mdformat core behavior change in 0.7.19",
-    "or in a list somehow?": "Structural: Admonitions in lists rendering differences",
-    "Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/guides/isolating-segmentation-objects.md?plain=1#L148-L259)": "Complex: Nested content tabs edge case",
-    "Deterministic indents for HTML": "Cosmetic: HTML block indentation changes",
+KNOWN_HTML_STABILITY_LIMITATIONS: set[str] = {
+    "Deterministic indents for HTML",
+    "Examples from https://python-markdown.github.io/extensions/attr_list",
+    "Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/guides/isolating-segmentation-objects.md?plain=1#L148-L259)",
+    "Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https://github.com/KyleKing/mdformat-mkdocs/issues/4)",
+    "Math with Leading/Trailing Whitespace",
+    "or in a list somehow?",
+    "ReLU Function with Mixed Syntax (Issue #45)",
+    "Table (squished by mdformat>=0.7.19)",
 }
 
 T = TypeVar("T")
@@ -72,39 +71,22 @@ def test_format_fixtures(line, title, text, expected):
     ids=[f[1] for f in fixtures],
 )
 def test_format_html_stability(line, title, text, expected):
-    """Validate that formatting doesn't change HTML output.
-
-    This test ensures that mdformat-mkdocs preserves HTML semantics
-    when formatting markdown, preventing issues like #77 where
-    trailing spaces in inline code would cause validation failures.
-
-    Some test cases are marked as expected failures (xfail) to document known
-    limitations that are either cosmetic, mdformat core issues, or complex edge
-    cases not worth fixing.
-    """
-    # Mark known limitations as xfail
+    """Validate that formatting doesn't change HTML output."""
     if title in KNOWN_HTML_STABILITY_LIMITATIONS:
-        reason = KNOWN_HTML_STABILITY_LIMITATIONS[title]
-        pytest.xfail(f"Known limitation: {reason}")
+        pytest.xfail(f"Known limitation: {title}")
 
-    # Format the markdown
     output = mdformat.text(text, extensions={"mkdocs"})
 
-    # Setup markdown-it parser with mkdocs plugins
     md = MarkdownIt("commonmark")
-    # Initialize options with empty mdformat config to prevent KeyError
     md.options.update({"mdformat": {"plugin": {"mkdocs": {}}}})
     update_mdit(md)
     md.options["xhtmlOut"] = False
 
-    # Render both original and formatted to HTML
     original_html = md.render(text)
     formatted_html = md.render(output)
 
-    # HTML should be identical
     assert original_html.rstrip() == formatted_html.rstrip(), (
-        f"Formatting changed HTML output for '{title}'. "
-        f"This indicates that formatting is not HTML-stable.\n"
+        f"HTML changed for '{title}'.\n"
         f"Original markdown:\n{text}\n"
         f"Formatted markdown:\n{output}\n"
         f"Original HTML:\n{original_html}\n"
