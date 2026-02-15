@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import textwrap
 from functools import partial
 from typing import TYPE_CHECKING
@@ -135,28 +136,52 @@ def _render_math_inline(node: RenderTreeNode, context: RenderContext) -> str:  #
 
 
 def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    """Render block math with original delimiters."""
+    """Render block math with original delimiters.
+
+    Strips blockquote markers ("> ") from content when block math appears inside blockquotes.
+    markdown-it includes these markers in the content, but they should not be in the output.
+    """
     markup = node.markup
     content = node.content
+
+    # Strip blockquote markers from each line if present
+    # When block math appears in blockquotes, markdown-it includes "> " in content
+    lines = content.split("\n")
+    cleaned_lines = [
+        line.removeprefix("> ") if line.startswith("> ") else line for line in lines
+    ]
+    cleaned_content = "\n".join(cleaned_lines).strip()
+
     if markup == "$$":
-        return f"$$\n{content.strip()}\n$$"
+        return f"$$\n{cleaned_content}\n$$"
     if markup == "\\[":
-        return f"\\[\n{content.strip()}\n\\]"
+        return f"\\[\n{cleaned_content}\n\\]"
     # Fallback
-    return f"$$\n{content.strip()}\n$$"
+    return f"$$\n{cleaned_content}\n$$"
 
 
 def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
-    """Render block math with equation label."""
+    """Render block math with equation label.
+
+    Strips blockquote markers ("> ") from content when block math appears inside blockquotes.
+    """
     markup = node.markup
     content = node.content
     label = node.info  # Label is stored in info field
+
+    # Strip blockquote markers from each line if present
+    lines = content.split("\n")
+    cleaned_lines = [
+        line.removeprefix("> ") if line.startswith("> ") else line for line in lines
+    ]
+    cleaned_content = "\n".join(cleaned_lines).strip()
+
     if markup == "$$":
-        return f"$$\n{content.strip()}\n$$ ({label})"
+        return f"$$\n{cleaned_content}\n$$ ({label})"
     if markup == "\\[":
-        return f"\\[\n{content.strip()}\n\\] ({label})"
+        return f"\\[\n{cleaned_content}\n\\] ({label})"
     # Fallback
-    return f"$$\n{content.strip()}\n$$ ({label})"
+    return f"$$\n{cleaned_content}\n$$ ({label})"
 
 
 def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
@@ -202,6 +227,53 @@ def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
         return node.content
 
     return default_renderer(node, context)
+
+
+def _render_text(node: RenderTreeNode, context: RenderContext) -> str:
+    r"""Render text node, preserving escaped dollar signs when math is enabled.
+
+    When math support is enabled, dollar signs ($) become special delimiters. However,
+    mdformat core removes "unnecessary" backslash escapes during normalization. This
+    causes escaped dollar signs (\$) to become unescaped ($), which are then incorrectly
+    parsed as math delimiters instead of literal dollar signs.
+
+    This custom text renderer detects originally-escaped dollar signs by comparing the
+    text token content (escapes removed by mdformat) with the parent inline token
+    content (escapes preserved), and re-escapes them to prevent math parsing.
+
+    Example:
+        Input:     \$escaped\$
+        mdformat:  $escaped$  (escapes removed)
+        HTML:      <eq>escaped</eq>  (parsed as math - WRONG!)
+
+        With fix:  \$escaped\$  (escapes re-added)
+        HTML:      $escaped$  (literal text - CORRECT!)
+
+    Related: https://github.com/KyleKing/mdformat-mkdocs/issues/77
+    """
+    # Use default renderer as baseline
+    default_renderer = DEFAULT_RENDERERS.get("text")
+    if default_renderer is None:
+        return node.content
+
+    text = default_renderer(node, context)
+
+    # Only process if math is enabled
+    if cli_is_no_mkdocs_math(context.options):
+        return text
+
+    # Detect originally-escaped dollar signs by comparing with parent inline token
+    # The parent inline token preserves backslashes, while the text token has them removed
+    if node.parent and node.parent.type == "inline":
+        parent_content = node.parent.content
+        # Find positions where $ appears in text but \$ appears in parent
+        # This indicates an originally-escaped dollar sign
+        if "$" in text and r"\$" in parent_content:
+            # Re-escape dollar signs that were originally escaped
+            # Use negative lookbehind to avoid double-escaping
+            text = re.sub(r"(?<!\\)\$", r"\$", text)
+
+    return text
 
 
 def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:
@@ -302,9 +374,10 @@ RENDERERS: Mapping[str, Render] = {
     "code_inline": _render_code_inline,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
+    "dd": render_material_definition_body,
     "dl": render_material_definition_list,
     "dt": render_material_definition_term,
-    "dd": render_material_definition_body,
+    "text": _render_text,
     # Math support (from mdit-py-plugins)
     DOLLARMATH_INLINE: _render_math_inline,
     DOLLARMATH_BLOCK: _render_math_block,
@@ -323,7 +396,7 @@ RENDERERS: Mapping[str, Render] = {
 
 
 normalize_list = partial(
-    unbounded_normalize_list,  # type: ignore[has-type]
+    unbounded_normalize_list,
     check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
 )
 
@@ -334,7 +407,7 @@ normalize_list = partial(
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "inline": postprocess_list_wrap,  # type: ignore[has-type]
+    "inline": postprocess_list_wrap,
     "ordered_list": normalize_list,
     "paragraph": escape_deflist,
 }
