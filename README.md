@@ -32,6 +32,23 @@ Supports:
 - [Python Markdown "Snippets"\*](https://facelessuser.github.io/pymdown-extensions/extensions/snippets)
     - \*Note: the markup (HTML) renders the plain text without implementing the snippet logic. I'm open to contributions if anyone needs full support for snippets
 
+### Features with Implicit Support
+
+The following MkDocs/Material/PyMdown syntax passes through mdformat-mkdocs unchanged — it is not modified or corrupted, but it is also not actively normalized:
+
+- [PyMdown Keys](https://facelessuser.github.io/pymdown-extensions/extensions/keys/) — `++ctrl+alt+del++` (not a markdown construct, preserved as-is)
+- [PyMdown Critic Markup](https://facelessuser.github.io/pymdown-extensions/extensions/critic/) — `{--deleted--}`, `{++added++}`, `{~~old~>new~~}`, `{==highlight==}`, `{>>comment<<}`
+- [PyMdown Highlight](https://facelessuser.github.io/pymdown-extensions/extensions/mark/) — `==marked text==`
+- [PyMdown Caret / Tilde](https://facelessuser.github.io/pymdown-extensions/extensions/caret/) — `H^2^O`, `CH~3~OH`
+- [PyMdown Emoji](https://facelessuser.github.io/pymdown-extensions/extensions/emoji/) — `:smile:`, `:material-icon:`
+- [PyMdown InlineHilite](https://facelessuser.github.io/pymdown-extensions/extensions/inlinehilite/) — language hints inside backtick spans (`:::python code`) are never modified
+- [PyMdown SmartSymbols](https://facelessuser.github.io/pymdown-extensions/extensions/smartsymbols/) — `(c)`, `(tm)`, `--`, `-->` are plain ASCII in source and not touched
+- [PyMdown MagicLink](https://facelessuser.github.io/pymdown-extensions/extensions/magiclink/) — `@username`, `#123` are plain text and pass through
+- [Material Grids](https://squidfunk.github.io/mkdocs-material/reference/grids/) — `<div class="grid cards" markdown>` is an HTML block; content is preserved but markdown inside is not reformatted
+- [Mermaid / Superfences](https://squidfunk.github.io/mkdocs-material/reference/diagrams/) — diagram code inside fenced blocks is never modified
+
+**Note on [PyMdown ProgressBar](https://facelessuser.github.io/pymdown-extensions/extensions/progressbar/)**: The syntax `[=50% "50%"]` resembles an undefined link reference and will be escaped to `\[=50% "50%"\]` by default. Use `--ignore-missing-references` to preserve it, or avoid this extension if you use mdformat without that flag.
+
 See the example test files, [./tests/pre-commit-test.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/pre-commit-test.md) and [./tests/format/fixtures.md](https://raw.githubusercontent.com/KyleKing/mdformat-mkdocs/main/tests/format/fixtures.md)
 
 ## `mdformat` Usage
