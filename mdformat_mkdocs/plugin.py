@@ -190,6 +190,29 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
     return inline.content
 
 
+_ESCAPED_LINK_SPACED_URL = re.compile(r"\\\[([^\]]*)\\\]\(([^)]*[ ][^)]*)\)")
+
+
+def _fix_links_with_spaced_urls(
+    text: str,
+    node: RenderTreeNode,  # noqa: ARG001
+    context: RenderContext,  # noqa: ARG001
+) -> str:
+    """Rewrite escaped links with space-containing URLs to angle-bracket syntax.
+
+    CommonMark requires link destinations with spaces to use angle brackets.
+    When markdown-it fails to parse [text](url with space) as a link, mdformat
+    escapes the brackets. Detects and repairs those cases.
+
+    Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/80
+
+    """
+    return _ESCAPED_LINK_SPACED_URL.sub(
+        lambda m: f"[{m.group(1)}](<{m.group(2)}>)",
+        text,
+    )
+
+
 def _render_text(node: RenderTreeNode, context: RenderContext) -> str:
     r"""Re-escape dollar signs that mdformat core stripped.
 
@@ -336,13 +359,22 @@ RENDERERS: Mapping[str, Render] = {
 
 if TYPE_CHECKING:
     normalize_list: Postprocess
-    postprocess_list_wrap: Postprocess
+    postprocess_inline: Postprocess
 else:
     normalize_list = partial(
         unbounded_normalize_list,
         check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
     )
-    postprocess_list_wrap = _postprocess_list_wrap
+
+    def postprocess_inline(
+        text: str,
+        node: RenderTreeNode,
+        context: RenderContext,
+    ) -> str:
+        """Run all inline postprocessors in sequence."""
+        text = _postprocess_list_wrap(text, node, context)
+        return _fix_links_with_spaced_urls(text, node, context)
+
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike
@@ -351,7 +383,7 @@ else:
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "inline": postprocess_list_wrap,
+    "inline": postprocess_inline,
     "ordered_list": normalize_list,
     "paragraph": escape_deflist,
 }

@@ -15,6 +15,7 @@ from tests.helpers import print_text
 KNOWN_HTML_STABILITY_LIMITATIONS: set[str] = {
     "Deterministic indents for HTML",
     "Examples from https://python-markdown.github.io/extensions/attr_list",
+    "Issue #80: Button link with space in URL (invalid escaping of square brackets)",
     "Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/guides/isolating-segmentation-objects.md?plain=1#L148-L259)",
     "Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https://github.com/KyleKing/mdformat-mkdocs/issues/4)",
     "Math with Leading/Trailing Whitespace",
