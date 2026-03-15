@@ -15,6 +15,8 @@ Supports:
 - [MkDocs-Material Content Tabs\*](https://squidfunk.github.io/mkdocs-material/reference/content-tabs)
     - \*Note: the markup (HTML) rendered by this plugin is sufficient for formatting but not for viewing in a browser. Please open an issue if you have a need to generate valid HTML.
 - [MkDocs-Material Definition Lists](https://squidfunk.github.io/mkdocs-material/reference/lists/#using-definition-lists)
+- [mkdocstrings Injection Blocks](https://mkdocstrings.github.io/usage/)
+    - Preserves `:::` identifier blocks and their indented YAML options verbatim
 - [mkdocstrings Anchors (autorefs)](https://mkdocstrings.github.io/autorefs/#markdown-anchors)
 - [mkdocstrings Cross-References](https://mkdocstrings.github.io/usage/#cross-references)
 - [Python Markdown "Abbreviations"\*](https://squidfunk.github.io/mkdocs-material/reference/tooltips/#adding-abbreviations)

@@ -20,6 +20,7 @@ from .mdit_plugins import (
     MKDOCSTRINGS_AUTOREFS_PREFIX,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
+    MKDOCSTRINGS_INJECTION_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
@@ -31,6 +32,7 @@ from .mdit_plugins import (
     material_deflist_plugin,
     mkdocstrings_autorefs_plugin,
     mkdocstrings_crossreference_plugin,
+    mkdocstrings_injection_plugin,
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
     pymd_arithmatex_plugin,
@@ -109,6 +111,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(material_content_tabs_plugin)
     mdit.use(material_deflist_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
+    mdit.use(mkdocstrings_injection_plugin)
     mdit.use(pymd_abbreviations_plugin)
     mdit.use(pymd_admon_plugin)
     mdit.use(pymd_snippet_plugin)
@@ -350,6 +353,7 @@ RENDERERS: Mapping[str, Render] = {
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,
+    MKDOCSTRINGS_INJECTION_PREFIX: _render_node_content,
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX: _render_heading_autoref,
     PYMD_ABBREVIATIONS_PREFIX: _render_inline_content,
     PYMD_SNIPPET_PREFIX: _render_inline_content,
