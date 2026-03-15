@@ -4,9 +4,9 @@ This is not math: \$escaped\$ and \\(also escaped\\).
 
 Literal dollar: I paid \$5.00 for \$3.00 worth.
 .
-This is not math: $escaped$ and \\(also escaped\\).
+This is not math: \$escaped\$ and \\(also escaped\\).
 
-Literal dollar: I paid $5.00 for $3.00 worth.
+Literal dollar: I paid \$5.00 for \$3.00 worth.
 .
 
 Escaped Bracket Notation (Issue #72)
@@ -125,8 +125,7 @@ Math in Blockquotes
 > The full equation:
 >
 > $$
-> > E = mc^2
-> >
+> E = mc^2
 > $$
 .
 

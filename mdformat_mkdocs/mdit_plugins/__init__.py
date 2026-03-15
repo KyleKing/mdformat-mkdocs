@@ -21,6 +21,10 @@ from ._mkdocstrings_crossreference import (
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX,
     mkdocstrings_crossreference_plugin,
 )
+from ._mkdocstrings_injection import (
+    MKDOCSTRINGS_INJECTION_PREFIX,
+    mkdocstrings_injection_plugin,
+)
 from ._pymd_abbreviations import PYMD_ABBREVIATIONS_PREFIX, pymd_abbreviations_plugin
 from ._pymd_admon import pymd_admon_plugin
 from ._pymd_arithmatex import (
@@ -48,6 +52,7 @@ __all__ = (
     "MKDOCSTRINGS_AUTOREFS_PREFIX",
     "MKDOCSTRINGS_CROSSREFERENCE_PREFIX",
     "MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX",
+    "MKDOCSTRINGS_INJECTION_PREFIX",
     "PYMD_ABBREVIATIONS_PREFIX",
     "PYMD_CAPTIONS_PREFIX",
     "PYMD_SNIPPET_PREFIX",
@@ -59,6 +64,7 @@ __all__ = (
     "material_deflist_plugin",
     "mkdocstrings_autorefs_plugin",
     "mkdocstrings_crossreference_plugin",
+    "mkdocstrings_injection_plugin",
     "pymd_abbreviations_plugin",
     "pymd_admon_plugin",
     "pymd_arithmatex_plugin",

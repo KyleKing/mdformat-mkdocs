@@ -33,6 +33,26 @@ def _python_markdown_attr_list(state: StateInline, silent: bool) -> bool:
     if state.pos > 0 and state.src[state.pos - 1] == "\\":
         return False
 
+    # Check if we're potentially inside a link by looking for an unclosed '['
+    # before us and a '](' after the match
+    if state.linkLevel > 0:
+        return False
+
+    # Look backwards for unclosed '['
+    search_start = max(0, state.pos - 100)  # Limit backwards search
+    text_before = state.src[search_start : state.pos]
+    open_brackets = text_before.count("[") - text_before.count("]")
+    if open_brackets > 0:
+        # We might be inside a link, check if there's '](' after our match
+        match_end_pos = state.pos + match.end()
+        if match_end_pos < len(state.src):
+            lookahead = state.src[
+                match_end_pos : min(match_end_pos + 100, len(state.src))
+            ]
+            if "](" in lookahead:
+                # Very likely inside link text, don't match
+                return False
+
     if silent:
         return True
 
