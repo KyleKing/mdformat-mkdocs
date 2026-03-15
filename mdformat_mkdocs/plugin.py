@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import textwrap
 from functools import partial
 from typing import TYPE_CHECKING
@@ -10,7 +11,7 @@ from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 
 from ._helpers import ContextOptions, get_conf
 from ._normalize_list import normalize_list as unbounded_normalize_list
-from ._postprocess_inline import postprocess_list_wrap
+from ._postprocess_inline import postprocess_list_wrap as _postprocess_list_wrap
 from .mdit_plugins import (
     AMSMATH_BLOCK,
     DOLLARMATH_BLOCK,
@@ -134,29 +135,42 @@ def _render_math_inline(node: RenderTreeNode, context: RenderContext) -> str:  #
     return f"${content}$"
 
 
+def _strip_blockquote_markers(content: str) -> str:
+    """Strip blockquote markers from math block content.
+
+    markdown-it includes "> " prefixes when block math appears inside blockquotes.
+    """
+    lines = content.split("\n")
+    return "\n".join(
+        line.removeprefix("> ") if line.startswith("> ") else line for line in lines
+    ).strip()
+
+
 def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render block math with original delimiters."""
     markup = node.markup
-    content = node.content
+    cleaned_content = _strip_blockquote_markers(node.content)
+
     if markup == "$$":
-        return f"$$\n{content.strip()}\n$$"
+        return f"$$\n{cleaned_content}\n$$"
     if markup == "\\[":
-        return f"\\[\n{content.strip()}\n\\]"
+        return f"\\[\n{cleaned_content}\n\\]"
     # Fallback
-    return f"$$\n{content.strip()}\n$$"
+    return f"$$\n{cleaned_content}\n$$"
 
 
 def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render block math with equation label."""
     markup = node.markup
-    content = node.content
-    label = node.info  # Label is stored in info field
+    label = node.info
+    cleaned_content = _strip_blockquote_markers(node.content)
+
     if markup == "$$":
-        return f"$$\n{content.strip()}\n$$ ({label})"
+        return f"$$\n{cleaned_content}\n$$ ({label})"
     if markup == "\\[":
-        return f"\\[\n{content.strip()}\n\\] ({label})"
+        return f"\\[\n{cleaned_content}\n\\] ({label})"
     # Fallback
-    return f"$$\n{content.strip()}\n$$ ({label})"
+    return f"$$\n{cleaned_content}\n$$ ({label})"
 
 
 def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
@@ -176,40 +190,30 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
     return inline.content
 
 
-def _render_code_inline(node: RenderTreeNode, context: RenderContext) -> str:
-    r"""Render inline code, cleaning up whitespace from newline normalization.
+def _render_text(node: RenderTreeNode, context: RenderContext) -> str:
+    r"""Re-escape dollar signs that mdformat core stripped.
 
-    `markdown-it` normalizes newlines in inline code to spaces. This can result in
-    unintended trailing spaces from original newlines before closing backticks.
-    Per mdformat's own logic, trailing spaces are only intentional if there are
-    also leading spaces. So we strip trailing spaces when there's no leading space.
+    mdformat removes "unnecessary" backslash escapes (\$ -> $), but with math enabled
+    those bare $ become math delimiters. Compares text content against the parent
+    inline token (which preserves backslashes) to detect and restore the escapes.
 
-    Example: `code\n` (newline) → `code ` (parsed) → `code` (rendered)
-
-    This could break at any time, so this is a best effort to resolve issues like:
-    https://github.com/KyleKing/mdformat-mkdocs/issues/34#issuecomment-3589835341
-
+    Related: https://github.com/KyleKing/mdformat-mkdocs/issues/77
     """
-    default_renderer = DEFAULT_RENDERERS.get("code_inline")
+    default_renderer = DEFAULT_RENDERERS.get("text")
     if default_renderer is None:
         return node.content
 
-    result = default_renderer(node, context)
+    text = default_renderer(node, context)
 
-    # Only process single-backtick code (not double-backtick code with embedded backticks)
-    if not (result.startswith("`") and result.endswith("`") and "``" not in result):
-        return result
+    if cli_is_no_mkdocs_math(context.options):
+        return text
 
-    content = result[1:-1]  # Strip opening and closing backticks
-    has_leading_space = content.startswith(" ")
-    has_trailing_space = content.endswith(" ")
+    if node.parent and node.parent.type == "inline":
+        parent_content = node.parent.content
+        if "$" in text and r"\$" in parent_content:
+            text = re.sub(r"(?<!\\)\$", r"\$", text)
 
-    # Strip trailing space only if there's no leading space and content is not all whitespace
-    # This preserves the mdformat rule: spaces are only intentional when both are present
-    if has_trailing_space and not has_leading_space and content.strip():
-        return f"`{content.rstrip(' ')}`"
-
-    return result
+    return text
 
 
 def _render_heading_autoref(node: RenderTreeNode, context: RenderContext) -> str:
@@ -307,12 +311,12 @@ RENDERERS: Mapping[str, Render] = {
     "admonition_title": render_admon_title,
     "admonition_mkdocs": add_extra_admon_newline,
     "admonition_mkdocs_title": render_admon_title,
-    "code_inline": _render_code_inline,
     "content_tab_mkdocs": add_extra_admon_newline,
     "content_tab_mkdocs_title": render_admon_title,
+    "dd": render_material_definition_body,
     "dl": render_material_definition_list,
     "dt": render_material_definition_term,
-    "dd": render_material_definition_body,
+    "text": _render_text,
     # Math support (from mdit-py-plugins)
     DOLLARMATH_INLINE: _render_math_inline,
     DOLLARMATH_BLOCK: _render_math_block,
@@ -330,10 +334,15 @@ RENDERERS: Mapping[str, Render] = {
 }
 
 
-normalize_list = partial(
-    unbounded_normalize_list,  # type: ignore[has-type]
-    check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
-)
+if TYPE_CHECKING:
+    normalize_list: Postprocess
+    postprocess_list_wrap: Postprocess
+else:
+    normalize_list = partial(
+        unbounded_normalize_list,
+        check_if_align_semantic_breaks_in_lists=cli_is_align_semantic_breaks_in_lists,
+    )
+    postprocess_list_wrap = _postprocess_list_wrap
 
 # A mapping from `RenderTreeNode.type` to a `Postprocess` that does
 # postprocessing for the output of the `Render` function. Unlike
@@ -342,7 +351,7 @@ normalize_list = partial(
 # will run in series.
 POSTPROCESSORS: Mapping[str, Postprocess] = {
     "bullet_list": normalize_list,
-    "inline": postprocess_list_wrap,  # type: ignore[has-type]
+    "inline": postprocess_list_wrap,
     "ordered_list": normalize_list,
     "paragraph": escape_deflist,
 }
