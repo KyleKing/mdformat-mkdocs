@@ -52,6 +52,8 @@ coverage.xml
 *.cover
 *.py.cover
 .hypothesis/
+!.hypothesis/examples/
+!.hypothesis/examples/*
 .pytest_cache/
 cover/
 
@@ -218,3 +220,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Git worktrees
+.worktrees/
