@@ -45,6 +45,20 @@ tox -e ruff -- --unsafe-fixes
 tox -e type
 ```
 
+## Canary Testing (Real Downstream Repos)
+
+```bash
+# Run mdformat --check against all tracked downstream repos
+tox -e canary
+
+# Test a subset by name
+tox -e canary -- uv ruff
+```
+
+Clones real consumer repos (ruff, uv, vizro, etc.) via git sparse checkout and runs
+`mdformat --check` against their docs. Not in the default `tox` run — invoke explicitly
+before releasing to catch integration regressions that synthetic fixtures miss.
+
 ## Pre-commit Hook Testing
 
 ```bash

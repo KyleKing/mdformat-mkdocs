@@ -184,6 +184,13 @@ isolated_build = true
 requires = ["tox>=4.32.0"]
 skip_missing_interpreters = false
 
+[tool.tox.env.canary]
+basepython = ["py314"]
+changedir = "{tox_root}"
+commands = [["python", "scripts/canary.py", {default = [], extend = true, replace = "posargs"}]]
+description = "Run mdformat --check against real downstream repos. Optionally specify: '-- ruff uv' to test a subset."
+skip_install = false
+
 [tool.tox.env.cz]
 basepython = ["py314"]
 commands = [["cz", "bump", {default = [], extend = true, replace = "posargs"}]]
