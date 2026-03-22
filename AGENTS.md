@@ -48,16 +48,27 @@ tox -e type
 ## Canary Testing (Real Downstream Repos)
 
 ```bash
-# Run mdformat --check against all tracked downstream repos
+# Run idempotency checks against all tracked downstream repos
 tox -e canary
 
 # Test a subset by name
 tox -e canary -- uv ruff
 ```
 
-Clones real consumer repos (ruff, uv, vizro, etc.) via git sparse checkout and runs
-`mdformat --check` against their docs. Not in the default `tox` run — invoke explicitly
-before releasing to catch integration regressions that synthetic fixtures miss.
+Clones real consumer repos via git sparse checkout and runs a two-pass idempotency check: format with mdformat once, format again, compare. Not in the default `tox` run — invoke explicitly before releasing to catch crashes or unstable output on real MkDocs content.
+
+Repo inventory (see `scripts/canary.py` for full details and excludes):
+
+| Repo                    | Uses mdformat-mkdocs?       | Notes                                                                                 |
+| ----------------------- | --------------------------- | ------------------------------------------------------------------------------------- |
+| astral-sh/ruff          | No                          | Smoke test only                                                                       |
+| roboflow/supervision    | Yes (`>=2.1.0`, `--number`) | `changelog.md` and `deprecated.md` excluded (mirroring their own pre-commit excludes) |
+| astral-sh/ty            | No                          | Smoke test only                                                                       |
+| ultralytics/ultralytics | No                          | Smoke test only                                                                       |
+| astral-sh/uv            | No                          | Smoke test only                                                                       |
+| mckinsey/vizro          | No                          | Smoke test only                                                                       |
+
+To update the table: `git -C .tox/canary/tmp/<name> show HEAD:.pre-commit-config.yaml`
 
 ## Pre-commit Hook Testing
 

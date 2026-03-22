@@ -1,11 +1,14 @@
-"""Run mdformat --check against real downstream repos (canary testing)."""
+"""Run mdformat idempotency checks against real downstream repos (canary testing)."""
 
 from __future__ import annotations
 
+import difflib
 import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+
+import mdformat
 
 
 @dataclass(frozen=True)
@@ -13,6 +16,7 @@ class Repo:
     name: str
     url: str
     patterns: tuple[str, ...]
+    excludes: tuple[str, ...] = ()
 
     @property
     def display(self) -> str:
@@ -21,21 +25,76 @@ class Repo:
 
 
 @dataclass(frozen=True)
+class FileResult:
+    path: Path
+    error: str | None = None
+    diff: str | None = None
+
+    @property
+    def passed(self) -> bool:
+        return self.error is None and self.diff is None
+
+
+@dataclass(frozen=True)
 class CheckResult:
     repo: Repo
-    passed: bool
-    output: str
+    file_results: tuple[FileResult, ...]
+
+    @property
+    def passed(self) -> bool:
+        return all(r.passed for r in self.file_results)
+
+    @property
+    def output(self) -> str:
+        lines: list[str] = []
+        for result in self.file_results:
+            if result.error:
+                lines.append(f"Error: {result.path}")
+                lines.append(f"  {result.error}")
+            elif result.diff:
+                lines.append(f"Not idempotent: {result.path}")
+                lines.extend(f"  {line}" for line in result.diff.splitlines()[:40])
+        return "\n".join(lines)
 
 
 _CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "tmp"
 
+# Each entry documents whether the repo uses mdformat-mkdocs and how.
+# This context drives exclude decisions — if a repo excludes files from their
+# own mdformat run, we mirror that here so canary tracks what they actually format.
+#
+# Repos that don't use mdformat are included as idempotency smoke tests: we
+# verify our plugin doesn't crash or produce unstable output on real MkDocs content,
+# even if that content has never been run through mdformat.
+#
+# To update: run `git -C .tox/canary/tmp/<name> show HEAD:.pre-commit-config.yaml`
+# and check for mdformat hooks + their args/excludes.
 _REPOS = [
-    Repo("ruff",        "https://github.com/astral-sh/ruff",          ("docs/**/*.md",)),
-    Repo("supervision", "https://github.com/roboflow/supervision",     ("docs/**/*.md",)),
-    Repo("ty",          "https://github.com/astral-sh/ty",            ("docs/**/*.md",)),
+    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
+    Repo("ruff", "https://github.com/astral-sh/ruff", ("docs/**/*.md",)),
+
+    # Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0).
+    # Explicitly excludes changelog.md and deprecated.md from their own hook — both
+    # contain code blocks with embedded triple-backtick strings (e.g. """```json...""")
+    # that trigger an idempotency edge case. Mirror their excludes here.
+    Repo(
+        "supervision",
+        "https://github.com/roboflow/supervision",
+        ("docs/**/*.md",),
+        excludes=("docs/changelog.md", "docs/deprecated.md"),
+    ),
+
+    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
+    Repo("ty", "https://github.com/astral-sh/ty", ("docs/**/*.md",)),
+
+    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("ultralytics", "https://github.com/ultralytics/ultralytics", ("docs/**/*.md",)),
-    Repo("uv",          "https://github.com/astral-sh/uv",            ("docs/**/*.md",)),
-    Repo("vizro",       "https://github.com/mckinsey/vizro",          ("docs/**/*.md",)),
+
+    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
+    Repo("uv", "https://github.com/astral-sh/uv", ("docs/**/*.md",)),
+
+    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
+    Repo("vizro", "https://github.com/mckinsey/vizro", ("docs/**/*.md",)),
 ]
 
 
@@ -64,17 +123,50 @@ def _clone_or_pull(repo: Repo, target_dir: Path) -> None:
         )
 
 
+def _collect_files(repo: Repo, target_dir: Path) -> list[Path]:
+    """Expand glob patterns and filter excludes, returning sorted file list."""
+    included: set[Path] = set()
+    for pattern in repo.patterns:
+        included.update(target_dir.glob(pattern))
+
+    excluded: set[Path] = set()
+    for pattern in repo.excludes:
+        excluded.update(target_dir.glob(pattern))
+
+    return sorted(included - excluded)
+
+
+def _check_file(path: Path) -> FileResult:
+    """Verify mdformat produces idempotent output for a single file."""
+    try:
+        original = path.read_text(encoding="utf-8")
+    except Exception as err:
+        return FileResult(path=path, error=f"read error: {err}")
+
+    try:
+        pass1 = mdformat.text(original, extensions={"mkdocs"})
+        pass2 = mdformat.text(pass1, extensions={"mkdocs"})
+    except Exception as err:
+        return FileResult(path=path, error=f"mdformat error: {err}")
+
+    if pass1 == pass2:
+        return FileResult(path=path)
+
+    diff = "".join(difflib.unified_diff(
+        pass1.splitlines(keepends=True),
+        pass2.splitlines(keepends=True),
+        fromfile=f"{path} (pass 1)",
+        tofile=f"{path} (pass 2)",
+        n=3,
+    ))
+    return FileResult(path=path, diff=diff)
+
+
 def _check_repo(repo: Repo, target_dir: Path) -> CheckResult:
-    result = subprocess.run(
-        [sys.executable, "-m", "mdformat", "--check", "--extension", "mkdocs",
-         str(target_dir)],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
+    files = _collect_files(repo, target_dir)
     return CheckResult(
         repo=repo,
-        passed=(result.returncode == 0),
-        output=result.stdout.decode(),
+        file_results=tuple(_check_file(f) for f in files),
     )
 
 
@@ -98,11 +190,13 @@ def main(argv: list[str]) -> None:
     print("--- Canary Results ---")
     for result in results:
         label = "PASS" if result.passed else "FAIL"
-        print(f"{label}  {result.repo.display}")
+        failures = [r for r in result.file_results if not r.passed]
+        suffix = f" ({len(failures)} file(s))" if failures else ""
+        print(f"{label}  {result.repo.display}{suffix}")
         if not result.passed:
-            lines = result.output.splitlines()[:20]
-            if lines:
-                for line in lines:
+            output = result.output
+            if output:
+                for line in output.splitlines()[:30]:
                     print(f"      {line}")
             else:
                 print("      (no output)")
