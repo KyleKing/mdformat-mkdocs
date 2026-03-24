@@ -71,3 +71,10 @@ Issue #80: Button link with space in URL (invalid escaping of square brackets)
 .
 [:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
 .
+
+Issue #80: Button link with angle-bracket URL (space must not be percent-encoded)
+.
+[:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
+.
+[:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
+.

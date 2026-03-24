@@ -194,26 +194,50 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
 
 
 _ESCAPED_LINK_SPACED_URL = re.compile(r"\\\[([^\]]*)\\\]\(([^)]*[ ][^)]*)\)")
+_PERCENT_ENCODED_URL_LINK = re.compile(r"\[([^\]]*)\]\(([^)]*%20[^)]*)\)")
+_ANGLE_BRACKET_SPACED_URL_SOURCE = re.compile(r"\]\(<([^>]* [^>]*)>\)")
 
 
 def _fix_links_with_spaced_urls(
     text: str,
-    node: RenderTreeNode,  # noqa: ARG001
+    node: RenderTreeNode,
     context: RenderContext,  # noqa: ARG001
 ) -> str:
-    """Rewrite escaped links with space-containing URLs to angle-bracket syntax.
+    """Rewrite links with space-containing URLs to angle-bracket syntax.
 
     CommonMark requires link destinations with spaces to use angle brackets.
-    When markdown-it fails to parse [text](url with space) as a link, mdformat
-    escapes the brackets. Detects and repairs those cases.
+    Handles two cases:
+
+    1. markdown-it fails to parse [text](url space) as a link and mdformat
+       escapes the brackets — detects ``\\[text\\](url space)`` and rewrites to
+       ``[text](<url space>)``.
+    2. markdown-it parses [text](<url space>) correctly but percent-encodes
+       the space in the href — detects [text](url%20space) and restores to
+       [text](<url space>) using the original source in node.content.
 
     Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/80
 
     """
-    return _ESCAPED_LINK_SPACED_URL.sub(
+    text = _ESCAPED_LINK_SPACED_URL.sub(
         lambda m: f"[{m.group(1)}](<{m.group(2)}>)",
         text,
     )
+
+    spaced_urls_from_source = {
+        m.group(1) for m in _ANGLE_BRACKET_SPACED_URL_SOURCE.finditer(node.content)
+    }
+    if spaced_urls_from_source:
+
+        def _restore_spaced_url(m: re.Match) -> str:
+            link_text, encoded_url = m.group(1), m.group(2)
+            decoded_url = encoded_url.replace("%20", " ")
+            if decoded_url in spaced_urls_from_source:
+                return f"[{link_text}](<{decoded_url}>)"
+            return m.group(0)
+
+        text = _PERCENT_ENCODED_URL_LINK.sub(_restore_spaced_url, text)
+
+    return text
 
 
 def _render_text(node: RenderTreeNode, context: RenderContext) -> str:
