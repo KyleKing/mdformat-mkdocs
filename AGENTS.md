@@ -8,6 +8,26 @@
 1. **Verify**: `tox -e test -- --snapshot-update`
 1. **Full suite**: `tox`
 
+### Fixture Idempotency Rule
+
+Whenever a fixture's input differs from its expected output (`A → B`), also add a second fixture testing that the output is stable (`B → B`). This catches cases where the transformation is correct but the result is not idempotent — a class of bug that canary testing will only find if the transformed form happens to appear in a tracked downstream repo.
+
+```markdown
+Issue #N: descriptive title of the forward transformation
+.
+<input that needs fixing>
+.
+<corrected output>
+.
+
+Issue #N: descriptive title (idempotency)
+.
+<corrected output>
+.
+<corrected output>
+.
+```
+
 ## Testing
 
 ```bash
