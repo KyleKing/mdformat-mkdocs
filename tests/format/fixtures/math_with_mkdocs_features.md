@@ -242,3 +242,243 @@ Math in Mixed MkDocs Features
         c = 3 \times 10^8 m/s
         \]
 .
+
+Math with Admonitions (idempotency)
+.
+!!! note
+
+    The equation $E = mc^2$ is famous.
+
+    $$
+    E = mc^2
+    $$
+
+!!! tip "Energy Formula"
+
+    Einstein's equation \(E = mc^2\) relates energy and mass.
+
+    \[
+    E = mc^2
+    \]
+.
+!!! note
+
+    The equation $E = mc^2$ is famous.
+
+    $$
+    E = mc^2
+    $$
+
+!!! tip "Energy Formula"
+
+    Einstein's equation \(E = mc^2\) relates energy and mass.
+
+    \[
+    E = mc^2
+    \]
+.
+
+Math with Content Tabs (idempotency)
+.
+=== "Tab 1"
+
+    Formula: $x = y$
+
+    Block equation:
+
+    $$
+    a^2 + b^2 = c^2
+    $$
+
+=== "Tab 2"
+
+    Using parenthesis notation: \(F = ma\)
+
+    \[
+    F = ma
+    \]
+.
+=== "Tab 1"
+
+    Formula: $x = y$
+
+    Block equation:
+
+    $$
+    a^2 + b^2 = c^2
+    $$
+
+=== "Tab 2"
+
+    Using parenthesis notation: \(F = ma\)
+
+    \[
+    F = ma
+    \]
+.
+
+Math with Definition Lists (idempotency)
+.
+Einstein's Equation
+
+:   $E = mc^2$ represents energy-mass equivalence.
+
+    $$
+    E = mc^2
+    $$
+
+Newton's Second Law
+
+:   The force \(F\) is defined as:
+
+    \[
+    F = ma
+    \]
+.
+Einstein's Equation
+
+:   $E = mc^2$ represents energy-mass equivalence.
+
+    $$
+    E = mc^2
+    $$
+
+Newton's Second Law
+
+:   The force \(F\) is defined as:
+
+    \[
+    F = ma
+    \]
+.
+
+Math in Nested Admonitions (idempotency)
+.
+!!! note "Outer Note"
+
+    This is the outer admonition with $x = y$.
+
+    !!! warning "Inner Warning"
+
+        Nested admonition with \(a = b\).
+
+        $$
+        c = d
+        $$
+
+    Back to outer with:
+
+    \[
+    e = f
+    \]
+.
+!!! note "Outer Note"
+
+    This is the outer admonition with $x = y$.
+
+    !!! warning "Inner Warning"
+
+        Nested admonition with \(a = b\).
+
+        $$
+        c = d
+        $$
+
+    Back to outer with:
+
+    \[
+    e = f
+    \]
+.
+
+Math in Admonitions with Lists (idempotency)
+.
+!!! info
+
+    Key formulas:
+
+    1. Energy: $E = mc^2$
+
+    1. Force: $F = ma$
+
+    1. Momentum:
+
+        $$
+        p = mv
+        $$
+
+    1. Power: \(P = W / t\)
+.
+!!! info
+
+    Key formulas:
+
+    1. Energy: $E = mc^2$
+
+    1. Force: $F = ma$
+
+    1. Momentum:
+
+        $$
+        p = mv
+        $$
+
+    1. Power: \(P = W / t\)
+.
+
+Math in Mixed MkDocs Features (idempotency)
+.
+!!! example "Combining Features"
+
+    Consider the definition:
+
+    Energy
+    :   Defined as $E = mc^2$
+
+    With tabs:
+
+    === "General Form"
+
+        $$
+        E = mc^2
+        $$
+
+    === "Expanded Form"
+
+        Where:
+
+        - $E$ is energy
+        - $m$ is mass
+        - $c$ is speed of light
+
+        \[
+        c = 3 \times 10^8 m/s
+        \]
+.
+!!! example "Combining Features"
+
+    Consider the definition:
+
+    Energy
+    :   Defined as $E = mc^2$
+
+    With tabs:
+
+    === "General Form"
+
+        $$
+        E = mc^2
+        $$
+
+    === "Expanded Form"
+
+        Where:
+
+        - $E$ is energy
+        - $m$ is mass
+        - $c$ is speed of light
+
+        \[
+        c = 3 \times 10^8 m/s
+        \]
+.

@@ -19,6 +19,27 @@ Potentially other content
     - 2x indent
 .
 
+Abbreviations (idempotency)
+.
+The HTML specification is maintained.
+
+*[HTML]: Hyper Text Markup Language
+
+Potentially other content
+
+- Which needs to be formatted
+    - 2x indent
+.
+The HTML specification is maintained.
+
+*[HTML]: Hyper Text Markup Language
+
+Potentially other content
+
+- Which needs to be formatted
+    - 2x indent
+.
+
 
 Glossary (Appended without the acronym present)
 .
@@ -43,9 +64,33 @@ The HTML specification is maintained by the W3C.
 *[W3C]: World Wide Web Consortium
 .
 
+Broken (idempotency)
+.
+The HTML specification is maintained by the W3C.
+
+*[HTML]: Hyper Text Markup Language
+*[W3C]: World Wide Web Consortium
+.
+The HTML specification is maintained by the W3C.
+
+*[HTML]: Hyper Text Markup Language
+*[W3C]: World Wide Web Consortium
+.
+
 Mixed content
 .
 \*\[HTML\]: Hyper Text Markup Language
+- A list
+.
+*[HTML]: Hyper Text Markup Language
+
+- A list
+.
+
+Mixed content (idempotency)
+.
+*[HTML]: Hyper Text Markup Language
+
 - A list
 .
 *[HTML]: Hyper Text Markup Language

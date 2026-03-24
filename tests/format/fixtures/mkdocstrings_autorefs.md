@@ -15,3 +15,10 @@ Broken Anchor links (https://github.com/KyleKing/mdformat-mkdocs/issues/25)
 .
 [](){#some-anchor-name}
 .
+
+Broken Anchor links (idempotency)
+.
+[](){#some-anchor-name}
+.
+[](){#some-anchor-name}
+.

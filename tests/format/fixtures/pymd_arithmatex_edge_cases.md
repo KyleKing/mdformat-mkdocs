@@ -74,6 +74,53 @@ x = y
 \]
 .
 
+Escaped Brackets vs Math Brackets (idempotency)
+.
+Single-line escaped bracket: \[test\]: value
+
+Multi-line math block:
+
+\[
+a^2 + b^2 = c^2
+\]
+
+Math with label (space before parenthesis):
+
+\[
+E = mc^2
+\] (eq:einstein)
+
+Escaped bracket with letter: [test]x
+
+Math at end of line:
+
+\[
+x = y
+\]
+.
+Single-line escaped bracket: \[test\]: value
+
+Multi-line math block:
+
+\[
+a^2 + b^2 = c^2
+\]
+
+Math with label (space before parenthesis):
+
+\[
+E = mc^2
+\] (eq:einstein)
+
+Escaped bracket with letter: [test]x
+
+Math at end of line:
+
+\[
+x = y
+\]
+.
+
 Math in Lists
 .
 1. First item with math $x = y$
@@ -85,6 +132,45 @@ Math in Lists
 
 3. Third item with nested list:
     - Nested with $a = b$
+    - More nested:
+
+        $$
+        F = ma
+        $$
+.
+1. First item with math $x = y$
+
+1. Second item with block math:
+
+    $$
+    E = mc^2
+    $$
+
+1. Third item with nested list:
+
+    - Nested with $a = b$
+
+    - More nested:
+
+        $$
+        F = ma
+        $$
+.
+
+Math in Lists (idempotency)
+.
+1. First item with math $x = y$
+
+1. Second item with block math:
+
+    $$
+    E = mc^2
+    $$
+
+1. Third item with nested list:
+
+    - Nested with $a = b$
+
     - More nested:
 
         $$
@@ -250,6 +336,25 @@ $$
 
 \[
    a = b
+\]
+.
+$$
+x = y
+$$
+
+\[
+a = b
+\]
+.
+
+Math with Leading/Trailing Whitespace (idempotency)
+.
+$$
+x = y
+$$
+
+\[
+a = b
 \]
 .
 $$

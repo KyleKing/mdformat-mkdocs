@@ -328,3 +328,229 @@ You can also use words, to fit your writing style more closely[^note].
 \[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
 This footnote also has been made with a different syntax using 4 spaces for new lines.
 .
+
+Asterisk list (idempotency)
+.
+- item 1
+    - item 2
+.
+- item 1
+    - item 2
+.
+
+Numbered list (idempotency)
+.
+1. item 1
+    1. item 2
+    1. item 2
+        1. item 3
+        1. item 3
+.
+1. item 1
+    1. item 2
+    1. item 2
+        1. item 3
+        1. item 3
+.
+
+Combination list (idempotency)
+.
+- item 1
+    - item 2
+        1. item 3
+.
+- item 1
+    - item 2
+        1. item 3
+.
+
+Corrected Indentation from 3x (idempotency)
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
+
+Corrected Indentation from 5x (idempotency)
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+.
+
+Handle Jagged Indents 2x (idempotency)
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Jagged Indents 5x (idempotency)
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+                - item 5
+        - item 6
+        - item 7
+- item 8
+.
+
+Handle Mixed Indents (idempotency)
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+            - item 5
+            - item 6
+    - item 7
+- item 8
+.
+- item 1
+    - item 2
+        - item 3
+            - item 4
+            - item 5
+            - item 6
+    - item 7
+- item 8
+.
+
+Hanging List (idempotency)
+.
+1. Here indent width is
+   three.
+
+    1. Here indent width is
+       three.
+
+1. Here indent width is
+   five. It needs to be so, because
+
+    Otherwise this next paragraph doesn't belong in the same list item.
+.
+1. Here indent width is
+   three.
+
+    1. Here indent width is
+       three.
+
+1. Here indent width is
+   five. It needs to be so, because
+
+    Otherwise this next paragraph doesn't belong in the same list item.
+.
+
+Code block in semantic indent (idempotency)
+.
+1. Item 1
+   with a semantic line feed
+
+    ```bash
+    echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
+    ```
+
+1. Item 2
+
+1. Item 3
+.
+1. Item 1
+   with a semantic line feed
+
+    ```bash
+    echo "I get moved around by prettier/mdformat, originally I am 3 spaces deep"
+    ```
+
+1. Item 2
+
+1. Item 3
+.
+
+Nested semantic lines (idempotency)
+.
+- Line
+  semantic line 1 (2 spaces deep)
+    1. Bullet (4 spaces deep)
+       semantic line 2 (7 spaces deep)
+.
+- Line
+  semantic line 1 (2 spaces deep)
+    1. Bullet (4 spaces deep)
+       semantic line 2 (7 spaces deep)
+.
+
+Table (idempotency)
+.
+| Label | Rating | Comment |
+|:---------------|---------:|:---------------------|
+| Name | 2| <!-- Comment --> |
+.
+| Label | Rating | Comment |
+|:---------------|---------:|:---------------------|
+| Name | 2| <!-- Comment --> |
+.
+
+Task List / Check List (idempotency)
+.
+- [x] #739
+    - [ ] Add delight to the experience when all tasks are complete :tada:
+.
+- [x] #739
+    - [ ] Add delight to the experience when all tasks are complete :tada:
+.
+
+Footnotes (idempotency)
+.
+Here is a simple footnote[^1].
+
+You can also use words, to fit your writing style more closely[^note].
+
+\[^1\]: My reference.
+\[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+This footnote also has been made with a different syntax using 4 spaces for new lines.
+.
+Here is a simple footnote[^1].
+
+You can also use words, to fit your writing style more closely[^note].
+
+\[^1\]: My reference.
+\[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+This footnote also has been made with a different syntax using 4 spaces for new lines.
+.

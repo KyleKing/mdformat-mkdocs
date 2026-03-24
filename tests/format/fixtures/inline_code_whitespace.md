@@ -16,6 +16,13 @@ Both leading and trailing spaces - mdformat strips both
 .
 `code`
 .
+
+Both leading and trailing spaces - mdformat strips both (idempotency)
+.
+`code`
+.
+`code`
+.
 Multiple trailing spaces - preserved
 .
 `code  `
@@ -40,10 +47,24 @@ Empty code - gets escaped
 .
 \`\`
 .
+
+Empty code - gets escaped (idempotency)
+.
+\`\`
+.
+\`\`
+.
 Newline before closing backtick (snippet case) - preserved as space
 .
 `--8<-- "somesnippet.sh"
 `
+.
+`--8<-- "somesnippet.sh" `
+.
+
+Newline before closing backtick (snippet case) (idempotency)
+.
+`--8<-- "somesnippet.sh" `
 .
 `--8<-- "somesnippet.sh" `
 .
@@ -68,6 +89,13 @@ Code with trailing and internal spaces - preserved
 Double backticks with trailing space - preserved differently
 .
 ``code` ``
+.
+`` code`  ``
+.
+
+Double backticks with trailing space (idempotency)
+.
+`` code`  ``
 .
 `` code`  ``
 .

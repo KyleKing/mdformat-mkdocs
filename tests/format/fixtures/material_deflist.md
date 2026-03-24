@@ -177,3 +177,181 @@ Term 1
 Term 1
 \: Definition
 .
+
+Pandoc (idempotency)
+.
+paragraph
+
+Term 1
+
+:   Definition 1
+
+Term 2 with *inline markup*
+
+:   Definition 2
+
+    ```
+    { some code, part of Definition 2 }
+    ```
+
+    Third paragraph of definition 2.
+
+paragraph
+.
+paragraph
+
+Term 1
+
+:   Definition 1
+
+Term 2 with *inline markup*
+
+:   Definition 2
+
+    ```
+    { some code, part of Definition 2 }
+    ```
+
+    Third paragraph of definition 2.
+
+paragraph
+.
+
+Pandoc 2 (idempotency)
+.
+Term 1
+
+:   Definition
+    with lazy continuation.
+
+    Second paragraph of the definition.
+.
+Term 1
+
+:   Definition
+    with lazy continuation.
+
+    Second paragraph of the definition.
+.
+
+Pandoc 3 (idempotency)
+.
+paragraph
+
+Term 1
+:   Definition 1
+
+Term 2
+:   Definition 2a
+:   Definition 2b
+
+paragraph
+.
+paragraph
+
+Term 1
+:   Definition 1
+
+Term 2
+:   Definition 2a
+:   Definition 2b
+
+paragraph
+.
+
+Spaces after a colon (idempotency)
+.
+Term 1
+:   paragraph
+
+Term 2
+:   ```
+    code block
+    ```
+.
+Term 1
+:   paragraph
+
+Term 2
+:   ```
+    code block
+    ```
+.
+
+List is tight, only if all dts are tight (idempotency)
+.
+Term 1
+
+:   foo
+
+:   bar
+
+Term 2
+
+:   foo
+
+:   bar
+.
+Term 1
+
+:   foo
+
+:   bar
+
+Term 2
+
+:   foo
+
+:   bar
+.
+
+Regression test (first paragraphs shouldn't be tight) (idempotency)
+.
+Term 1
+
+:   foo
+
+    bar
+
+Term 2
+
+:   foo
+.
+Term 1
+
+:   foo
+
+    bar
+
+Term 2
+
+:   foo
+.
+
+Nested definition lists (idempotency)
+.
+test
+:   foo
+    :   bar
+        :   baz
+    :   bar
+:   foo
+.
+test
+:   foo
+    :   bar
+        :   baz
+    :   bar
+:   foo
+.
+
+Regression test (blockquote inside deflist) (idempotency)
+.
+foo
+:   > bar
+:   baz
+.
+foo
+:   > bar
+:   baz
+.

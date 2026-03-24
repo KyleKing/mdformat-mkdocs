@@ -32,6 +32,39 @@ This is a paragraph.
 [link](http://example.com){: class="foo bar" title="Some title!" }
 .
 
+Examples from https://python-markdown.github.io/extensions/attr_list (idempotency)
+.
+{: #someid .someclass somekey='some value' #id1 .class1 id=id2 class="class2 class3" .class4 }
+
+{ not an attribute list, but not escaped because '' is dropped during read_fixture_file }
+
+{ #someid .someclass somekey='some value' }
+
+This is a paragraph.
+{: #an_id .a_class }
+
+# A setext style header {: #setext}
+
+### A hash style header ### {: #hash }
+
+[link](http://example.com){: class="foo bar" title="Some title!" }
+.
+{: #someid .someclass somekey='some value' #id1 .class1 id=id2 class="class2 class3" .class4 }
+
+{ not an attribute list, but not escaped because '' is dropped during read_fixture_file }
+
+{ #someid .someclass somekey='some value' }
+
+This is a paragraph.
+{: #an_id .a_class }
+
+# A setext style header {: #setext}
+
+### A hash style header ### {: #hash }
+
+[link](http://example.com){: class="foo bar" title="Some title!" }
+.
+
 Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source https://raw.githubusercontent.com/arv-anshul/arv-anshul.github.io/refs/heads/main/docs/index.md
 .
 <div class="grid cards" markdown>
@@ -41,6 +74,29 @@ Example from https://github.com/KyleKing/mdformat-mkdocs/issues/45 and source ht
 [:material-account-box:+ .lg .middle +&nbsp; **About** &nbsp;](about/index.md){ .md-button style="text-align: center; display: block;" }
 
 [:fontawesome-brands-blogger-b:+ .lg .middle +&nbsp; **Blogs** &nbsp;](blog/index.md){ .md-button style="text-align: center; display: block;" }
+
+</div>
+.
+<div class="grid cards" markdown>
+
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
+
+[:material-account-box:+ .lg .middle +  **About**  ](about/index.md){ .md-button style="text-align: center; display: block;" }
+
+[:fontawesome-brands-blogger-b:+ .lg .middle +  **Blogs**  ](blog/index.md){ .md-button style="text-align: center; display: block;" }
+
+</div>
+.
+
+Issue #45 (idempotency)
+.
+<div class="grid cards" markdown>
+
+<!-- Note: &nbsp; HTML entities are converted to Unicode by mdformat (core behavior) -->
+
+[:material-account-box:+ .lg .middle +  **About**  ](about/index.md){ .md-button style="text-align: center; display: block;" }
+
+[:fontawesome-brands-blogger-b:+ .lg .middle +  **Blogs**  ](blog/index.md){ .md-button style="text-align: center; display: block;" }
 
 </div>
 .
@@ -68,6 +124,13 @@ Issue #74: Attribute list inside link text (icon shorthand with classes)
 Issue #80: Button link with space in URL (invalid escaping of square brackets)
 .
 [:material-download: Download](../assets/load data.txt){:download="load data" .md-button}
+.
+[:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
+.
+
+Issue #80: Button link with space in URL (idempotency)
+.
+[:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
 .
 [:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
 .

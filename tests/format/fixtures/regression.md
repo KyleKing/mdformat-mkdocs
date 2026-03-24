@@ -29,3 +29,10 @@ Inline snippet with newline before closing backtick
 .
 `--8<-- "somesnippet.sh" `
 .
+
+Inline snippet with newline before closing backtick (idempotency)
+.
+`--8<-- "somesnippet.sh" `
+.
+`--8<-- "somesnippet.sh" `
+.
