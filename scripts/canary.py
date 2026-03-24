@@ -1,9 +1,11 @@
 """Run mdformat idempotency checks against real downstream repos (canary testing)."""
 
+# ruff: noqa: T201, S603, S607
+
 from __future__ import annotations
 
 import difflib
-import subprocess
+import subprocess  # noqa: S404
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,6 +15,8 @@ import mdformat
 
 @dataclass(frozen=True)
 class Repo:
+    """A downstream repository to check for idempotent mdformat output."""
+
     name: str
     url: str
     patterns: tuple[str, ...]
@@ -26,31 +30,37 @@ class Repo:
 
 @dataclass(frozen=True)
 class FileResult:
+    """Result of running mdformat idempotency check on a single file."""
+
     path: Path
     error: str | None = None
     diff: str | None = None
 
     @property
     def passed(self) -> bool:
+        """Return True if the file produced no errors and no diff."""
         return self.error is None and self.diff is None
 
 
 @dataclass(frozen=True)
 class CheckResult:
+    """Aggregated idempotency check results for a single repository."""
+
     repo: Repo
     file_results: tuple[FileResult, ...]
 
     @property
     def passed(self) -> bool:
+        """Return True if all file results passed."""
         return all(r.passed for r in self.file_results)
 
     @property
     def output(self) -> str:
+        """Format failure details for display."""
         lines: list[str] = []
         for result in self.file_results:
             if result.error:
-                lines.append(f"Error: {result.path}")
-                lines.append(f"  {result.error}")
+                lines.extend((f"Error: {result.path}", f"  {result.error}"))
             elif result.diff:
                 lines.append(f"Not idempotent: {result.path}")
                 lines.extend(f"  {line}" for line in result.diff.splitlines()[:40])
@@ -72,7 +82,6 @@ _CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "tmp"
 _REPOS = [
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("ruff", "https://github.com/astral-sh/ruff", ("docs/**/*.md",)),
-
     # Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0).
     # Explicitly excludes changelog.md and deprecated.md from their own hook — both
     # contain code blocks with embedded triple-backtick strings (e.g. """```json...""")
@@ -83,16 +92,14 @@ _REPOS = [
         ("docs/**/*.md",),
         excludes=("docs/changelog.md", "docs/deprecated.md"),
     ),
-
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("ty", "https://github.com/astral-sh/ty", ("docs/**/*.md",)),
-
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo("ultralytics", "https://github.com/ultralytics/ultralytics", ("docs/**/*.md",)),
-
+    Repo(
+        "ultralytics", "https://github.com/ultralytics/ultralytics", ("docs/**/*.md",)
+    ),
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("uv", "https://github.com/astral-sh/uv", ("docs/**/*.md",)),
-
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("vizro", "https://github.com/mckinsey/vizro", ("docs/**/*.md",)),
 ]
@@ -101,8 +108,16 @@ _REPOS = [
 def _clone_or_pull(repo: Repo, target_dir: Path) -> None:
     if not target_dir.exists():
         subprocess.run(
-            ["git", "clone", "--depth", "1", "--filter=blob:none", "--sparse",
-             repo.url, str(target_dir)],
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--filter=blob:none",
+                "--sparse",
+                repo.url,
+                str(target_dir),
+            ],
             check=True,
         )
         subprocess.run(
@@ -152,13 +167,15 @@ def _check_file(path: Path) -> FileResult:
     if pass1 == pass2:
         return FileResult(path=path)
 
-    diff = "".join(difflib.unified_diff(
-        pass1.splitlines(keepends=True),
-        pass2.splitlines(keepends=True),
-        fromfile=f"{path} (pass 1)",
-        tofile=f"{path} (pass 2)",
-        n=3,
-    ))
+    diff = "".join(
+        difflib.unified_diff(
+            pass1.splitlines(keepends=True),
+            pass2.splitlines(keepends=True),
+            fromfile=f"{path} (pass 1)",
+            tofile=f"{path} (pass 2)",
+            n=3,
+        )
+    )
     return FileResult(path=path, diff=diff)
 
 
@@ -171,12 +188,15 @@ def _check_repo(repo: Repo, target_dir: Path) -> CheckResult:
 
 
 def main(argv: list[str]) -> None:
+    """Run canary checks against all or a named subset of repos."""
     repos = list(_REPOS)
     if argv:
         valid = {r.name for r in _REPOS}
         unknown = [name for name in argv if name not in valid]
         if unknown:
-            print(f"Unknown repo(s): {', '.join(unknown)}. Valid: {', '.join(sorted(valid))}")
+            print(
+                f"Unknown repo(s): {', '.join(unknown)}. Valid: {', '.join(sorted(valid))}"
+            )
             sys.exit(1)
         repos = [r for r in _REPOS if r.name in argv]
 

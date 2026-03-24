@@ -203,7 +203,7 @@ def _fix_links_with_spaced_urls(
     node: RenderTreeNode,
     context: RenderContext,  # noqa: ARG001
 ) -> str:
-    """Rewrite links with space-containing URLs to angle-bracket syntax.
+    r"""Rewrite links with space-containing URLs to angle-bracket syntax.
 
     CommonMark requires link destinations with spaces to use angle brackets.
     Handles two cases:
@@ -228,7 +228,7 @@ def _fix_links_with_spaced_urls(
     }
     if spaced_urls_from_source:
 
-        def _restore_spaced_url(m: re.Match) -> str:
+        def _restore_spaced_url(m: re.Match[str]) -> str:
             link_text, encoded_url = m.group(1), m.group(2)
             decoded_url = encoded_url.replace("%20", " ")
             if decoded_url in spaced_urls_from_source:
