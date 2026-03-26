@@ -42,6 +42,7 @@ from .mdit_plugins import (
     render_material_definition_body,
     render_material_definition_list,
     render_material_definition_term,
+    spaced_url_link_plugin,
 )
 
 if TYPE_CHECKING:
@@ -116,6 +117,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     mdit.use(pymd_admon_plugin)
     mdit.use(pymd_snippet_plugin)
     mdit.use(python_markdown_attr_list_plugin)
+    mdit.use(spaced_url_link_plugin)
 
     if cli_is_ignore_missing_references(mdit.options):
         mdit.use(mkdocstrings_crossreference_plugin)
@@ -196,6 +198,7 @@ def _render_inline_content(node: RenderTreeNode, context: RenderContext) -> str:
 _ESCAPED_LINK_SPACED_URL = re.compile(r"\\\[([^\]]*)\\\]\(([^)]*[ ][^)]*)\)")
 _PERCENT_ENCODED_URL_LINK = re.compile(r"\[([^\]]*)\]\(([^)]*%20[^)]*)\)")
 _ANGLE_BRACKET_SPACED_URL_SOURCE = re.compile(r"\]\(<([^>]* [^>]*)>\)")
+_UNBRACKETED_SPACED_URL_SOURCE = re.compile(r"\]\(([^<>()]*\s[^<>()]*)\)")
 
 
 def _fix_links_with_spaced_urls(
@@ -206,14 +209,18 @@ def _fix_links_with_spaced_urls(
     r"""Rewrite links with space-containing URLs to angle-bracket syntax.
 
     CommonMark requires link destinations with spaces to use angle brackets.
-    Handles two cases:
+    Handles three cases:
 
     1. markdown-it fails to parse [text](url space) as a link and mdformat
        escapes the brackets — detects ``\\[text\\](url space)`` and rewrites to
-       ``[text](<url space>)``.
+       ``[text](<url space>)``. (Fallback for edge cases not caught by the
+       spaced_url_link mdit rule.)
     2. markdown-it parses [text](<url space>) correctly but percent-encodes
        the space in the href — detects [text](url%20space) and restores to
        [text](<url space>) using the original source in node.content.
+    3. The spaced_url_link mdit rule parses [text](url space) as a link with
+       percent-encoded href — same rewrite as case 2, but source has no
+       angle brackets so a separate pattern extracts the original URL.
 
     Addresses: https://github.com/KyleKing/mdformat-mkdocs/issues/80
 
@@ -225,7 +232,7 @@ def _fix_links_with_spaced_urls(
 
     spaced_urls_from_source = {
         m.group(1) for m in _ANGLE_BRACKET_SPACED_URL_SOURCE.finditer(node.content)
-    }
+    } | {m.group(1) for m in _UNBRACKETED_SPACED_URL_SOURCE.finditer(node.content)}
     if spaced_urls_from_source:
 
         def _restore_spaced_url(m: re.Match[str]) -> str:

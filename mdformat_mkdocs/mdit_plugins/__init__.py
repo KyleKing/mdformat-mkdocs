@@ -41,6 +41,7 @@ from ._python_markdown_attr_list import (
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
     python_markdown_attr_list_plugin,
 )
+from ._spaced_url_link import SPACED_URL_LINK_PREFIX, spaced_url_link_plugin
 
 __all__ = (
     "AMSMATH_BLOCK",
@@ -57,6 +58,7 @@ __all__ = (
     "PYMD_CAPTIONS_PREFIX",
     "PYMD_SNIPPET_PREFIX",
     "PYTHON_MARKDOWN_ATTR_LIST_PREFIX",
+    "SPACED_URL_LINK_PREFIX",
     "TEXMATH_BLOCK_EQNO",
     "escape_deflist",
     "material_admon_plugin",
@@ -74,4 +76,5 @@ __all__ = (
     "render_material_definition_body",
     "render_material_definition_list",
     "render_material_definition_term",
+    "spaced_url_link_plugin",
 )

@@ -141,3 +141,17 @@ Issue #80: Button link with angle-bracket URL (space must not be percent-encoded
 .
 [:material-download: Download](<../assets/load data.txt>){:download="load data" .md-button}
 .
+
+Issue #80: Bare link with space in URL (no attr_list suffix)
+.
+[Download](../assets/load data.txt)
+.
+[Download](<../assets/load data.txt>)
+.
+
+Issue #80: Bare link with space in URL (no attr_list suffix, idempotency)
+.
+[Download](<../assets/load data.txt>)
+.
+[Download](<../assets/load data.txt>)
+.
