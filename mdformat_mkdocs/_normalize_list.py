@@ -468,8 +468,12 @@ def parse_text(
     new_indents = [*starmap(_format_new_indent, zip(lines, block_indents, strict=True))]
 
     new_contents = [
-        _format_new_content(line, inc_numbers, ci is not None)
-        for line, ci in zip(lines, code_indents, strict=True)
+        _format_new_content(
+            line,
+            inc_numbers,
+            block_indent is not None and block_indent.kind == "code",
+        )
+        for line, block_indent in zip(lines, block_indents, strict=True)
     ]
 
     if use_sem_break:
