@@ -41,6 +41,7 @@ fixtures = flatten(
             "material_math.md",
             "math_with_mkdocs_features.md",
             "mkdocstrings_autorefs.md",
+            "mkdocstrings_injection.md",
             "pymd_abbreviations.md",
             "pymd_arithmatex.md",
             "pymd_arithmatex_ams_environments.md",

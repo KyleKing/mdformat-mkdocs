@@ -22,6 +22,7 @@ from ._mkdocstrings_crossreference import (
     mkdocstrings_crossreference_plugin,
 )
 from ._mkdocstrings_injection import (
+    INJECTION_PATTERN,
     MKDOCSTRINGS_INJECTION_PREFIX,
     mkdocstrings_injection_plugin,
 )
@@ -48,6 +49,7 @@ __all__ = (
     "DOLLARMATH_BLOCK",
     "DOLLARMATH_BLOCK_LABEL",
     "DOLLARMATH_INLINE",
+    "INJECTION_PATTERN",
     "MATERIAL_ADMON_MARKERS",
     "MATERIAL_CONTENT_TAB_MARKERS",
     "MKDOCSTRINGS_AUTOREFS_PREFIX",

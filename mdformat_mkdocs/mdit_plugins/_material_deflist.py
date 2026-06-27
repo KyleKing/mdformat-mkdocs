@@ -35,7 +35,6 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.deflist import deflist_plugin
 
 if TYPE_CHECKING:
-    from markdown_it import MarkdownIt
     from mdformat.renderer import RenderContext, RenderTreeNode
     from mdformat.renderer.typing import Render
 

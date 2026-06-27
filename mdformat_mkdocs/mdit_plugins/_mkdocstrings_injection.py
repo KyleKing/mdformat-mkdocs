@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from markdown_it import MarkdownIt
     from markdown_it.rules_block import StateBlock
 
-_INJECTION_PATTERN = re.compile(r"^:::\s+\S")
+INJECTION_PATTERN = re.compile(r"^:::\s+\S")
 MKDOCSTRINGS_INJECTION_PREFIX = "mkdocstrings_injection"
 
 
@@ -40,9 +40,9 @@ def _mkdocstrings_injection(
     if is_code_block(state, start_line):
         return False
 
-    base_indent = state.blkIndent
+    base_indent = state.tShift[start_line]
     header = _get_line(state, start_line, base_indent)
-    if not _INJECTION_PATTERN.match(header):
+    if not INJECTION_PATTERN.match(header):
         return False
 
     if silent:
@@ -51,10 +51,14 @@ def _mkdocstrings_injection(
     lines = [header]
     next_line = start_line + 1
     while next_line < end_line:
-        if state.tShift[next_line] <= base_indent:
+        if not state.isEmpty(next_line) and state.tShift[next_line] <= base_indent:
             break
         lines.append(_get_line(state, next_line, base_indent))
         next_line += 1
+
+    while len(lines) > 1 and not lines[-1].strip():
+        lines.pop()
+        next_line -= 1
 
     token = state.push(MKDOCSTRINGS_INJECTION_PREFIX, "", 0)
     token.content = "\n".join(lines)
