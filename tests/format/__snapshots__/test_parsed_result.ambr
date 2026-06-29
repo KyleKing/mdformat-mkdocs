@@ -1704,7 +1704,7 @@
     debug_block_indents=list([
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
@@ -2458,31 +2458,31 @@
       None,
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
@@ -2649,19 +2649,19 @@
       None,
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
@@ -2777,31 +2777,31 @@
     debug_block_indents=list([
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
@@ -2927,25 +2927,25 @@
     debug_block_indents=list([
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),
@@ -3056,19 +3056,19 @@
       None,
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
       BlockIndent(
         indent_depth=1,
-        kind='code',
+        kind='injection',
         raw_indent='    ',
         start_line=1,
       ),
@@ -3184,7 +3184,7 @@
     debug_block_indents=list([
       BlockIndent(
         indent_depth=0,
-        kind='code',
+        kind='injection',
         raw_indent='',
         start_line=0,
       ),

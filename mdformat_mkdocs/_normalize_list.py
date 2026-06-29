@@ -221,7 +221,7 @@ class BlockIndent(NamedTuple):
     start_line: int
     raw_indent: str
     indent_depth: int
-    kind: Literal["code", "HTML"]
+    kind: Literal["code", "HTML", "injection"]
 
 
 def _parse_code_block(last: BlockIndent | None, line: LineResult) -> BlockIndent | None:
@@ -275,7 +275,7 @@ def _parse_injection_block(
                     start_line=line.parsed.line_num,
                     raw_indent=line.parsed.indent,
                     indent_depth=len(line.parents),
-                    kind="code",
+                    kind="injection",
                 )
             return None
         return last
@@ -284,7 +284,7 @@ def _parse_injection_block(
             start_line=line.parsed.line_num,
             raw_indent=line.parsed.indent,
             indent_depth=len(line.parents),
-            kind="code",
+            kind="injection",
         )
     return None
 
@@ -309,12 +309,11 @@ def _parse_semantic_indent(
     tin: tuple[LineResult, BlockIndent | None],
 ) -> SemanticIndent:
     """Conditionally evaluate when semantic indents are necessary."""
-    # PLANNED: This works, but is very confusing
-    line, code_indent = tin
+    line, block_indent = tin
 
     if (
         not line.parsed.content
-        or code_indent is not None
+        or block_indent is not None
         or line.parsed.syntax in SYNTAX_CODE_LIST
     ):
         result = SemanticIndent.EMPTY
@@ -471,7 +470,7 @@ def parse_text(
         _format_new_content(
             line,
             inc_numbers,
-            block_indent is not None and block_indent.kind == "code",
+            block_indent is not None and block_indent.kind in {"code", "injection"},
         )
         for line, block_indent in zip(lines, block_indents, strict=True)
     ]
