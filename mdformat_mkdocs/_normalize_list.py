@@ -106,6 +106,9 @@ class Syntax(Enum):
 SYNTAX_CODE_LIST = {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
 """The start of a code block, which is also the start of a list."""
 
+SYNTAX_LIST = {Syntax.LIST_BULLETED, Syntax.LIST_NUMBERED, *SYNTAX_CODE_LIST}
+"""Any line that begins a list item."""
+
 
 class ParsedLine(NamedTuple):
     """Parsed Line of text."""
@@ -259,6 +262,15 @@ def _parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent 
         )
     elif last and not line.parsed.content:
         # Stop tracking an HTML block on a line break
+        result = None
+    elif (
+        last
+        and line.parsed.syntax in SYNTAX_LIST
+        and len(line.parsed.indent) < len(last.raw_indent)
+    ):
+        # A list item that dedents below the block is a sibling, not HTML
+        #   content. This guards against an inline autolink (or comment) on a
+        #   continuation line being mistaken for a block that swallows siblings.
         result = None
     return result
 

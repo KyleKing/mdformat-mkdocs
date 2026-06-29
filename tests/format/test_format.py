@@ -17,6 +17,7 @@ KNOWN_HTML_STABILITY_LIMITATIONS: set[str] = {
     "Examples from https://python-markdown.github.io/extensions/attr_list",
     "Example from Ultralytics Documentation (https://github.com/ultralytics/ultralytics/blob/fd82a671015a30a869d740c45c65f5633d1d93c4/docs/en/guides/isolating-segmentation-objects.md?plain=1#L148-L259)",
     "Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https://github.com/KyleKing/mdformat-mkdocs/issues/4)",
+    "Issue #81: HTML comment on a continuation line followed by a tight sibling",
     "Math with Leading/Trailing Whitespace",
     "or in a list somehow?",
     "ReLU Function with Mixed Syntax (Issue #45)",

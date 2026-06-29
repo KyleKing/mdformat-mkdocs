@@ -218,3 +218,79 @@ Angle brackets in nested contexts
 
         Content with <placeholder>
 .
+
+
+Issue #81: Autolink on a continuation line followed by a tight sibling
+.
+- a
+  <https://a.bc/d>
+- x
+.
+- a
+    <https://a.bc/d>
+- x
+.
+
+
+Issue #81: Autolink on a continuation line followed by a tight sibling (idempotency)
+.
+- a
+    <https://a.bc/d>
+- x
+.
+- a
+    <https://a.bc/d>
+- x
+.
+
+
+Issue #81: HTML comment on a continuation line followed by a tight sibling
+.
+- a
+  <!-- c -->
+- x
+.
+- a
+    <!-- c -->
+- x
+.
+
+
+Issue #81: HTML comment on a continuation line followed by a tight sibling (idempotency)
+.
+- a
+    <!-- c -->
+- x
+.
+- a
+    <!-- c -->
+- x
+.
+
+
+Issue #81: Autolink on a continuation line followed by multiple tight siblings
+.
+- a
+  <https://a.bc/d>
+- x
+- y
+.
+- a
+    <https://a.bc/d>
+- x
+- y
+.
+
+
+Issue #81: Autolink on a continuation line followed by multiple tight siblings (idempotency)
+.
+- a
+    <https://a.bc/d>
+- x
+- y
+.
+- a
+    <https://a.bc/d>
+- x
+- y
+.

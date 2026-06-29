@@ -38,7 +38,7 @@ class FileResult:
 
     @property
     def passed(self) -> bool:
-        """Return True if the file produced no errors and no diff."""
+        """True if the file produced no errors and no diff."""
         return self.error is None and self.diff is None
 
 
@@ -51,7 +51,7 @@ class CheckResult:
 
     @property
     def passed(self) -> bool:
-        """Return True if all file results passed."""
+        """True if all file results passed."""
         return all(r.passed for r in self.file_results)
 
     @property
