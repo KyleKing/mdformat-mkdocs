@@ -82,3 +82,29 @@ mkdocstrings injection with private submodule nested in list
         options:
           heading_level: 2
 .
+
+mkdocstrings injection nested in bulleted list (semantic indent)
+.
+- List item:
+    ::: package.module.Class
+        options:
+          heading_level: 2
+.
+- List item:
+    ::: package.module.Class
+        options:
+          heading_level: 2
+.
+
+mkdocstrings injection nested in numbered list (semantic indent)
+.
+1. List item:
+    ::: package.module.Class
+        options:
+          heading_level: 2
+.
+1. List item:
+    ::: package.module.Class
+        options:
+          heading_level: 2
+.

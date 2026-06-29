@@ -20,7 +20,7 @@ TICKET_019 = """Example python mkdocstring snippets
     ],
     ids=["TICKET_019"],
 )
-def test_align_semantic_breaks_in_lists(text, expected):
+def test_ignore_missing_references(text, expected):
     output = mdformat.text(
         text,
         options={"ignore_missing_references": True},
