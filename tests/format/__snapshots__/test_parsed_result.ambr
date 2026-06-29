@@ -1699,6 +1699,38 @@
     ]),
   )
 # ---
+# name: test_parsed_result[Standard mkdocstrings injection]
+  ParsedText(
+    debug_block_indents=list([
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='::: package.module.Class',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '::: package.module.Class',
+      ),
+    ]),
+  )
+# ---
 # name: test_parsed_result[Support inline bulleted code (https://github.com/KyleKing/mdformat-mkdocs/issues/40)]
   ParsedText(
     debug_block_indents=list([
@@ -2416,6 +2448,765 @@
       tuple(
         '',
         '```',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection nested in list with blank line]
+  ParsedText(
+    debug_block_indents=list([
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='- List item:',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='::: package.module.Class',
+          indent='    ',
+          line_num=1,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='options:',
+          indent='        ',
+          line_num=2,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='        ',
+            line_num=2,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='heading_level: 2',
+          indent='          ',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=4,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='        ',
+            line_num=2,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='show_source: true',
+          indent='          ',
+          line_num=5,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '- List item:',
+      ),
+      tuple(
+        '  ',
+        '::: package.module.Class',
+      ),
+      tuple(
+        '      ',
+        'options:',
+      ),
+      tuple(
+        '        ',
+        'heading_level: 2',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '          ',
+        'show_source: true',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection nested in list]
+  ParsedText(
+    debug_block_indents=list([
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='- List item:',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='::: package.module.Class',
+          indent='    ',
+          line_num=1,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='options:',
+          indent='        ',
+          line_num=2,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='        ',
+            line_num=2,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='heading_level: 2',
+          indent='          ',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '- List item:',
+      ),
+      tuple(
+        '  ',
+        '::: package.module.Class',
+      ),
+      tuple(
+        '      ',
+        'options:',
+      ),
+      tuple(
+        '        ',
+        'heading_level: 2',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection with blank line in options]
+  ParsedText(
+    debug_block_indents=list([
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='::: package.module.Class',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='options:',
+          indent='    ',
+          line_num=1,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='    ',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='heading_level: 2',
+          indent='      ',
+          line_num=2,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='',
+          indent='',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='    ',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='show_source: true',
+          indent='      ',
+          line_num=4,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '::: package.module.Class',
+      ),
+      tuple(
+        '    ',
+        'options:',
+      ),
+      tuple(
+        '      ',
+        'heading_level: 2',
+      ),
+      tuple(
+        '',
+        '',
+      ),
+      tuple(
+        '      ',
+        'show_source: true',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection with options]
+  ParsedText(
+    debug_block_indents=list([
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='::: package.module.Class',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='options:',
+          indent='    ',
+          line_num=1,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='    ',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='heading_level: 2',
+          indent='      ',
+          line_num=2,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='::: package.module.Class',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='    ',
+            line_num=1,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='show_source: true',
+          indent='      ',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '::: package.module.Class',
+      ),
+      tuple(
+        '    ',
+        'options:',
+      ),
+      tuple(
+        '      ',
+        'heading_level: 2',
+      ),
+      tuple(
+        '      ',
+        'show_source: true',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection with private submodule nested in list]
+  ParsedText(
+    debug_block_indents=list([
+      None,
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+      BlockIndent(
+        indent_depth=1,
+        kind='code',
+        raw_indent='    ',
+        start_line=1,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='- List item:',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='::: my_package._private_module',
+          indent='    ',
+          line_num=1,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: my_package._private_module',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='options:',
+          indent='        ',
+          line_num=2,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+      LineResult(
+        parents=list([
+          ParsedLine(
+            content='- List item:',
+            indent='',
+            line_num=0,
+            syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
+          ),
+          ParsedLine(
+            content='::: my_package._private_module',
+            indent='    ',
+            line_num=1,
+            syntax=<Syntax.INJECTION: 'INJECTION'>,
+          ),
+          ParsedLine(
+            content='options:',
+            indent='        ',
+            line_num=2,
+            syntax=None,
+          ),
+        ]),
+        parsed=ParsedLine(
+          content='heading_level: 2',
+          indent='          ',
+          line_num=3,
+          syntax=None,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '- List item:',
+      ),
+      tuple(
+        '  ',
+        '::: my_package._private_module',
+      ),
+      tuple(
+        '      ',
+        'options:',
+      ),
+      tuple(
+        '        ',
+        'heading_level: 2',
+      ),
+    ]),
+  )
+# ---
+# name: test_parsed_result[mkdocstrings injection with private submodule]
+  ParsedText(
+    debug_block_indents=list([
+      BlockIndent(
+        indent_depth=0,
+        kind='code',
+        raw_indent='',
+        start_line=0,
+      ),
+    ]),
+    debug_original_lines=list([
+      LineResult(
+        parents=list([
+        ]),
+        parsed=ParsedLine(
+          content='::: my_package._private_module',
+          indent='',
+          line_num=0,
+          syntax=<Syntax.INJECTION: 'INJECTION'>,
+        ),
+        prev_list_peers=list([
+        ]),
+      ),
+    ]),
+    new_lines=list([
+      tuple(
+        '',
+        '::: my_package._private_module',
       ),
     ]),
   )

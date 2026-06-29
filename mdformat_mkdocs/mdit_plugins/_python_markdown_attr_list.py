@@ -17,7 +17,6 @@ from markdown_it import MarkdownIt
 from mdformat_mkdocs._synced.admon_factories import new_token
 
 if TYPE_CHECKING:
-    from markdown_it import MarkdownIt
     from markdown_it.rules_inline import StateInline
 
 _ATTR_LIST_PATTERN = re.compile(r"{:? (?P<attrs>[^}]+) }")

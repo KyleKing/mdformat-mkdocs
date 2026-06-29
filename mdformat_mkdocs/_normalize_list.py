@@ -19,7 +19,11 @@ from ._helpers import (
     rstrip_result,
     separate_indent,
 )
-from .mdit_plugins import MATERIAL_ADMON_MARKERS, MATERIAL_CONTENT_TAB_MARKERS
+from .mdit_plugins import (
+    INJECTION_PATTERN,
+    MATERIAL_ADMON_MARKERS,
+    MATERIAL_CONTENT_TAB_MARKERS,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -71,6 +75,7 @@ class Syntax(Enum):
     START_MARKED = "START_MARKED"
     EDGE_CODE = "EDGE_CODE"
     HTML = "HTML"
+    INJECTION = "INJECTION"
 
     @classmethod
     def from_content(cls, content: str) -> Syntax | None:
@@ -85,13 +90,17 @@ class Syntax(Enum):
             if match["item"].startswith("```"):
                 return cls.CODE_NUMBERED if is_numbered else cls.CODE_BULLETED
             return cls.LIST_NUMBERED if is_numbered else cls.LIST_BULLETED
+
+        result = None
         if any(content.startswith(f"{marker} ") for marker in MARKERS):
-            return cls.START_MARKED
-        if content.startswith("```"):
-            return cls.EDGE_CODE
-        if content.startswith("<"):
-            return cls.HTML
-        return None
+            result = cls.START_MARKED
+        elif content.startswith("```"):
+            result = cls.EDGE_CODE
+        elif content.startswith("<"):
+            result = cls.HTML
+        elif INJECTION_PATTERN.match(content):
+            result = cls.INJECTION
+        return result
 
 
 SYNTAX_CODE_LIST = {Syntax.CODE_BULLETED, Syntax.CODE_NUMBERED}
@@ -252,6 +261,32 @@ def _parse_html_line(last: BlockIndent | None, line: LineResult) -> BlockIndent 
         # Stop tracking an HTML block on a line break
         result = None
     return result
+
+
+def _parse_injection_block(
+    last: BlockIndent | None,
+    line: LineResult,
+) -> BlockIndent | None:
+    """Identify mkdocstrings injection sections."""
+    if last is not None:
+        if line.parsed.content and len(line.parsed.indent) <= len(last.raw_indent):
+            if line.parsed.syntax == Syntax.INJECTION:
+                return BlockIndent(
+                    start_line=line.parsed.line_num,
+                    raw_indent=line.parsed.indent,
+                    indent_depth=len(line.parents),
+                    kind="code",
+                )
+            return None
+        return last
+    if line.parsed.syntax == Syntax.INJECTION:
+        return BlockIndent(
+            start_line=line.parsed.line_num,
+            raw_indent=line.parsed.indent,
+            indent_depth=len(line.parents),
+            kind="code",
+        )
+    return None
 
 
 # ======================================================================================
@@ -420,15 +455,25 @@ def parse_text(
         indent if (indent and code_indents[indent.start_line] is None) else None
         for indent in map_lookback(_parse_html_line, lines, None)
     ]
-    # When both, code_indents take precedence
+    injection_indents = [
+        # Any indents initiated from within a `code_block_indents` should be ignored
+        indent if (indent and code_indents[indent.start_line] is None) else None
+        for indent in map_lookback(_parse_injection_block, lines, None)
+    ]
+    # When multiple match, code_indents take precedence, then html_indents
     block_indents = [
-        c_ or h_ for c_, h_ in zip(code_indents, html_indents, strict=True)
+        c_ or h_ or i_
+        for c_, h_, i_ in zip(code_indents, html_indents, injection_indents, strict=True)
     ]
     new_indents = [*starmap(_format_new_indent, zip(lines, block_indents, strict=True))]
 
     new_contents = [
-        _format_new_content(line, inc_numbers, ci is not None)
-        for line, ci in zip(lines, code_indents, strict=True)
+        _format_new_content(
+            line,
+            inc_numbers,
+            block_indent is not None and block_indent.kind == "code",
+        )
+        for line, block_indent in zip(lines, block_indents, strict=True)
     ]
 
     if use_sem_break:
