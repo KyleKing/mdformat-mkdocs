@@ -2,6 +2,6 @@
 "cargo:mdsf" = "latest"
 "pipx:prek" = "latest"
 "pipx:pytest-watcher" = "latest"
-"pipx:tox" = {uvx_args = "--with tox-uv==1.29.0", version = "4.32.0"}
+"pipx:tox" = {uvx_args = "--with tox-uv>=1.29.0", version = "latest"}
 python = ["3.10.15", "3.14.0"]
 uv = "latest"

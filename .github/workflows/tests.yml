@@ -11,12 +11,12 @@ jobs:
   prek:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: 3.14
-      - uses: j178/prek-action@v1
+      - uses: j178/prek-action@v2
 
   tests:
     runs-on: ${{ matrix.os }}
@@ -25,7 +25,7 @@ jobs:
         python-version: ["3.10", "3.14"]
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
@@ -39,14 +39,14 @@ jobs:
   prek-hook:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install uv and Python
         uses: astral-sh/setup-uv@v7
         with:
           python-version: 3.14
           activate-environment: true
       - name: Install prek
-        uses: j178/prek-action@v1
+        uses: j178/prek-action@v2
         with:
           install-only: true
       - name: Install Package
@@ -66,7 +66,7 @@ jobs:
       contents: write  # For GitHub release creation
       id-token: write  # IMPORTANT: mandatory for PyPI trusted publishing
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: true
