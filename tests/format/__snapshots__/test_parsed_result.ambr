@@ -2621,15 +2621,15 @@
         '- List item:',
       ),
       tuple(
-        '  ',
+        '    ',
         '::: package.module.Class',
       ),
       tuple(
-        '      ',
+        '        ',
         'options:',
       ),
       tuple(
-        '        ',
+        '          ',
         'heading_level: 2',
       ),
       tuple(
@@ -2758,15 +2758,15 @@
         '- List item:',
       ),
       tuple(
-        '  ',
+        '    ',
         '::: package.module.Class',
       ),
       tuple(
-        '      ',
+        '        ',
         'options:',
       ),
       tuple(
-        '        ',
+        '          ',
         'heading_level: 2',
       ),
     ]),
@@ -3165,15 +3165,15 @@
         '- List item:',
       ),
       tuple(
-        '  ',
+        '    ',
         '::: my_package._private_module',
       ),
       tuple(
-        '      ',
+        '        ',
         'options:',
       ),
       tuple(
-        '        ',
+        '          ',
         'heading_level: 2',
       ),
     ]),
