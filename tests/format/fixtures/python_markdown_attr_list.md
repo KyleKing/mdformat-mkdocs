@@ -155,3 +155,25 @@ Issue #80: Bare link with space in URL (no attr_list suffix, idempotency)
 .
 [Download](<../assets/load data.txt>)
 .
+
+Issue #83: Linked image with attr_list and long URL (hang fix)
+.
+[![Watch: Building Real-Time Multi-Object Tracking with RF-DETR and
+  Trackers](https://storage.googleapis.com/com-roboflow-marketing/trackers/docs/roboflow-piotr-rf-detr-trackers-v1b-callout.png){ width="960" height="540"
+  loading="lazy" decoding="async" }](https://www.youtube.com/watch?v=u0k2dTZ0vfs)
+.
+[![Watch: Building Real-Time Multi-Object Tracking with RF-DETR and
+Trackers](https://storage.googleapis.com/com-roboflow-marketing/trackers/docs/roboflow-piotr-rf-detr-trackers-v1b-callout.png){ width="960" height="540"
+loading="lazy" decoding="async" }](https://www.youtube.com/watch?v=u0k2dTZ0vfs)
+.
+
+Issue #83: Linked image with attr_list and long URL (idempotency)
+.
+[![Watch: Building Real-Time Multi-Object Tracking with RF-DETR and
+Trackers](https://storage.googleapis.com/com-roboflow-marketing/trackers/docs/roboflow-piotr-rf-detr-trackers-v1b-callout.png){ width="960" height="540"
+loading="lazy" decoding="async" }](https://www.youtube.com/watch?v=u0k2dTZ0vfs)
+.
+[![Watch: Building Real-Time Multi-Object Tracking with RF-DETR and
+Trackers](https://storage.googleapis.com/com-roboflow-marketing/trackers/docs/roboflow-piotr-rf-detr-trackers-v1b-callout.png){ width="960" height="540"
+loading="lazy" decoding="async" }](https://www.youtube.com/watch?v=u0k2dTZ0vfs)
+.
