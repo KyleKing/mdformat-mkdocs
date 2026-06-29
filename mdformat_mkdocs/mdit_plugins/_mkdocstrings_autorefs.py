@@ -35,6 +35,7 @@ def _mkdocstrings_autorefs_plugin(state: StateInline, silent: bool) -> bool:
         return False
 
     if silent:
+        state.pos += match.end()  # skipToken only auto-advances when ok=False
         return True
 
     anchor = match["anchor"]
