@@ -10,11 +10,7 @@ FIXTURE_PATHS = [
     Path(__file__).parent / "fixtures/parsed_result.md",
     Path(__file__).parent / "fixtures/mkdocstrings_injection.md",
 ]
-fixtures = list(
-    chain.from_iterable(
-        read_fixture_file(path) for path in FIXTURE_PATHS
-    )
-)
+fixtures = list(chain.from_iterable(read_fixture_file(path) for path in FIXTURE_PATHS))
 
 
 @pytest.mark.parametrize(

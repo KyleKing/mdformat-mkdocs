@@ -158,6 +158,14 @@ def test_idempotency(text: str) -> None:
 
 
 @given(markdown_document())
+def test_idempotency_with_semantic_breaks(text: str) -> None:
+    options = {"align_semantic_breaks_in_lists": True, "wrap": "keep"}
+    once = mdformat.text(text, options=options, extensions={"mkdocs"})
+    twice = mdformat.text(once, options=options, extensions={"mkdocs"})
+    assert once == twice
+
+
+@given(markdown_document())
 def test_html_round_trip(text: str) -> None:
     output = mdformat.text(text, extensions={"mkdocs"})
     assume(not _has_known_html_limitation(output))

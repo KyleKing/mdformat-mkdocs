@@ -462,7 +462,9 @@ def parse_text(
     # When multiple match, code_indents take precedence, then html_indents
     block_indents = [
         c_ or h_ or i_
-        for c_, h_, i_ in zip(code_indents, html_indents, injection_indents, strict=True)
+        for c_, h_, i_ in zip(
+            code_indents, html_indents, injection_indents, strict=True
+        )
     ]
     new_indents = [*starmap(_format_new_indent, zip(lines, block_indents, strict=True))]
 
@@ -479,7 +481,9 @@ def parse_text(
         semantic_indents = map_lookback(
             _parse_semantic_indent,
             [*zip(lines, block_indents, strict=True)],
-            _parse_semantic_indent(SemanticIndent.INITIAL, (lines[0], block_indents[0])),
+            _parse_semantic_indent(
+                SemanticIndent.INITIAL, (lines[0], block_indents[0])
+            ),
         )
         new_indents = [
             _trim_semantic_indent(indent, s_i, in_defbody)
