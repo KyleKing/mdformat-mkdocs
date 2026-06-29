@@ -15,7 +15,7 @@ EOL = "\n"
 MKDOCS_INDENT_COUNT = 4
 """Use 4-spaces for mkdocs."""
 
-FILLER_CHAR = "𝕏"  # noqa: RUF001
+FILLER_CHAR = ""
 """A spacer that is inserted and then removed to ensure proper word wrap."""
 
 
