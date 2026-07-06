@@ -4,6 +4,8 @@
 
 An [mdformat](https://github.com/executablebooks/mdformat) plugin for [mkdocs](https://github.com/mkdocs/mkdocs) and packages commonly used with MkDocs ([mkdocs-material](https://squidfunk.github.io/mkdocs-material), [mkdocstrings](https://mkdocstrings.github.io), and [python-markdown](https://python-markdown.github.io))
 
+In addition, mdformat-mkdocs will intentionally provide support for [Zensical](https://zensical.org), which is working towards feature parity with mkdocs ([as of mid-2026](https://zensical.org/compatibility)) and may add features ahead of mkdocs.
+
 Supports:
 
 - Indents are converted to four-spaces instead of two
