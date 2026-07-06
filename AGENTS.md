@@ -150,6 +150,17 @@ The package implements mdformat's plugin interface with up to four key exports i
 - Plugins parse syntax into tokens during the parsing phase
 - Corresponding renderers in `plugin.py` convert tokens back to formatted markdown
 
+**Inline rule protocol (`StateInline` rules)**
+
+Every inline rule (`md.inline.ruler.*`) must follow this contract:
+
+- Returning `True` (match): advance `state.pos` to just past the match — in **both** silent and non-silent mode.
+- Returning `False` (no match): leave `state.pos` unchanged.
+
+`skipToken` (used by `parseLinkLabel` during link-label scanning) calls rules with `silent=True` and only auto-advances `state.pos += 1` when `ok=False`. If a rule returns `True` without moving `state.pos`, the parser stalls in an infinite loop at that position. Verify this contract with a unit test in `tests/test_inline_rule_protocol.py`.
+
+Link-boundary detection using bracket counting (`text_before.count("[") - text_before.count("]")`) must search the full `state.src[:state.pos]` with no length cap. A previous version capped this scan (e.g. to 100 chars), which silently failed for image URLs longer than the cap, causing attr-list tokens to be matched inside link labels.
+
 **mdformat_mkdocs/\_helpers.py**
 
 - Shared utilities: `MKDOCS_INDENT_COUNT` (4 spaces), `separate_indent`, `get_conf`
@@ -184,6 +195,7 @@ Configuration can be passed via:
 
 - `tests/format/`: Tests formatting output (input markdown → formatted markdown)
 - `tests/render/`: Tests HTML rendering (markdown → HTML via markdown-it)
+- `tests/test_inline_rule_protocol.py`: Unit tests for the `StateInline` rule contract (see below)
 
 ## Development Notes
 
