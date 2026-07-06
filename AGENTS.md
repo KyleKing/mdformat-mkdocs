@@ -79,16 +79,18 @@ Clones real consumer repos via git sparse checkout and runs a two-pass idempoten
 
 Repo inventory (see `scripts/canary.py` for full details and excludes):
 
-| Repo                    | Uses mdformat-mkdocs?       | Notes                                                                                 |
-| ----------------------- | --------------------------- | ------------------------------------------------------------------------------------- |
-| astral-sh/ruff          | No                          | Smoke test only                                                                       |
-| roboflow/supervision    | Yes (`>=2.1.0`, `--number`) | `changelog.md` and `deprecated.md` excluded (mirroring their own pre-commit excludes) |
-| astral-sh/ty            | No                          | Smoke test only                                                                       |
-| ultralytics/ultralytics | No                          | Smoke test only                                                                       |
-| astral-sh/uv            | No                          | Smoke test only                                                                       |
-| mckinsey/vizro          | No                          | Smoke test only                                                                       |
+| Repo                    | Uses mdformat-mkdocs?                                        | Notes                                                                                 |
+| ----------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| mongodb/specifications  | Yes (`==5.1.4`, `--wrap=120 --number`)                       | `extended-json.md` excluded (mirroring their own pre-commit exclude)                  |
+| j178/prek               | Yes (`==5.1.4`, `--number --align-semantic-breaks-in-lists`) | `--compact-tables` not replicated (needs mdformat-tables); checks all `**/*.md`       |
+| astral-sh/ruff          | No                                                           | Smoke test only                                                                       |
+| roboflow/supervision    | Yes (`>=2.1.0`, `--number`)                                  | `changelog.md` and `deprecated.md` excluded (mirroring their own pre-commit excludes) |
+| astral-sh/ty            | No                                                           | Smoke test only                                                                       |
+| ultralytics/ultralytics | No                                                           | Smoke test only                                                                       |
+| astral-sh/uv            | No                                                           | Smoke test only                                                                       |
+| mckinsey/vizro          | No                                                           | Smoke test only                                                                       |
 
-To update the table: `git -C .tox/canary/tmp/<name> show HEAD:.pre-commit-config.yaml`
+To update the table: `git -C .tox/canary/cache/<name> show HEAD:.pre-commit-config.yaml`
 
 ## Pre-commit Hook Testing
 

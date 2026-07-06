@@ -7,8 +7,10 @@ from __future__ import annotations
 import difflib
 import subprocess  # noqa: S404
 import sys
-from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any
 
 import mdformat
 
@@ -21,6 +23,7 @@ class Repo:
     url: str
     patterns: tuple[str, ...]
     excludes: tuple[str, ...] = ()
+    options: dict[str, Any] = field(default_factory=dict)
 
     @property
     def display(self) -> str:
@@ -67,7 +70,9 @@ class CheckResult:
         return "\n".join(lines)
 
 
-_CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "tmp"
+# Not "tmp" — tox wipes the env_tmp_dir at the start of every run, which would
+# defeat clone caching. "cache" persists until `tox -e canary --recreate`.
+_CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "cache"
 
 # Each entry documents whether the repo uses mdformat-mkdocs and how.
 # This context drives exclude decisions — if a repo excludes files from their
@@ -77,9 +82,28 @@ _CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "tmp"
 # verify our plugin doesn't crash or produce unstable output on real MkDocs content,
 # even if that content has never been run through mdformat.
 #
-# To update: run `git -C .tox/canary/tmp/<name> show HEAD:.pre-commit-config.yaml`
+# To update: run `git -C .tox/canary/cache/<name> show HEAD:.pre-commit-config.yaml`
 # and check for mdformat hooks + their args/excludes.
 _REPOS = [
+    # Uses mdformat-mkdocs==5.1.4 with --wrap=120 --number in pre-commit (rev 1.0.0).
+    # Excludes extended-json.md from their own hook; mirror that here.
+    Repo(
+        "mongodb",
+        "https://github.com/mongodb/specifications",
+        ("source/**/*.md",),
+        excludes=("source/extended-json/extended-json.md",),
+        options={"number": True, "wrap": 120},
+    ),
+    # Uses mdformat-mkdocs==5.1.4 with --number --compact-tables
+    # --align-semantic-breaks-in-lists in pre-commit (rev 1.0.0), over all *.md.
+    # --compact-tables needs mdformat-tables, which the canary env does not
+    # install, so it is not replicated here.
+    Repo(
+        "prek",
+        "https://github.com/j178/prek",
+        ("**/*.md",),
+        options={"number": True, "align_semantic_breaks_in_lists": True},
+    ),
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("ruff", "https://github.com/astral-sh/ruff", ("docs/**/*.md",)),
     # Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0).
@@ -91,6 +115,7 @@ _REPOS = [
         "https://github.com/roboflow/supervision",
         ("docs/**/*.md",),
         excludes=("docs/changelog.md", "docs/deprecated.md"),
+        options={"number": True},
     ),
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("ty", "https://github.com/astral-sh/ty", ("docs/**/*.md",)),
@@ -101,7 +126,8 @@ _REPOS = [
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
     Repo("uv", "https://github.com/astral-sh/uv", ("docs/**/*.md",)),
     # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo("vizro", "https://github.com/mckinsey/vizro", ("docs/**/*.md",)),
+    # Monorepo: docs live under vizro-core/docs/, vizro-ai/docs/, etc.
+    Repo("vizro", "https://github.com/mckinsey/vizro", ("*/docs/**/*.md",)),
 ]
 
 
@@ -132,6 +158,11 @@ def _clone_or_pull(repo: Repo, target_dir: Path) -> None:
             check=True,
         )
         subprocess.run(
+            ["git", "sparse-checkout", "set", "--no-cone", *repo.patterns],
+            cwd=target_dir,
+            check=True,
+        )
+        subprocess.run(
             ["git", "reset", "--hard", "FETCH_HEAD"],
             cwd=target_dir,
             check=True,
@@ -151,7 +182,7 @@ def _collect_files(repo: Repo, target_dir: Path) -> list[Path]:
     return sorted(included - excluded)
 
 
-def _check_file(path: Path) -> FileResult:
+def _check_file(path: Path, options: dict[str, Any]) -> FileResult:
     """Verify mdformat produces idempotent output for a single file."""
     try:
         original = path.read_text(encoding="utf-8")
@@ -159,8 +190,8 @@ def _check_file(path: Path) -> FileResult:
         return FileResult(path=path, error=f"read error: {err}")
 
     try:
-        pass1 = mdformat.text(original, extensions={"mkdocs"})
-        pass2 = mdformat.text(pass1, extensions={"mkdocs"})
+        pass1 = mdformat.text(original, options=options, extensions={"mkdocs"})
+        pass2 = mdformat.text(pass1, options=options, extensions={"mkdocs"})
     except Exception as err:
         return FileResult(path=path, error=f"mdformat error: {err}")
 
@@ -181,9 +212,15 @@ def _check_file(path: Path) -> FileResult:
 
 def _check_repo(repo: Repo, target_dir: Path) -> CheckResult:
     files = _collect_files(repo, target_dir)
+    if not files:
+        no_match = FileResult(
+            path=target_dir,
+            error=f"no files matched patterns {repo.patterns}",
+        )
+        return CheckResult(repo=repo, file_results=(no_match,))
     return CheckResult(
         repo=repo,
-        file_results=tuple(_check_file(f) for f in files),
+        file_results=tuple(_check_file(f, repo.options) for f in files),
     )
 
 
@@ -201,11 +238,9 @@ def main(argv: list[str]) -> None:
         repos = [r for r in _REPOS if r.name in argv]
 
     _CANARY_DIR.mkdir(parents=True, exist_ok=True)
-    results: list[CheckResult] = []
-    for repo in repos:
-        target_dir = _CANARY_DIR / repo.name
-        _clone_or_pull(repo, target_dir)
-        results.append(_check_repo(repo, target_dir))
+    with ThreadPoolExecutor(max_workers=len(repos)) as pool:
+        list(pool.map(lambda r: _clone_or_pull(r, _CANARY_DIR / r.name), repos))
+    results = [_check_repo(repo, _CANARY_DIR / repo.name) for repo in repos]
 
     print("--- Canary Results ---")
     for result in results:

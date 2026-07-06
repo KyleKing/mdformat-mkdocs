@@ -188,12 +188,13 @@ skip_missing_interpreters = false
 basepython = ["py314"]
 changedir = "{tox_root}"
 commands = [["python", "scripts/canary.py", {default = [], extend = true, replace = "posargs"}]]
-description = "Run mdformat --check against real downstream repos. Optionally specify: '-- ruff uv' to test a subset."
+description = "Run mdformat idempotency checks against real downstream repos. Optionally specify: '-- ruff uv' to test a subset."
 skip_install = false
 
 [tool.tox.env.cz]
 basepython = ["py314"]
 commands = [["cz", "bump", {default = [], extend = true, replace = "posargs"}]]
+commands_pre = [["tox", "-e", "canary"]]
 deps = "commitizen>=4.10.0"
 description = "Bump version using commitizen. Optionally specify: '-- --increment MAJOR|MINOR|PATCH' or '-- --dry-run'"
 skip_install = true
