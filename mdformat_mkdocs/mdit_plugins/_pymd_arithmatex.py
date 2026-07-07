@@ -92,10 +92,13 @@ def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
     md.use(dollarmath_plugin)
 
     # Bracket syntax: \(...\) and \[...\]
+    # Snapshot existing rules so we only wrap the ones texmath adds here. Other
+    # plugins (e.g. mdformat-myst) may already have registered math_block rules,
+    # so identifying texmath's rules by position is unreliable (issue #90).
+    before = {id(rule) for rule in md.block.ruler.__rules__}
     md.use(texmath_plugin, delimiters="brackets")
 
     # Fix for issue #72: Wrap texmath block rules to reject \[test\]: value
-    # Find the texmath rules (inserted after dollarmath's math_block)
     def make_wrapper(
         original_fn: Callable[[StateBlock, int, int, bool], bool],
     ) -> Callable[[StateBlock, int, int, bool], bool]:
@@ -106,21 +109,13 @@ def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
 
         return wrapped
 
-    # Wrap math_block_eqno and the second math_block (both from texmath)
-    # Find them by name, skipping the first math_block (from dollarmath)
-    found_first_math_block = False
     wrapped_count = 0
-    for idx, rule in enumerate(md.block.ruler.__rules__):
-        if rule.name == "math_block":
-            if found_first_math_block:
-                # This is the second math_block (from texmath)
-                md.block.ruler.__rules__[idx].fn = make_wrapper(rule.fn)
-                wrapped_count += 1
-            else:
-                found_first_math_block = True
-        elif rule.name == "math_block_eqno":
-            # This is from texmath
-            md.block.ruler.__rules__[idx].fn = make_wrapper(rule.fn)
+    for rule in md.block.ruler.__rules__:
+        if id(rule) not in before and rule.name in {
+            DOLLARMATH_BLOCK,
+            TEXMATH_BLOCK_EQNO,
+        }:
+            rule.fn = make_wrapper(rule.fn)
             wrapped_count += 1
 
     if wrapped_count != _EXPECTED_WRAPPED_RULES:
