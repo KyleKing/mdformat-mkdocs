@@ -148,34 +148,46 @@ def _strip_blockquote_markers(content: str) -> str:
     lines = content.split("\n")
     return "\n".join(
         line.removeprefix("> ") if line.startswith("> ") else line for line in lines
-    ).strip()
+    )
+
+
+def _split_math_block_content(content: str) -> tuple[str, str, str]:
+    """Split math block content into (cleaned content, leading sep, trailing sep).
+
+    A separator is a newline if the raw content already had whitespace on that
+    side (safe to normalize, since that whitespace collapses the same way
+    whether it's a space or a newline), and empty otherwise. Content with no
+    surrounding whitespace (Issue #84) must not gain a separator: inserting
+    one would change the math block's rendered text content, so the plugin's
+    idempotency validation would fail.
+    """
+    unquoted = _strip_blockquote_markers(content)
+    leading_sep = "\n" if unquoted[:1].isspace() else ""
+    trailing_sep = "\n" if unquoted[-1:].isspace() else ""
+    return unquoted.strip(), leading_sep, trailing_sep
 
 
 def _render_math_block(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render block math with original delimiters."""
     markup = node.markup
-    cleaned_content = _strip_blockquote_markers(node.content)
+    cleaned_content, leading_sep, trailing_sep = _split_math_block_content(node.content)
 
-    if markup == "$$":
-        return f"$$\n{cleaned_content}\n$$"
     if markup == "\\[":
-        return f"\\[\n{cleaned_content}\n\\]"
-    # Fallback
-    return f"$$\n{cleaned_content}\n$$"
+        return f"\\[{leading_sep}{cleaned_content}{trailing_sep}\\]"
+    # "$$" and fallback
+    return f"$${leading_sep}{cleaned_content}{trailing_sep}$$"
 
 
 def _render_math_block_eqno(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001
     """Render block math with equation label."""
     markup = node.markup
     label = node.info
-    cleaned_content = _strip_blockquote_markers(node.content)
+    cleaned_content, leading_sep, trailing_sep = _split_math_block_content(node.content)
 
-    if markup == "$$":
-        return f"$$\n{cleaned_content}\n$$ ({label})"
     if markup == "\\[":
-        return f"\\[\n{cleaned_content}\n\\] ({label})"
-    # Fallback
-    return f"$$\n{cleaned_content}\n$$ ({label})"
+        return f"\\[{leading_sep}{cleaned_content}{trailing_sep}\\] ({label})"
+    # "$$" and fallback
+    return f"$${leading_sep}{cleaned_content}{trailing_sep}$$ ({label})"
 
 
 def _render_amsmath(node: RenderTreeNode, context: RenderContext) -> str:  # noqa: ARG001

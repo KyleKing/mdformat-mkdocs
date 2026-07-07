@@ -410,3 +410,34 @@ Multiple: $a=1$, $b=2$, and $c=3$.
 
 Parenthesis: \(x=y\) is equivalent to \(y=x\).
 .
+
+Issue #84: block math with no surrounding whitespace (dollar)
+.
+$$F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
+$$F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
+
+Issue #84: block math with no surrounding whitespace (bracket)
+.
+\[F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega\]
+.
+\[F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega\]
+.
+
+Issue #84: block math with whitespace on one side only
+.
+$$ F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
+$$
+F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
+
+Issue #84: block math with whitespace on one side only (idempotency)
+.
+$$
+F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
+$$
+F_{x,m}=\int_\Omega p(\varphi,z) \cdot \sin(\varphi) d\Omega$$
+.
