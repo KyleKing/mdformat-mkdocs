@@ -6,6 +6,7 @@ from typing import TypeVar
 
 import mdformat
 import pytest
+from _pytest.mark import ParameterSet
 from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 
@@ -68,16 +69,23 @@ def test_format_fixtures(line, title, text, expected):
     assert output.rstrip() == expected.rstrip()
 
 
-@pytest.mark.parametrize(
-    ("line", "title", "text", "expected"),
-    fixtures,
-    ids=[f[1] for f in fixtures],
-)
+def _stability_params() -> list[ParameterSet]:
+    """Mark known limitations xfail(strict=True) so a fixed one becomes a failure."""
+    params = []
+    for fixture in fixtures:
+        title = fixture[1]
+        marks = (
+            pytest.mark.xfail(strict=True, reason=f"Known limitation: {title}")
+            if title in KNOWN_HTML_STABILITY_LIMITATIONS
+            else ()
+        )
+        params.append(pytest.param(*fixture, marks=marks, id=title))
+    return params
+
+
+@pytest.mark.parametrize(("line", "title", "text", "expected"), _stability_params())
 def test_format_html_stability(line, title, text, expected):
     """Validate that formatting doesn't change HTML output."""
-    if title in KNOWN_HTML_STABILITY_LIMITATIONS:
-        pytest.xfail(f"Known limitation: {title}")
-
     output = mdformat.text(text, extensions={"mkdocs"})
 
     md = MarkdownIt("commonmark")
