@@ -54,6 +54,25 @@ This identifies escaped brackets like \[`code`\] (not math), since backticks are
 _EXPECTED_WRAPPED_RULES = 2
 
 
+def _is_ambiguous_same_line_close(state: StateBlock, start_line: int) -> bool:
+    r"""True if the line opens `$$`, closes it, then has trailing content.
+
+    e.g. `$$b$$ trailing`: dollarmath's block rule only recognizes a
+    same-line close when the closing `$$` is the last thing on the line.
+    With trailing text present, it instead scans forward for the *next*
+    `$$` anywhere in the document, silently swallowing everything in
+    between (including subsequent list items) as literal math content.
+    """
+    pos = state.bMarks[start_line] + state.tShift[start_line]
+    end = state.eMarks[start_line]
+    stripped = state.src[pos:end].strip()
+    return (
+        stripped.startswith("$$")
+        and "$$" in stripped[2:]
+        and not stripped.endswith("$$")
+    )
+
+
 def _is_escaped_bracket(state: StateBlock, start_line: int) -> bool:
     r"""Check if \[...\] on this line is escaped brackets, not math.
 
@@ -76,6 +95,42 @@ def _is_escaped_bracket(state: StateBlock, start_line: int) -> bool:
     )
 
 
+def _guard_dollarmath_same_line_close(
+    md: MarkdownIt, before_dollarmath: set[int]
+) -> None:
+    """Wrap dollarmath's own `math_block` rule against the same-line-close bug.
+
+    e.g. `$$b$$ trailing` otherwise swallows subsequent content as literal
+    math text. Identified by id, since texmath registers a rule with the
+    same name ("math_block") later in `pymd_arithmatex_plugin`.
+
+    TODO: a fix has been proposed upstream in `mdit-py-plugins` (drafted in
+    `mdformat-obsidian`'s UPSTREAM_MDIT_PY_PLUGINS_FIX.md) that would make
+    this guard unnecessary. Once a released `mdit-py-plugins` includes it,
+    bump the version floor in pyproject.toml, run the test suite, and if
+    `tests/test_arithmatex_plugin_compat.py::test_same_line_close_with_trailing_text_does_not_swallow_list_items`
+    still passes, delete this function and its call site below.
+    """
+    for rule in md.block.ruler.__rules__:
+        if id(rule) not in before_dollarmath and rule.name == DOLLARMATH_BLOCK:
+            original_fn = rule.fn
+
+            def guarded(
+                state: StateBlock,
+                start: int,
+                end: int,
+                silent: bool,
+                _original_fn: Callable[
+                    [StateBlock, int, int, bool], bool
+                ] = original_fn,
+            ) -> bool:
+                if _is_ambiguous_same_line_close(state, start):
+                    return False
+                return _original_fn(state, start, end, silent)
+
+            rule.fn = guarded
+
+
 def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
     r"""Register Arithmatex support using existing mdit-py-plugins.
 
@@ -89,7 +144,9 @@ def pymd_arithmatex_plugin(md: MarkdownIt) -> None:
     """
     # Dollar syntax: $...$ and $$...$$
     # Defaults provide smart dollar mode (no digits/space adjacent to $)
+    before_dollarmath = {id(rule) for rule in md.block.ruler.__rules__}
     md.use(dollarmath_plugin)
+    _guard_dollarmath_same_line_close(md, before_dollarmath)
 
     # Bracket syntax: \(...\) and \[...\]
     # Snapshot existing rules so we only wrap the ones texmath adds here. Other
