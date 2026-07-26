@@ -141,16 +141,22 @@ md.render(text)
 
 `mdformat-mkdocs` adds the CLI arguments:
 
-- `--align-semantic-breaks-in-lists` to optionally align line breaks in numbered lists to 3-spaces. If not specified, the default of 4-indents is followed universally.
+- `--align-semantic-breaks-in-lists` to optionally align semantic line breaks (continuation lines that aren't a nested list, code block, or admonition) to the width of the list marker: 3-spaces for numbered lists, 2-spaces for bulleted lists. If not specified, the default of 4-indents is followed universally.
 
     ```txt
     # with: mdformat
     1. Semantic line feed where the following line is
         three spaces deep
 
+    - Semantic line feed where the following line is
+        two spaces deep
+
     # vs. "mdformat --align-semantic-breaks-in-lists"
     1. Semantic line feed where the following line is
        three spaces deep
+
+    - Semantic line feed where the following line is
+      two spaces deep
     ```
 
 - `--ignore-missing-references` if set, do not escape link references when no definition is found. This is required when references are dynamic, such as with python mkdocstrings
