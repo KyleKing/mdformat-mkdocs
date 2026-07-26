@@ -76,3 +76,11 @@ Trailing space in inline code before horizontal rule
 <p><code>test </code></p>
 <hr>
 .
+
+
+Link with a spaced URL in angle brackets
+.
+[text](<http://example.com/some path>)
+.
+<p><a href="http://example.com/some%20path">text</a></p>
+.

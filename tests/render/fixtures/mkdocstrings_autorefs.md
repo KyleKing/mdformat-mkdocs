@@ -29,3 +29,10 @@ relação a outro
 verificar a precedência alfabética de um <a id="spiderWordFound4" href=""></a>texto em
 relação a outro</p>
 .
+
+Anchor links with angle-bracket empty destination
+.
+[](<>){#anchor-name}
+.
+<p><a id="anchor-name" href=""></a></p>
+.
