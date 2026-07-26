@@ -24,14 +24,14 @@ def _print(content: str, show_whitespace: bool) -> None:
     for line in content.split("\n"):
         indent, content = separate_indent(line)
         visible_indents = indent.replace(" ", "→").replace("\t", "➤")
-        print((visible_indents if show_whitespace else indent) + content)  # noqa: T201
+        print((visible_indents if show_whitespace else indent) + content)  # ruff:ignore[print]
 
 
-def print_text(output: str, expected: str, show_whitespace: bool = False) -> None:  # noqa: FBT002
+def print_text(output: str, expected: str, show_whitespace: bool = False) -> None:  # ruff:ignore[boolean-default-value-positional-argument]
     """Conditional print text for debugging."""
     if _SHOW_TEXT:
-        print("--  Output  --")  # noqa: T201
+        print("--  Output  --")  # ruff:ignore[print]
         _print(output, show_whitespace)
-        print("-- Expected --")  # noqa: T201
+        print("-- Expected --")  # ruff:ignore[print]
         _print(expected, show_whitespace)
-        print("--  <End>   --")  # noqa: T201
+        print("--  <End>   --")  # ruff:ignore[print]

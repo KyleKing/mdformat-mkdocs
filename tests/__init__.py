@@ -1,4 +1,4 @@
-# ruff: noqa: RUF067
+# ruff:file-ignore[non-empty-init-module]
 """Ignore beartype warnings from tests."""
 
 from contextlib import suppress

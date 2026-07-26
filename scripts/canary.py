@@ -1,12 +1,38 @@
-"""Run mdformat idempotency checks against real downstream repos (canary testing)."""
+"""Run mdformat idempotency checks against real downstream repos (canary testing).
 
-# ruff: noqa: T201, S603, S607
+Repos to check are configured in 'scripts/canary_repos.json', which is not
+overwritten by 'copier update' once it exists (see '_skip_if_exists' in
+'copier.yml'). It starts empty: canary testing is entirely opt-in per
+project. JSON (not a Python module of 'Repo(...)' calls) so this script can
+change the 'Repo' shape across template syncs without breaking every
+downstream project's frozen, un-synced entries; unknown or missing fields
+are ignored or defaulted rather than raising.
+
+To add or update an entry, run
+`git -C .tox/canary/cache/<name> show HEAD:.pre-commit-config.yaml` and check
+for a mdformat hook plus its args/excludes, then mirror them in the JSON
+entry so canary tracks what the downstream repo actually formats. Only
+'name' and 'url' are required.
+
+Example entry, appended to the 'repos' array in 'canary_repos.json'::
+
+    {
+        "name": "some-project",
+        "url": "https://github.com/some-org/some-project",
+        "patterns": ["docs/**/*.md"],
+        "excludes": ["docs/changelog.md"],
+        "options": {"wrap": 120}
+    }
+"""
+
+# ruff:file-ignore[print, subprocess-without-shell-equals-true, start-process-with-partial-path]
 
 from __future__ import annotations
 
 import difflib
+import json
 import re
-import subprocess  # noqa: S404
+import subprocess  # ruff:ignore[suspicious-subprocess-import]
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -14,6 +40,10 @@ from pathlib import Path
 from typing import Any
 
 import mdformat
+
+# Idempotency misses escapes mdformat adds to the original (e.g. autorefs
+# [`pkg`][] -> \[`pkg`\][]); the original-vs-pass-1 diff catches them.
+_ESCAPE_RE = re.compile(r"\\([\[\]<>])")
 
 
 @dataclass(frozen=True)
@@ -30,11 +60,6 @@ class Repo:
     def display(self) -> str:
         """Derive 'org/repo' from URL for display."""
         return "/".join(self.url.rstrip("/").split("/")[-2:])
-
-
-# Idempotency misses escapes mdformat adds to the original (e.g. autorefs
-# [`pkg`][] -> \[`pkg`\][]); the original-vs-pass-1 diff catches them. See #80, #84.
-_ESCAPE_RE = re.compile(r"\\([\[\]<>])")
 
 
 def _new_escapes(original: str, formatted: str) -> int:
@@ -57,7 +82,7 @@ class FileResult:
     def passed(self) -> bool:
         """True if the file produced no errors and no diff.
 
-        ``new_escapes`` is a warning surfaced separately, not a failure.
+        'new_escapes' is a warning surfaced separately, not a failure.
         """
         return self.error is None and self.diff is None
 
@@ -98,69 +123,24 @@ class CheckResult:
 # defeat clone caching. "cache" persists until `tox -e canary --recreate`.
 _CANARY_DIR = Path(__file__).parent.parent / ".tox" / "canary" / "cache"
 
-# Each entry documents whether the repo uses mdformat-mkdocs and how.
-# This context drives exclude decisions — if a repo excludes files from their
-# own mdformat run, we mirror that here so canary tracks what they actually format.
-#
-# Repos that don't use mdformat are included as idempotency smoke tests: we
-# verify our plugin doesn't crash or produce unstable output on real MkDocs content,
-# even if that content has never been run through mdformat.
-#
-# To update: run `git -C .tox/canary/cache/<name> show HEAD:.pre-commit-config.yaml`
-# and check for mdformat hooks + their args/excludes.
-_REPOS = [
-    # Fork disabled its mdformat-mkdocs==5.2.0b2 hook (issue #80): dev-docs autorefs
-    # like [`pkg`][] were escaped to \[`pkg`\][]. --ignore-missing-references is the fix.
-    Repo(
-        "deeplabcut",
-        "https://github.com/deruyter92/DeepLabCut",
-        ("dev-docs/**/*.md",),
-        options={"ignore_missing_references": True},
-    ),
-    # Uses mdformat-mkdocs==5.1.4 with --wrap=120 --number in pre-commit (rev 1.0.0).
-    # Excludes extended-json.md from their own hook; mirror that here.
-    Repo(
-        "mongodb",
-        "https://github.com/mongodb/specifications",
-        ("source/**/*.md",),
-        excludes=("source/extended-json/extended-json.md",),
-        options={"number": True, "wrap": 120},
-    ),
-    # Uses mdformat-mkdocs==5.1.4 with --number --compact-tables
-    # --align-semantic-breaks-in-lists in pre-commit (rev 1.0.0), over all *.md.
-    # --compact-tables needs mdformat-tables, which the canary env does not
-    # install, so it is not replicated here.
-    Repo(
-        "prek",
-        "https://github.com/j178/prek",
-        ("**/*.md",),
-        options={"number": True, "align_semantic_breaks_in_lists": True},
-    ),
-    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo("ruff", "https://github.com/astral-sh/ruff", ("docs/**/*.md",)),
-    # Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0).
-    # Explicitly excludes changelog.md and deprecated.md from their own hook — both
-    # contain code blocks with embedded triple-backtick strings (e.g. """```json...""")
-    # that trigger an idempotency edge case. Mirror their excludes here.
-    Repo(
-        "supervision",
-        "https://github.com/roboflow/supervision",
-        ("docs/**/*.md",),
-        excludes=("docs/changelog.md", "docs/deprecated.md"),
-        options={"number": True},
-    ),
-    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo("ty", "https://github.com/astral-sh/ty", ("docs/**/*.md",)),
-    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo(
-        "ultralytics", "https://github.com/ultralytics/ultralytics", ("docs/**/*.md",)
-    ),
-    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    Repo("uv", "https://github.com/astral-sh/uv", ("docs/**/*.md",)),
-    # Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.
-    # Monorepo: docs live under vizro-core/docs/, vizro-ai/docs/, etc.
-    Repo("vizro", "https://github.com/mckinsey/vizro", ("*/docs/**/*.md",)),
-]
+_REPOS_PATH = Path(__file__).parent / "canary_repos.json"
+
+_EXTENSIONS = {"mkdocs"}
+
+
+def _load_repos(path: Path) -> list[Repo]:
+    """Parse 'canary_repos.json', defaulting/ignoring fields this version doesn't know."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [
+        Repo(
+            name=entry["name"],
+            url=entry["url"],
+            patterns=tuple(entry.get("patterns", ())),
+            excludes=tuple(entry.get("excludes", ())),
+            options=entry.get("options", {}),
+        )
+        for entry in data.get("repos", [])
+    ]
 
 
 def _clone_or_pull(repo: Repo, target_dir: Path) -> None:
@@ -222,8 +202,8 @@ def _check_file(path: Path, options: dict[str, Any]) -> FileResult:
         return FileResult(path=path, error=f"read error: {err}")
 
     try:
-        pass1 = mdformat.text(original, options=options, extensions={"mkdocs"})
-        pass2 = mdformat.text(pass1, options=options, extensions={"mkdocs"})
+        pass1 = mdformat.text(original, options=options, extensions=_EXTENSIONS)
+        pass2 = mdformat.text(pass1, options=options, extensions=_EXTENSIONS)
     except Exception as err:
         return FileResult(path=path, error=f"mdformat error: {err}")
 
@@ -257,24 +237,20 @@ def _check_repo(repo: Repo, target_dir: Path) -> CheckResult:
     )
 
 
-def main(argv: list[str]) -> None:
-    """Run canary checks against all or a named subset of repos."""
-    repos = list(_REPOS)
-    if argv:
-        valid = {r.name for r in _REPOS}
-        unknown = [name for name in argv if name not in valid]
-        if unknown:
-            print(
-                f"Unknown repo(s): {', '.join(unknown)}. Valid: {', '.join(sorted(valid))}"
-            )
-            sys.exit(1)
-        repos = [r for r in _REPOS if r.name in argv]
+def _resolve_repos(argv: list[str], all_repos: list[Repo]) -> list[Repo]:
+    if not argv:
+        return list(all_repos)
+    valid = {r.name for r in all_repos}
+    unknown = [name for name in argv if name not in valid]
+    if unknown:
+        print(
+            f"Unknown repo(s): {', '.join(unknown)}. Valid: {', '.join(sorted(valid))}"
+        )
+        sys.exit(1)
+    return [r for r in all_repos if r.name in argv]
 
-    _CANARY_DIR.mkdir(parents=True, exist_ok=True)
-    with ThreadPoolExecutor(max_workers=len(repos)) as pool:
-        list(pool.map(lambda r: _clone_or_pull(r, _CANARY_DIR / r.name), repos))
-    results = [_check_repo(repo, _CANARY_DIR / repo.name) for repo in repos]
 
+def _print_results(results: list[CheckResult]) -> None:
     print("--- Canary Results ---")
     for result in results:
         label = "PASS" if result.passed else "FAIL"
@@ -297,6 +273,27 @@ def main(argv: list[str]) -> None:
             )
             for path, count in warnings[:10]:
                 print(f"        {count:>4}  {path}")
+
+
+def main(argv: list[str]) -> None:
+    """Run canary checks against all or a named subset of repos."""
+    all_repos = _load_repos(_REPOS_PATH)
+
+    if not all_repos:
+        print(
+            "No canary repos configured in scripts/canary_repos.json. Skipping "
+            "(canary testing is opt-in; see this module's docstring)."
+        )
+        return
+
+    repos = _resolve_repos(argv, all_repos)
+
+    _CANARY_DIR.mkdir(parents=True, exist_ok=True)
+    with ThreadPoolExecutor(max_workers=len(repos)) as pool:
+        list(pool.map(lambda r: _clone_or_pull(r, _CANARY_DIR / r.name), repos))
+    results = [_check_repo(repo, _CANARY_DIR / repo.name) for repo in repos]
+
+    _print_results(results)
 
     failures = [r for r in results if not r.passed]
     count = len(failures)

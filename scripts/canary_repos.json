@@ -1,0 +1,98 @@
+{
+    "$comment": "Not overwritten by 'copier update' once this file exists (see canary.py's module docstring for how to add an entry, and copier.yml's '_skip_if_exists').",
+    "repos": [
+        {
+            "$comment": "Fork disabled its mdformat-mkdocs==5.2.0b2 hook (issue #80): dev-docs autorefs like [`pkg`][] were escaped to \\[`pkg`\\][]. --ignore-missing-references is the fix.",
+            "name": "deeplabcut",
+            "options": {
+                "ignore_missing_references": true
+            },
+            "patterns": [
+                "dev-docs/**/*.md"
+            ],
+            "url": "https://github.com/deruyter92/DeepLabCut"
+        },
+        {
+            "$comment": "Uses mdformat-mkdocs==5.1.4 with --wrap=120 --number in pre-commit (rev 1.0.0). Excludes extended-json.md from their own hook; mirror that here.",
+            "excludes": [
+                "source/extended-json/extended-json.md"
+            ],
+            "name": "mongodb",
+            "options": {
+                "number": true,
+                "wrap": 120
+            },
+            "patterns": [
+                "source/**/*.md"
+            ],
+            "url": "https://github.com/mongodb/specifications"
+        },
+        {
+            "$comment": "Uses mdformat-mkdocs==5.1.4 with --number --compact-tables --align-semantic-breaks-in-lists in pre-commit (rev 1.0.0), over all *.md. --compact-tables needs mdformat-tables, which the canary env does not install, so it is not replicated here.",
+            "name": "prek",
+            "options": {
+                "align_semantic_breaks_in_lists": true,
+                "number": true
+            },
+            "patterns": [
+                "**/*.md"
+            ],
+            "url": "https://github.com/j178/prek"
+        },
+        {
+            "$comment": "Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.",
+            "name": "ruff",
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/astral-sh/ruff"
+        },
+        {
+            "$comment": "Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0). Explicitly excludes changelog.md and deprecated.md from their own hook, both contain code blocks with embedded triple-backtick strings that trigger an idempotency edge case. Mirror their excludes here.",
+            "excludes": [
+                "docs/changelog.md",
+                "docs/deprecated.md"
+            ],
+            "name": "supervision",
+            "options": {
+                "number": true
+            },
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/roboflow/supervision"
+        },
+        {
+            "$comment": "Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.",
+            "name": "ty",
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/astral-sh/ty"
+        },
+        {
+            "$comment": "Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.",
+            "name": "ultralytics",
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/ultralytics/ultralytics"
+        },
+        {
+            "$comment": "Does NOT use mdformat. Included as a smoke test for real-world MkDocs content.",
+            "name": "uv",
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/astral-sh/uv"
+        },
+        {
+            "$comment": "Does NOT use mdformat. Included as a smoke test for real-world MkDocs content. Monorepo: docs live under vizro-core/docs/, vizro-ai/docs/, etc.",
+            "name": "vizro",
+            "patterns": [
+                "*/docs/**/*.md"
+            ],
+            "url": "https://github.com/mckinsey/vizro"
+        }
+    ]
+}

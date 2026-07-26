@@ -111,36 +111,36 @@ target-version = 'py310'
 
 [tool.ruff.lint]
 ignore = [
-  'ANN002', # Missing type annotation for `*args`
-  'ANN003', # Missing type annotation for `**kwargs`
-  'BLE001', # Do not catch blind exception: `Exception`
-  'COM812', # missing-trailing-comma
-  'CPY001', # Missing copyright notice at top of file
-  'D203', # "1 blank line required before class docstring" (Conflicts with D211)
-  'D213', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
-  'DOC201', # `return` is not documented in docstring
-  'DOC402', # `yield` is not documented in docstring
-  'E501', # Line too long (89 > 88)
-  'EM101', # Exception must not use a string literal, assign to variable first
-  'FBT001', # Boolean-typed positional argument in function definition
-  'FIX001', # Line contains FIXME
-  'FIX002', # Line contains TODO
-  'FIX004', # Line contains HACK
-  'N803', # Argument name `startLine` should be lowercase
-  'N815', # Variable `lineMax` in class scope should not be mixedCase
-  'PLR0913', # Too many arguments in function definition (6 > 5)
-  'S101', # Use of `assert` detected
-  'TC002', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
-  'TC003', # Move standard library import `argparse` into a type-checking block (for beartype)
-  'TD001', # Invalid TODO tag: `FIXME`
-  'TD002', # Missing author in TODO; try: `# TODO(<author_name>): ...`
-  'TD003', # Missing issue link on the line following this TODO
-  'TRY003', # Avoid specifying long messages outside the exception class
+  'assert', # Use of `assert` detected
+  'blind-except', # Do not catch blind exception: `Exception`
+  'boolean-type-hint-positional-argument', # Boolean-typed positional argument in function definition
+  'docstring-missing-returns', # `return` is not documented in docstring
+  'docstring-missing-yields', # `yield` is not documented in docstring
+  'incorrect-blank-line-before-class', # "1 blank line required before class docstring" (Conflicts with D211)
+  'invalid-argument-name', # Argument name `startLine` should be lowercase
+  'invalid-todo-tag', # Invalid TODO tag: `FIXME`
+  'line-contains-fixme', # Line contains FIXME
+  'line-contains-hack', # Line contains HACK
+  'line-contains-todo', # Line contains TODO
+  'line-too-long', # Line too long (89 > 88)
+  'missing-copyright-notice', # Missing copyright notice at top of file
+  'missing-todo-author', # Missing author in TODO; try: `# TODO(<author_name>): ...`
+  'missing-todo-link', # Missing issue link on the line following this TODO
+  'missing-trailing-comma', # missing-trailing-comma
+  'missing-type-args', # Missing type annotation for `*args`
+  'missing-type-kwargs', # Missing type annotation for `**kwargs`
+  'mixed-case-variable-in-class-scope', # Variable `lineMax` in class scope should not be mixedCase
+  'multi-line-summary-second-line', # "Multi-line docstring summary should start at the second line" (Conflicts with D212)
+  'raise-vanilla-args', # Avoid specifying long messages outside the exception class
+  'raw-string-in-exception', # Exception must not use a string literal, assign to variable first
+  'too-many-arguments', # Too many arguments in function definition (6 > 5)
+  'typing-only-standard-library-import', # Move standard library import `argparse` into a type-checking block (for beartype)
+  'typing-only-third-party-import', # Move third-party import `mdformat.renderer.typing.Postprocess` into a type-checking block (for beartype)
 ]
 preview = true
 select = ['ALL']
 unfixable = [
-  'ERA001', # Commented out code
+  'commented-out-code', # Commented out code
 ]
 
 [tool.ruff.lint.isort]
@@ -148,18 +148,18 @@ known-first-party = ['mdformat_mkdocs', 'tests']
 
 [tool.ruff.lint.per-file-ignores]
 '__init__.py' = [
-  'D104', # Missing docstring in public package
+  'undocumented-public-package', # Missing docstring in public package
 ]
 'tests/*.py' = [
-  'ANN001', # Missing type annotation for function argument
-  'ANN201', # Missing return type annotation for public function
-  'ANN202', # Missing return type annotation for private function `test_make_diffable`
-  'ARG001', # Unused function argument: `line`
-  'D100', # Missing docstring in public module
-  'D103', # Missing docstring in public function
-  'PLC2701', # Private name import `_<>` from external module
-  'PT004', # flake8-pytest-style: fixture does not return
-  'S101', # Use of `assert` detected
+  'assert', # Use of `assert` detected
+  'import-private-name', # Private name import `_<>` from external module
+  'missing-return-type-private-function', # Missing return type annotation for private function `test_make_diffable`
+  'missing-return-type-undocumented-public-function', # Missing return type annotation for public function
+  'missing-type-function-argument', # Missing type annotation for function argument
+  'pytest-missing-fixture-name-underscore', # flake8-pytest-style: fixture does not return
+  'undocumented-public-function', # Missing docstring in public function
+  'undocumented-public-module', # Missing docstring in public module
+  'unused-function-argument', # Unused function argument: `line`
 ]
 
 [tool.ruff.lint.pydocstyle]
@@ -188,7 +188,7 @@ skip_missing_interpreters = false
 basepython = ["py314"]
 changedir = "{tox_root}"
 commands = [["python", "scripts/canary.py", {default = [], extend = true, replace = "posargs"}]]
-description = "Run mdformat idempotency checks against real downstream repos. Optionally specify: '-- ruff uv' to test a subset."
+description = "Run mdformat idempotency checks against real downstream repos configured in scripts/canary_repos.json. Optionally specify: '-- some-repo another-repo' to test a subset."
 skip_install = false
 
 [tool.tox.env.cz]
