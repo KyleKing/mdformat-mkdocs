@@ -26,14 +26,17 @@ _RE_FUNCS = {"compile", "match", "search", "fullmatch", "findall", "finditer", "
 _METACHARS = set(".^$*+?()[]{}|")
 # Escapes that denote a character class, not a literal.
 _CLASS_ESCAPES = set("sSdDwWbBAZ")
+# Escapes that denote a control character rather than the escaped letter itself.
+_CONTROL_ESCAPES = {"a": "\a", "f": "\f", "n": "\n", "r": "\r", "t": "\t", "v": "\v"}
 
 
 def _literal_prefix(pattern: str) -> str:
     r"""Best-effort leading literal of a regex, so anchored patterns are matched.
 
-    Walks the source until the first metacharacter or character class, treating
-    ``\x`` as literal ``x`` and expanding a ``{n}`` repeat of the preceding
-    literal (so ```` `{3} ```` yields three backticks).
+    Walks the source until the first metacharacter or character class, decoding
+    control escapes such as ``\n``, treating any other ``\x`` as literal ``x``,
+    and expanding a ``{n}`` repeat of the preceding literal (so ```` `{3} ````
+    yields three backticks).
     """
     pattern = pattern.removeprefix("^")
     out: list[str] = []
@@ -44,7 +47,7 @@ def _literal_prefix(pattern: str) -> str:
             nxt = pattern[i + 1]
             if nxt in _CLASS_ESCAPES:
                 break
-            out.append(nxt)
+            out.append(_CONTROL_ESCAPES.get(nxt, nxt))
             i += 2
         elif char == "{" and out:
             end = pattern.find("}", i)

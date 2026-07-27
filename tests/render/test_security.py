@@ -4,17 +4,25 @@ Two failure modes matter when a plugin renders untrusted markdown to HTML:
 
 - **ReDoS** — a regex with overlapping/nested quantifiers backtracks
   super-linearly on adversarial input. The guard below *derives* payloads from
-  the plugin's own render fixtures: each fixture input is a known-valid
-  activation, so amplifying a homogeneous character run inside it drives the
-  plugin's real regexes without hand-authoring per-rule payloads. Add a fixture
-  and the fuzz corpus grows for free.
+  the plugin's own fixtures: each fixture input is a known-valid activation, so
+  amplifying a homogeneous character run inside it drives the plugin's real
+  regexes without hand-authoring per-rule payloads. Add a fixture and the fuzz
+  corpus grows for free. Both the render and format corpora feed it, and the
+  timing path runs `mdformat.text`, which is the only path that reaches a
+  postprocessor-only plugin's regexes.
 
 - **XSS** — a default render rule interpolates captured token content into markup
   without escaping. This cannot be derived from fixtures (the probe has to land
   in the specific sink), so `_INJECTION_CASES` is an explicit list you extend as
   the plugin grows sinks. Each case asserts the raw marker never survives in the
   output (``markdown-it`` runs with raw HTML disabled, so a correctly-escaped
-  plugin emits ``&lt;xss&gt;``).
+  plugin emits ``&lt;xss&gt;``). A plugin that registers no render rules has no
+  such sink, and the list stays empty.
+
+The plugin is applied through `update_mdit` and the `mkdocs` mdformat
+extension rather than by importing a markdown-it plugin symbol directly, so this
+file works unchanged whether the plugin ships syntax, renderers, postprocessors,
+or only some of those.
 
 See `SECURITY_GUARD.md` for how to keep this corpus healthy (fixture coverage,
 the AST reachability check in `test_regex_reachability.py`, and the optional
@@ -27,13 +35,21 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
+import mdformat
 import pytest
 from markdown_it import MarkdownIt
 from markdown_it.utils import read_fixture_file
 
-from mdformat_mkdocs.plugin import update_mdit
+from mdformat_mkdocs import update_mdit
 
-FIXTURE_PATH = Path(__file__).parent / "fixtures"
+_EXTENSION = "mkdocs"
+
+# Both corpora are fair game: a postprocessor-only plugin has no render fixtures,
+# and a syntax-only plugin may carry most of its regexes on the render side.
+FIXTURE_PATHS = (
+    Path(__file__).parent / "fixtures",
+    Path(__file__).parents[1] / "format" / "fixtures",
+)
 
 # Homogeneous runs of one character class are what push overlapping quantifiers
 # into catastrophic backtracking; amplify each fixture with every class.
@@ -44,7 +60,8 @@ _BUDGET_SECONDS = 1.0  # Safe threshold relaxed for CI
 
 def _make_md() -> MarkdownIt:
     md = MarkdownIt("commonmark")
-    md.options.update({"mdformat": {"plugin": {"mkdocs": {}}}})
+    # `update_mdit` reads config through `get_conf`, which requires seeded options
+    md.options.update({"mdformat": {"plugin": {_EXTENSION: {}}}})
     update_mdit(md)
     return md
 
@@ -52,7 +69,8 @@ def _make_md() -> MarkdownIt:
 def _fixture_inputs() -> list[str]:
     return [
         text
-        for path in sorted(FIXTURE_PATH.glob("*.md"))
+        for directory in FIXTURE_PATHS
+        for path in sorted(directory.glob("*.md"))
         for _line, _title, text, _expected in read_fixture_file(path)
     ]
 
@@ -81,13 +99,13 @@ _REDOS_PARAMS = [(text, filler) for text in _fixture_inputs() for filler in _FIL
     _REDOS_PARAMS,
     ids=[f"{i}-{filler!r}" for i, (_t, filler) in enumerate(_REDOS_PARAMS)],
 )
-def test_render_is_redos_safe(text: str, filler: str) -> None:
+def test_format_is_redos_safe(text: str, filler: str) -> None:
     source = _amplified(text, filler)
     start = time.perf_counter()
-    _make_md().render(source)
+    mdformat.text(source, extensions={_EXTENSION})
     elapsed = time.perf_counter() - start
     assert elapsed < _BUDGET_SECONDS, (
-        f"render took {elapsed:.3f}s on a {_RUN}x{filler!r} run amplified from "
+        f"format took {elapsed:.3f}s on a {_RUN}x{filler!r} run amplified from "
         f"{text!r}; likely catastrophic backtracking (ReDoS)"
     )
 

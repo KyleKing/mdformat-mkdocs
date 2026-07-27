@@ -75,9 +75,7 @@ tox -e canary
 tox -e canary -- uv ruff
 ```
 
-Clones real consumer repos via git sparse checkout and runs a two-pass idempotency check: format with mdformat once, format again, compare. Not in the default `tox` run — invoke explicitly before releasing to catch crashes or unstable output on real MkDocs content.
-
-See `scripts/canary.py` for full details and excludes
+Clones real consumer repos via git sparse checkout and runs a two-pass idempotency check: format once, format again, compare. Not part of the default `tox` run, so invoke it before releasing to catch crashes or unstable output on real MkDocs content. Configure tracked repos in `scripts/canary_repos.json` and see `scripts/canary.py` for excludes.
 
 ## Pre-commit Hook Testing
 
@@ -110,12 +108,12 @@ PYTHON
 
 ### Plugin System
 
-The package implements mdformat's plugin interface with up to four key exports in `__init__.py`:
+The package implements mdformat's plugin interface with up to four exports in `__init__.py`:
 
 - `update_mdit`: Registers markdown-it parser extensions
 - `add_cli_argument_group`: Optionally adds CLI flags
 - `RENDERERS`: Maps syntax tree node types to render functions
-- `POSTPROCESSORS`: Post-processes rendered output (list normalization, inline wrapping, deflist escaping)
+- `POSTPROCESSORS`: Post-processes rendered output of a syntax node. Multiple plugins can register a postprocessor for the same node type, and they run in series
 
 ### Core Components
 
@@ -155,40 +153,43 @@ Link-boundary detection using bracket counting (`text_before.count("[") - text_b
 
 **mdformat_mkdocs/\_synced/**
 
-- Contains code synced from other projects (admonition factories)
-- Check the README in these directories before modifying
+- Code synced from other mdformat plugins in this family (e.g. admonition factories). Check each subdirectory's README before modifying, since changes flow back upstream
 
 ### Configuration Options
 
 Configuration can be passed via:
 
-1. Example CLI arguments: `--cli-argument`
-1. Example TOML config file (`.mdformat.toml`):
+1. CLI argument, e.g. the scaffolded `--argument` flag
+1. TOML config file (`.mdformat.toml`):
     ```toml
     [plugin.mkdocs]
-    cli_argument = true
+    argument = true
     ```
 1. API: `mdformat.text(content, extensions={"mkdocs"}, options={...})`
 
-Boolean flags in `add_cli_argument_group` must use `action="store_const", const=True` (default `None`), never `action="store_true"` (default `False`). `get_conf()` treats a present-but-`False` value the same as an explicit user choice, so a `store_true` default silently overrides `cli_argument = true` set in `.mdformat.toml` whenever the CLI flag isn't passed. `mdformat`'s own CLI builder detects this and raises a `DeprecationWarning` for any plugin flag whose default isn't `None` or `argparse.SUPPRESS`.
+Two footguns to avoid:
+
+- Boolean flags in `add_cli_argument_group` must use `action="store_const", const=True` (default `None`), not `store_true`. A `store_true` default (`False`) is indistinguishable from an explicit choice to `get_conf()`, so it silently overrides `argument = true` from `.mdformat.toml` whenever the CLI flag isn't passed. mdformat's CLI builder raises a `DeprecationWarning` for any plugin flag whose default isn't `None` or `argparse.SUPPRESS`
+- Read config lazily. Call `get_conf()` (or read `RenderContext.options`) inside the rule/renderer function itself, not inside `update_mdit`. mdformat runs extensions' `update_mdit` in an unguaranteed order, so a value captured there can be stale by the time every extension has finished configuring options
 
 ### Testing Strategy
 
-**Snapshot Testing**
+**Fixture Testing**
 
-- Uses `syrupy` for snapshot testing
-- Test fixtures in `tests/format/fixtures/` and `tests/render/fixtures/`
-- Main test file: `tests/test_mdformat.py` verifies idempotent formatting against `tests/pre-commit-test.md`
+- Fixture files (before/after markdown pairs) live in `tests/format/fixtures/` and `tests/render/fixtures/`, parsed with `markdown_it.utils.read_fixture_file`
+- `tests/test_mdformat.py` verifies idempotent formatting against `tests/pre-commit-test.md`
+- This project layers `syrupy` on top of these fixtures, so `--snapshot-update` applies
 
 **Test Organization**
 
 - `tests/format/`: Tests formatting output (input markdown → formatted markdown)
 - `tests/render/`: Tests HTML rendering (markdown → HTML via markdown-it)
-- `tests/test_inline_rule_protocol.py`: Unit tests for the `StateInline` rule contract (see below)
+- `tests/test_hypothesis.py`: Property-based idempotency testing over generated markdown documents
+- `tests/test_inline_rule_protocol.py`: Unit tests for the `StateInline` rule contract (see above)
 
 ## Development Notes
 
-- **Do not use `uv` commands**—there is no `uv.lock` file. Always use `tox` (installed via mise and available on PATH) which manages environments and dependencies.
+- Do not use `uv` commands (there is no `uv.lock` file). Always use `tox` (installed via mise and available on PATH), which manages environments and dependencies
 
 ## mdformat-mkdocs Specific Guidance
 

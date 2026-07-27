@@ -2,7 +2,7 @@
 
 ## API Documentation
 
-A collection of useful resources to reference when developing new features:
+References for developing new features:
 
 - [`markdown-it-py` documentation](https://markdown-it-py.readthedocs.io/en/latest/using.html)
 - [`markdown-it` (JS) documentation](https://markdown-it.github.io/markdown-it)
@@ -10,14 +10,14 @@ A collection of useful resources to reference when developing new features:
 
 ## Local Development
 
-This package utilizes [mise](https://mise.jdx.dev) ([installation guide](https://github.com/jdx/mise/blob/79367a4d382d8ab4cb76afef357d0db4afa33866/docs/installing-mise.md)) for dependency management, [prek](https://github.com/j178/prek) for fast pre-commit hooks, [uv](https://docs.astral.sh/uv) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
+This package uses [mise](https://mise.jdx.dev) ([installation guide](https://github.com/jdx/mise/blob/79367a4d382d8ab4cb76afef357d0db4afa33866/docs/installing-mise.md)) for dependency management, [prek](https://github.com/j178/prek) for fast pre-commit hooks, [uv](https://docs.astral.sh/uv) as the build engine, and [tox](https://tox.readthedocs.io) for test automation.
 
 To install the development dependencies:
 
 ```bash
 brew install mise  # or see the installation alternatives above
 
-# Install dependencies from mist.toml
+# Install dependencies from mise.toml
 mise trust
 mise install
 
@@ -47,7 +47,7 @@ To run all pre-commit steps:
 prek run --all
 ```
 
-`pytest-watcher` is configured in `pyproject.toml` for `[tool.pytest-watcher]` to continuously run tests
+`pytest-watcher` (`[tool.pytest-watcher]` in `pyproject.toml`) reruns tests on file changes
 
 ```sh
 ptw .
@@ -74,11 +74,11 @@ pipx install . --include-deps --force --editable
 
 ## Publish to PyPI
 
-This project uses [PyPI Trusted Publishers](https://docs.pypi.org/trusted-publishers) for secure, token-free publishing from GitHub Actions, with [uv](https://docs.astral.sh/uv) for building packages.
+This project publishes from GitHub Actions with [PyPI Trusted Publishers](https://docs.pypi.org/trusted-publishers) (no API tokens) and builds with [uv](https://docs.astral.sh/uv).
 
 ### Initial Setup (One-time)
 
-Before publishing for the first time, you need to configure Trusted Publishing on PyPI:
+Before publishing for the first time, configure Trusted Publishing on PyPI:
 
 1. Go to your project's page on PyPI: `https://pypi.org/manage/project/mdformat_mkdocs/settings/publishing/`
     - If the project doesn't exist yet, go to [PyPI's publishing page](https://pypi.org/manage/account/publishing) to add a "pending" publisher
@@ -91,11 +91,11 @@ Before publishing for the first time, you need to configure Trusted Publishing o
 1. Configure the GitHub Environment:
     - Go to your repository's `Settings` → `Environments`
     - Create an environment named `pypi`
-    - (Recommended) Enable "Required reviewers" for production safety
+    - (Recommended) Enable "Required reviewers"
 
 ### Publishing a Release
 
-Use `commitizen` to automatically bump versions (in `pyproject.toml` and `mdformat_mkdocs/__init__.py`) and create a commit with tag:
+Use `commitizen` to bump versions (in `pyproject.toml` and `mdformat_mkdocs/__init__.py`) and create a tagged commit:
 
 ```sh
 # Dry run to preview the version bump
@@ -111,4 +111,4 @@ tox -e cz -- --increment PATCH  # or MINOR or MAJOR
 git push origin main --tags
 ```
 
-The GitHub Action will automatically build and publish to PyPI using Trusted Publishers (no API tokens needed!).
+The GitHub Action then builds and publishes to PyPI.
