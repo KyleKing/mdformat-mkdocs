@@ -99,15 +99,31 @@ CASE_1_NUMBERED = """
 """
 
 
+CASE_5 = """
+5. One
+5. Two
+5. Three
+"""
+
+
+CASE_5_NUMBERED = """
+5. One
+6. Two
+7. Three
+"""
+
+
 @pytest.mark.parametrize(
     ("text", "expected"),
     [
         (CASE_0, CASE_0_NUMBERED),
         (CASE_1, CASE_1_NUMBERED),
+        (CASE_5, CASE_5_NUMBERED),
     ],
     ids=[
         "CASE_0",
         "CASE_1",
+        "CASE_5",
     ],
 )
 def test_number(text: str, expected: str):

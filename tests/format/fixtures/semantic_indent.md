@@ -175,7 +175,7 @@ Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https:/
 1. Here indent width is
    three.
 
-    1. Here indent width is
+    2. Here indent width is
        three.
 
 1. Here indent width is

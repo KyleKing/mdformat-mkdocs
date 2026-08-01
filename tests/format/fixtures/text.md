@@ -174,7 +174,7 @@ Hanging List (https://github.com/executablebooks/mdformat/issues/371 and https:/
 1. Here indent width is
     three.
 
-    1. Here indent width is
+    2. Here indent width is
         three.
 
 1. Here indent width is
@@ -1603,6 +1603,24 @@ Unsupported versions of 0-indexed markdown list (Within ordered list)
     1\. inner
     4\. next
 0. next
+.
+
+Ordered list that does not start at 0 or 1 keeps its start number
+.
+5. one
+6. two
+.
+5. one
+5. two
+.
+
+Ordered list that does not start at 0 or 1 keeps its start number (idempotency)
+.
+5. one
+5. two
+.
+5. one
+5. two
 .
 
 Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/issues/31)
