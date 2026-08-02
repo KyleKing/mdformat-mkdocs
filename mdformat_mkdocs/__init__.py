@@ -1,6 +1,6 @@
 """An mdformat plugin for `mkdocs`."""
 
-__version__ = "5.2.2rc0"
+__version__ = "5.3.0"
 
 __plugin_name__ = "mkdocs"
 
