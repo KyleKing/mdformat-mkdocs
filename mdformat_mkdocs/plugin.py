@@ -6,6 +6,7 @@ import re
 import textwrap
 from functools import partial
 from typing import TYPE_CHECKING
+from urllib.parse import unquote
 
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 
@@ -249,7 +250,7 @@ def _fix_links_with_spaced_urls(
 
         def _restore_spaced_url(m: re.Match[str]) -> str:
             link_text, encoded_url = m.group(1), m.group(2)
-            decoded_url = encoded_url.replace("%20", " ")
+            decoded_url = unquote(encoded_url)
             if decoded_url in spaced_urls_from_source:
                 return f"[{link_text}](<{decoded_url}>)"
             return m.group(0)

@@ -156,6 +156,20 @@ Issue #80: Bare link with space in URL (no attr_list suffix, idempotency)
 [Download](<../assets/load data.txt>)
 .
 
+Jinja-templated URL with spaces and braces (mkdocs-macros)
+.
+[TorchScript]({{ integrations_path or "../integrations" }}/torchscript.md)
+.
+[TorchScript](<{{ integrations_path or "../integrations" }}/torchscript.md>)
+.
+
+Jinja-templated URL with spaces and braces (mkdocs-macros, idempotency)
+.
+[TorchScript](<{{ integrations_path or "../integrations" }}/torchscript.md>)
+.
+[TorchScript](<{{ integrations_path or "../integrations" }}/torchscript.md>)
+.
+
 Issue #83: Linked image with attr_list and long URL (hang fix)
 .
 [![Watch: Building Real-Time Multi-Object Tracking with RF-DETR and

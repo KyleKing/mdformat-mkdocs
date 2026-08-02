@@ -7,8 +7,9 @@ mdformat's HTML stability check fires.
 
 This rule fires BEFORE markdown-it's built-in link rule. When it detects a
 URL with at least one literal space (and no angle brackets), it emits proper
-link tokens with the space percent-encoded in the href, matching the HTML
-that mdformat outputs for the corrected form ``[text](<url with spaces>)``.
+link tokens with the href normalized via ``state.md.normalizeLink``, matching
+the HTML that mdformat outputs for the corrected form
+``[text](<url with spaces>)``.
 """
 
 from __future__ import annotations
@@ -52,7 +53,7 @@ def _spaced_url_link(state: StateInline, silent: bool) -> bool:
         old_pos_max = state.posMax
 
         token = state.push("link_open", "a", 1)
-        token.attrs = {"href": url.replace(" ", "%20")}
+        token.attrs = {"href": state.md.normalizeLink(url)}
         token.markup = ""
         token.info = ""
 
