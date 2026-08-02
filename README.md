@@ -85,9 +85,9 @@ repos:
         additional_dependencies:
           - mdformat-mkdocs
           # Or
-          # - "mdformat-mkdocs[recommended-mdsf]>=5.1.0"
+          # - "mdformat-mkdocs[recommended-mdsf]>=5.2.2"
           # Or
-          # - "mdformat-mkdocs[recommended]"
+          # - "mdformat-mkdocs[recommended]>=5.2.2"
 ```
 
 ### uvx
