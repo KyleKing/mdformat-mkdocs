@@ -134,16 +134,23 @@ def _is_parent_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
     )
 
 
+NUMBERED_SYNTAX = {Syntax.LIST_NUMBERED, Syntax.CODE_NUMBERED}
+
+
 def _is_peer_list_line(prev_line: LineResult, parsed: ParsedLine) -> bool:
-    """Return True if two list items share the same scope and level."""
+    """Return True if two list items share the same scope, level, and marker kind."""
     list_types = {
         *SYNTAX_CODE_LIST,
         Syntax.LIST_BULLETED,
         Syntax.LIST_NUMBERED,
     }
+    same_marker_kind = (parsed.syntax in NUMBERED_SYNTAX) == (
+        prev_line.parsed.syntax in NUMBERED_SYNTAX
+    )
     return (
         parsed.syntax in list_types
         and prev_line.parsed.syntax in list_types
+        and same_marker_kind
         and len(parsed.indent) == len(prev_line.parsed.indent)
     )
 

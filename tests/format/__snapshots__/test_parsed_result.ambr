@@ -2187,12 +2187,6 @@
           syntax=<Syntax.LIST_BULLETED: 'LIST_BULLETED'>,
         ),
         prev_list_peers=list([
-          ParsedLine(
-            content='1. ```bash',
-            indent='  ',
-            line_num=5,
-            syntax=<Syntax.CODE_NUMBERED: 'CODE_NUMBERED'>,
-          ),
         ]),
       ),
       LineResult(

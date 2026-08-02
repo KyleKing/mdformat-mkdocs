@@ -1623,6 +1623,35 @@ Ordered list that does not start at 0 or 1 keeps its start number (idempotency)
 5. two
 .
 
+Nested bulleted sub-list followed by nested numbered sub-list does not crash
+.
+2. Build:
+    - bullet item
+
+    1. nested numbered
+.
+2. Build:
+
+    - bullet item
+
+    1. nested numbered
+.
+
+Nested bulleted sub-list followed by nested numbered sub-list does not crash (idempotency)
+.
+2. Build:
+
+    - bullet item
+
+    1. nested numbered
+.
+2. Build:
+
+    - bullet item
+
+    1. nested numbered
+.
+
 Broken code block because of `>` (https://github.com/KyleKing/mdformat-mkdocs/issues/31)
 .
 # Title
