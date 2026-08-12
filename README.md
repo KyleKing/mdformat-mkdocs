@@ -57,16 +57,21 @@ See the example test files, [./tests/pre-commit-test.md](https://raw.githubuserc
 
 Add this package wherever you use `mdformat` and the plugin will be auto-recognized. No additional configuration necessary. For additional information on plugins, see [the official `mdformat` documentation here](https://mdformat.readthedocs.io/en/stable/users/plugins.html)
 
+### Required Extras
+
+Always installed to prevent corruption to footnotes and frontmatter syntaxes supported by MkDocs out of the box:
+
+- [mdformat-gfm](https://github.com/hukkin/mdformat-gfm) for tables, strikethrough, task lists, and autolinks
+- [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter)) for yaml frontmatter parsed by MkDocs
+- [mdformat-footnote](https://pypi.org/project/mdformat-footnote) for `[^1]: ...` footnote definitions
+
 ### Optional Extras
 
-This package specifies two optional "extra" plugins (`'recommended'` and `'recommended-mdsf'` ) for plugins that work well with typical documentation managed by `mkdocs`:
+This package also specifies two "extra" plugins (`'recommended'` and `'recommended-mdsf'`) for plugins that work well with typical documentation managed by `mkdocs`:
 
 - For `'recommended'`:
     - [mdformat-beautysh](https://pypi.org/project/mdformat-beautysh)
     - [mdformat-config](https://pypi.org/project/mdformat-config)
-    - [mdformat-footnote](https://pypi.org/project/mdformat-footnote)
-    - [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter))
-    - [mdformat-gfm](https://github.com/hukkin/mdformat-gfm)
     - [mdformat-ruff](https://github.com/Freed-Wu/mdformat-ruff)
     - [mdformat-simple-breaks](https://pypi.org/project/mdformat-simple-breaks)
     - [mdformat-web](https://pypi.org/project/mdformat-web)
@@ -85,9 +90,9 @@ repos:
         additional_dependencies:
           - mdformat-mkdocs
           # Or
-          # - "mdformat-mkdocs[recommended-mdsf]>=5.2.2"
+          # - "mdformat-mkdocs[recommended-mdsf]>=5.3.0"
           # Or
-          # - "mdformat-mkdocs[recommended]>=5.2.2"
+          # - "mdformat-mkdocs[recommended]>=5.3.0"
 ```
 
 ### uvx

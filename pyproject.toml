@@ -14,6 +14,8 @@ classifiers = [
 ]
 dependencies = [
   "mdformat >= 1.0.0",
+  "mdformat-footnote >= 0.1.3",
+  "mdformat-front-matters >= 2.0.0",
   "mdformat-gfm >= 1.0.0",
   "mdit-py-plugins >= 0.6.1",
   "more-itertools >= 11.1.0",
@@ -35,9 +37,6 @@ recommended = [
   # Keep in-sync with README
   "mdformat-beautysh >= 1.0.0",
   "mdformat-config >= 0.2.1",
-  "mdformat-footnote >= 0.1.3",
-  "mdformat-front-matters >= 2.0.0",
-  "mdformat-gfm >=1.0.0",
   "mdformat-ruff >= 0.1.3",
   "mdformat-simple-breaks >= 0.1.0",
   "mdformat-web >= 0.2.0",
@@ -47,9 +46,6 @@ recommended = [
 ]
 recommended-mdsf = [
   # Keep in-sync with README
-  "mdformat-footnote >= 0.1.3",
-  "mdformat-front-matters >= 2.0.0",
-  "mdformat-gfm >=1.0.0",
   "mdformat-hooks >= 0.1.0",
   "mdformat-simple-breaks >= 0.1.0",
   "mdformat-wikilink >= 0.3.0",
