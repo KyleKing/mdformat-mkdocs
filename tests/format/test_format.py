@@ -68,9 +68,23 @@ def test_format_fixtures(line, title, text, expected):
     assert output.rstrip() == expected.rstrip()
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason=(
+        "Known limitation: mdformat's markdown-it parser silently truncates content "
+        "nested past its default maxNesting (20), which MkDocs-style 4-space list "
+        "indentation reaches at ~10 levels. mdformat-mkdocs used to raise maxNesting "
+        "itself, but that couldn't tell an explicit user-configured limit from the "
+        "default, so it's been removed pending https://github.com/hukkin/mdformat "
+        "adding a public `max_nesting` option. Once that ships and the `mdformat` "
+        "dependency is pinned to a version that has it, this test should pass "
+        "(document deep nesting via `options={'max_nesting': ...}`) and the "
+        "xfail should be removed."
+    ),
+)
 def test_format_deeply_nested_list():
-    """A list nested 250 levels deep must format and round-trip without error."""
-    depth = 250
+    """A list nested 12 levels deep must format and round-trip without error."""
+    depth = 12
     text = "\n".join(f"{'    ' * i}- item{i}" for i in range(depth)) + "\n"
 
     output = mdformat.text(text, extensions={"mkdocs"})

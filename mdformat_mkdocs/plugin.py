@@ -105,16 +105,13 @@ def add_cli_argument_group(group: argparse._ArgumentGroup) -> None:
     )
 
 
-MIN_MAX_NESTING = 1000
-"""markdown-it's default maxNesting (20) silently truncates lists nested past ~10 levels deep."""
-
 MIN_RECURSION_LIMIT = 10_000
-"""Building a SyntaxTreeNode from a MIN_MAX_NESTING-deep token stream recurses past Python's default limit (1000)."""
+"""Building a SyntaxTreeNode from a deeply nested token stream (e.g. `maxNesting` raised
+for deeply nested MkDocs lists) recurses past Python's default limit (1000)."""
 
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
-    mdit.options["maxNesting"] = max(mdit.options["maxNesting"], MIN_MAX_NESTING)
     sys.setrecursionlimit(max(sys.getrecursionlimit(), MIN_RECURSION_LIMIT))
     mdit.use(material_admon_plugin)
     if not cli_is_no_mkdocs_math(mdit.options):
