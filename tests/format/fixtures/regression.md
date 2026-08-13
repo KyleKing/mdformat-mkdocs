@@ -36,3 +36,32 @@ Inline snippet with newline before closing backtick (idempotency)
 .
 `--8<-- "somesnippet.sh" `
 .
+
+List nested past markdown-it's default maxNesting of 20
+.
+- item0
+    - item1
+        - item2
+            - item3
+                - item4
+                    - item5
+                        - item6
+                            - item7
+                                - item8
+                                    - item9
+                                        - item10
+                                            - item11
+.
+- item0
+    - item1
+        - item2
+            - item3
+                - item4
+                    - item5
+                        - item6
+                            - item7
+                                - item8
+                                    - item9
+                                        - item10
+                                            - item11
+.

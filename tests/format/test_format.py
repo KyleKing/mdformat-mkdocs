@@ -68,6 +68,16 @@ def test_format_fixtures(line, title, text, expected):
     assert output.rstrip() == expected.rstrip()
 
 
+def test_format_deeply_nested_list():
+    """A list nested 250 levels deep must format and round-trip without error."""
+    depth = 250
+    text = "\n".join(f"{'    ' * i}- item{i}" for i in range(depth)) + "\n"
+
+    output = mdformat.text(text, extensions={"mkdocs"})
+
+    assert output.rstrip() == text.rstrip()
+
+
 def _stability_params() -> list[ParameterSet]:
     """Mark known limitations xfail(strict=True) so a fixed one becomes a failure."""
     params = []
