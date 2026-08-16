@@ -9,6 +9,7 @@ from functools import partial
 from typing import TYPE_CHECKING
 from urllib.parse import unquote
 
+import mdformat.plugins
 from mdformat.renderer import DEFAULT_RENDERERS, RenderContext, RenderTreeNode
 
 from ._helpers import ContextOptions, get_conf
@@ -109,10 +110,21 @@ MIN_RECURSION_LIMIT = 10_000
 """Building a SyntaxTreeNode from a deeply nested token stream (e.g. `maxNesting` raised
 for deeply nested MkDocs lists) recurses past Python's default limit (1000)."""
 
+REQUIRED_EXTENSIONS = ("gfm", "front_matters", "footnote")
+"""Hard dependencies chained into `mkdocs` so `extensions={"mkdocs"}` alone is enough to
+avoid corrupting MkDocs-supported syntax; mdformat's Python API otherwise never activates
+an installed plugin unless its name is explicitly passed."""
+
 
 def update_mdit(mdit: MarkdownIt) -> None:
     """Update the parser."""
     sys.setrecursionlimit(max(sys.getrecursionlimit(), MIN_RECURSION_LIMIT))
+    active_extensions = mdit.options.setdefault("parser_extension", [])
+    for name in REQUIRED_EXTENSIONS:
+        plugin = mdformat.plugins.PARSER_EXTENSIONS[name]
+        if plugin not in active_extensions:
+            active_extensions.append(plugin)
+            plugin.update_mdit(mdit)
     mdit.use(material_admon_plugin)
     if not cli_is_no_mkdocs_math(mdit.options):
         mdit.use(pymd_arithmatex_plugin)

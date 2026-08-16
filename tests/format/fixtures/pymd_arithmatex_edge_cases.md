@@ -270,17 +270,17 @@ $$
 
 Math in Tables
 .
-| Formula | Description |
-| ------- | ----------- |
+| Formula  | Description |
+| -------- | ----------- |
 | $E=mc^2$ | Energy-mass |
-| $F=ma$ | Force |
-| \(p=mv\) | Momentum |
+| $F=ma$   | Force       |
+| \(p=mv\) | Momentum    |
 .
-| Formula | Description |
-| ------- | ----------- |
+| Formula  | Description |
+| -------- | ----------- |
 | $E=mc^2$ | Energy-mass |
-| $F=ma$ | Force |
-| \(p=mv\) | Momentum |
+| $F=ma$   | Force       |
+| \(p=mv\) | Momentum    |
 .
 
 Math at Line Boundaries

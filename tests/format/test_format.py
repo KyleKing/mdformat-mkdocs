@@ -22,7 +22,6 @@ KNOWN_HTML_STABILITY_LIMITATIONS: set[str] = {
     "Math with Leading/Trailing Whitespace",
     "or in a list somehow?",
     "ReLU Function with Mixed Syntax (Issue #45)",
-    "Table (squished by mdformat>=0.7.19)",
 }
 
 T = TypeVar("T")
@@ -90,6 +89,43 @@ def test_format_deeply_nested_list():
     output = mdformat.text(text, extensions={"mkdocs"})
 
     assert output.rstrip() == text.rstrip()
+
+
+def test_extensions_mkdocs_alone_chains_hard_dependencies():
+    """Issue #87: `extensions={"mkdocs"}` alone must format tables, frontmatter, footnotes.
+
+    mdformat's API never activates an installed plugin unless its name is
+    explicitly passed.
+    """
+    text = (
+        "---\n"
+        "title: Test\n"
+        "---\n"
+        "\n"
+        "| a | b |\n"
+        "|---|---|\n"
+        "| 1 | 2 |\n"
+        "\n"
+        "Footnote ref[^1].\n"
+        "\n"
+        "[^1]: Footnote def.\n"
+    )
+
+    output = mdformat.text(text, extensions={"mkdocs"})
+
+    assert output == (
+        "---\n"
+        "title: Test\n"
+        "---\n"
+        "\n"
+        "| a   | b   |\n"
+        "| --- | --- |\n"
+        "| 1   | 2   |\n"
+        "\n"
+        "Footnote ref[^1].\n"
+        "\n"
+        "[^1]: Footnote def.\n"
+    )
 
 
 def _stability_params() -> list[ParameterSet]:

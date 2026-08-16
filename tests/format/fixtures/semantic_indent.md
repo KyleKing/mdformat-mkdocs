@@ -252,15 +252,15 @@ Nested semantic lines (https://github.com/KyleKing/mdformat-mkdocs/issues/7)
 .
 
 
-Table (squished by mdformat>=0.7.19)
+Table (Issue #87: gfm now chained through mkdocs, so tables are formatted)
 .
 | Label          |   Rating | Comment              |
 |:---------------|---------:|:---------------------|
 | Name           |         2| <!-- Comment -->     |
 .
-| Label | Rating | Comment |
-|:---------------|---------:|:---------------------|
-| Name | 2| <!-- Comment --> |
+| Label | Rating | Comment          |
+| :---- | -----: | :--------------- |
+| Name  |      2 | <!-- Comment --> |
 .
 
 Floating Link
@@ -310,7 +310,7 @@ Task List / Check List
     - [ ] Add delight to the experience when all tasks are complete :tada:
 .
 
-Footnotes (WARN: escaping is prevented by mdformat-gfm. Tested by py#-hook)
+Footnotes (Issue #87: footnote now chained through mkdocs, so refs are no longer escaped)
 .
 Here is a simple footnote[^1].
 
@@ -324,9 +324,10 @@ Here is a simple footnote[^1].
 
 You can also use words, to fit your writing style more closely[^note].
 
-\[^1\]: My reference.
-\[^note\]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
-This footnote also has been made with a different syntax using 4 spaces for new lines.
+[^1]: My reference.
+
+[^note]: Named footnotes will still render with numbers instead of the text but allow easier identification and linking.\
+    This footnote also has been made with a different syntax using 4 spaces for new lines.
 .
 
 Asterisk list (idempotency)
@@ -518,13 +519,13 @@ Nested semantic lines (idempotency)
 
 Table (idempotency)
 .
-| Label | Rating | Comment |
-|:---------------|---------:|:---------------------|
-| Name | 2| <!-- Comment --> |
+| Label | Rating | Comment          |
+| :---- | -----: | :--------------- |
+| Name  |      2 | <!-- Comment --> |
 .
-| Label | Rating | Comment |
-|:---------------|---------:|:---------------------|
-| Name | 2| <!-- Comment --> |
+| Label | Rating | Comment          |
+| :---- | -----: | :--------------- |
+| Name  |      2 | <!-- Comment --> |
 .
 
 Task List / Check List (idempotency)
