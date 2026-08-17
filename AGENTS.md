@@ -10,7 +10,7 @@
 
 ### Fixture Idempotency Rule
 
-Whenever a fixture's input differs from its expected output (`A → B`), also add a second fixture testing that the output is stable (`B → B`). This catches cases where the transformation is correct but the result is not idempotent — a class of bug that canary testing will only find if the transformed form happens to appear in a tracked downstream repo.
+Whenever a fixture's input differs from its expected output (`A → B`), also add a second fixture testing that the output is stable (`B → B`). This catches cases where the transformation is correct but the result is not idempotent, a class of bug that canary testing only finds if the transformed form happens to appear in a tracked downstream repo.
 
 ```markdown
 Issue #N: descriptive title of the forward transformation
@@ -139,7 +139,7 @@ The package implements mdformat's plugin interface with up to four exports in `_
 
 Every inline rule (`md.inline.ruler.*`) must follow this contract:
 
-- Returning `True` (match): advance `state.pos` to just past the match — in **both** silent and non-silent mode.
+- Returning `True` (match): advance `state.pos` to just past the match, in **both** silent and non-silent mode.
 - Returning `False` (no match): leave `state.pos` unchanged.
 
 `skipToken` (used by `parseLinkLabel` during link-label scanning) calls rules with `silent=True` and only auto-advances `state.pos += 1` when `ok=False`. If a rule returns `True` without moving `state.pos`, the parser stalls in an infinite loop at that position. Verify this contract with a unit test in `tests/test_inline_rule_protocol.py`.
