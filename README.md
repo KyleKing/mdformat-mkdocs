@@ -65,7 +65,9 @@ Always installed to prevent corruption to footnotes and frontmatter syntaxes sup
 - [mdformat-front-matters](https://pypi.org/project/mdformat-front-matters) (previously [mdformat-frontmatter](https://pypi.org/project/mdformat-frontmatter)) for yaml frontmatter parsed by MkDocs
 - [mdformat-footnote](https://pypi.org/project/mdformat-footnote) for `[^1]: ...` footnote definitions
 
-The `mkdocs` extension chains all three, so `mdformat.text(src, extensions={"mkdocs"})` gets you the full set without listing them individually. This matters for the Python API specifically: `mdformat`'s CLI auto-activates every installed plugin, but the API only activates extensions you name, even if their package is installed.
+The `mkdocs` extension chains all three automatically, so `mdformat.text(src, extensions={"mkdocs"})` formats tables, frontmatter, and footnotes without naming each plugin.
+
+This only affects the Python API. `mdformat`'s CLI auto-activates every installed plugin, so it already got this for free. The API activates only the extensions you name, even when a plugin's package is installed, so before this chaining was added, `extensions={"mkdocs"}` alone left tables squished and footnote references escaped ([#87](https://github.com/KyleKing/mdformat-mkdocs/issues/87)).
 
 ### Optional Extras
 
