@@ -27,7 +27,7 @@ license-files = ["LICENSE"]
 name = "mdformat_mkdocs"
 readme = "README.md"
 requires-python = ">=3.10.0"
-version = "6.0.1"
+version = "6.0.2"
 
 [project.entry-points."mdformat.parser_extension"]
 mkdocs = "mdformat_mkdocs"
@@ -67,7 +67,7 @@ homepage = "https://github.com/kyleking/mdformat-mkdocs"
 
 [tool.commitizen]
 tag_format = "v${version}"
-version = "6.0.1"
+version = "6.0.2"
 version_files = ["mdformat_mkdocs/__init__.py", "pyproject.toml:^version"]
 
 [tool.mypy]
