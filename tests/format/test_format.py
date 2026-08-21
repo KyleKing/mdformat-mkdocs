@@ -47,6 +47,7 @@ fixtures = flatten(
             "pymd_arithmatex.md",
             "pymd_arithmatex_ams_environments.md",
             "pymd_arithmatex_edge_cases.md",
+            "pymd_blocks.md",
             "pymd_snippet.md",
             "python_markdown_attr_list.md",
             "regression.md",

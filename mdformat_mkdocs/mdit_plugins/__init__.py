@@ -36,6 +36,7 @@ from ._pymd_arithmatex import (
     TEXMATH_BLOCK_EQNO,
     pymd_arithmatex_plugin,
 )
+from ._pymd_blocks import PYMD_BLOCKS_PREFIX, pymd_blocks_plugin
 from ._pymd_captions import PYMD_CAPTIONS_PREFIX, pymd_captions_plugin
 from ._pymd_snippet import PYMD_SNIPPET_PREFIX, pymd_snippet_plugin
 from ._python_markdown_attr_list import (
@@ -57,6 +58,7 @@ __all__ = (
     "MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX",
     "MKDOCSTRINGS_INJECTION_PREFIX",
     "PYMD_ABBREVIATIONS_PREFIX",
+    "PYMD_BLOCKS_PREFIX",
     "PYMD_CAPTIONS_PREFIX",
     "PYMD_SNIPPET_PREFIX",
     "PYTHON_MARKDOWN_ATTR_LIST_PREFIX",
@@ -72,6 +74,7 @@ __all__ = (
     "pymd_abbreviations_plugin",
     "pymd_admon_plugin",
     "pymd_arithmatex_plugin",
+    "pymd_blocks_plugin",
     "pymd_captions_plugin",
     "pymd_snippet_plugin",
     "python_markdown_attr_list_plugin",

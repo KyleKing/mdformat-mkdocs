@@ -25,6 +25,7 @@ from .mdit_plugins import (
     MKDOCSTRINGS_HEADING_AUTOREFS_PREFIX,
     MKDOCSTRINGS_INJECTION_PREFIX,
     PYMD_ABBREVIATIONS_PREFIX,
+    PYMD_BLOCKS_PREFIX,
     PYMD_CAPTIONS_PREFIX,
     PYMD_SNIPPET_PREFIX,
     PYTHON_MARKDOWN_ATTR_LIST_PREFIX,
@@ -39,6 +40,7 @@ from .mdit_plugins import (
     pymd_abbreviations_plugin,
     pymd_admon_plugin,
     pymd_arithmatex_plugin,
+    pymd_blocks_plugin,
     pymd_captions_plugin,
     pymd_snippet_plugin,
     python_markdown_attr_list_plugin,
@@ -129,6 +131,7 @@ def update_mdit(mdit: MarkdownIt) -> None:
     if not cli_is_no_mkdocs_math(mdit.options):
         mdit.use(pymd_arithmatex_plugin)
     mdit.use(pymd_captions_plugin)
+    mdit.use(pymd_blocks_plugin)
     mdit.use(material_content_tabs_plugin)
     mdit.use(material_deflist_plugin)
     mdit.use(mkdocstrings_autorefs_plugin)
@@ -392,6 +395,22 @@ def render_pymd_caption(node: RenderTreeNode, context: RenderContext) -> str:
     return f"/// {caption_type}{caption_number}{caption_attrs}\n{rendered_content}\n///"
 
 
+def render_pymd_block(node: RenderTreeNode, context: RenderContext) -> str:
+    """Render a generic pymdownx.blocks block, preserving option indentation."""
+    header = f"{node.markup} {node.info}"
+    options = node.meta.get("options")
+    content = "\n\n".join(
+        render for child in node.children if (render := child.render(context))
+    )
+
+    text = header
+    if options:
+        text += f"\n{options}"
+    if content:
+        text += f"\n\n{content}"
+    return f"{text}\n{node.markup}"
+
+
 # A mapping from syntax tree node type to a function that renders it.
 # This can be used to overwrite renderer functions of existing syntax
 # or add support for new syntax.
@@ -413,6 +432,7 @@ RENDERERS: Mapping[str, Render] = {
     TEXMATH_BLOCK_EQNO: _render_math_block_eqno,
     AMSMATH_BLOCK: _render_amsmath,
     # Other plugins
+    PYMD_BLOCKS_PREFIX: render_pymd_block,
     PYMD_CAPTIONS_PREFIX: render_pymd_caption,
     MKDOCSTRINGS_AUTOREFS_PREFIX: _render_meta_content,
     MKDOCSTRINGS_CROSSREFERENCE_PREFIX: _render_cross_reference,

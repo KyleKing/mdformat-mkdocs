@@ -33,6 +33,10 @@ Supports:
     - Can be deactivated entirely with the `--no-mkdocs-math` flag
 - [Python Markdown "Snippets"\*](https://facelessuser.github.io/pymdown-extensions/extensions/snippets)
     - \*Note: the markup (HTML) renders the plain text without implementing the snippet logic. I'm open to contributions if anyone needs full support for snippets
+- [PyMdown "Blocks"\*](https://facelessuser.github.io/pymdown-extensions/extensions/blocks) (`/// name` fenced syntax, e.g. `admonition`, `details`, `tab`, `html`, `definition`, `expand`, `markdown`, or any third-party block type): options directly after the header keep their original indentation, and nested content is formatted like any other markdown ([#88](https://github.com/KyleKing/mdformat-mkdocs/issues/88))
+    - \*Note: `/// caption`, `/// figure-caption`, and `/// table-caption` blocks are normalized separately, see [PyMdown "Blocks: Caption"](https://facelessuser.github.io/pymdown-extensions/extensions/blocks/caption) below
+    - \*Note: a literal `///` line inside a fenced code block that's part of a block's content is misread as the block's closing fence; wrap such content so no line is a bare `///`, or open an issue if this affects you
+- [PyMdown "Blocks: Caption"](https://facelessuser.github.io/pymdown-extensions/extensions/blocks/caption): `/// caption`, `/// figure-caption`, and `/// table-caption` are normalized to `/// {type} | {number}` with the `attrs` option indented four spaces
 
 ### Features with Implicit Support
 
