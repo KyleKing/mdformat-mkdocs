@@ -48,6 +48,18 @@
             "url": "https://github.com/astral-sh/ruff"
         },
         {
+            "$comment": "Uses mdformat-mkdocs==5.3.0 with --wrap=80 --number via .mdformat.toml in pre-commit (rev 1.0.0). No longer excludes docs/api/ now that the mkdocs plugin handles mkdocstrings syntax.",
+            "name": "sbsim",
+            "options": {
+                "number": true,
+                "wrap": 80
+            },
+            "patterns": [
+                "docs/**/*.md"
+            ],
+            "url": "https://github.com/google/sbsim"
+        },
+        {
             "$comment": "Uses mdformat-mkdocs[recommended]>=2.1.0 with --number in pre-commit (rev 1.0.0). Explicitly excludes changelog.md and deprecated.md from their own hook, both contain code blocks with embedded triple-backtick strings that trigger an idempotency edge case. Mirror their excludes here.",
             "excludes": [
                 "docs/changelog.md",
