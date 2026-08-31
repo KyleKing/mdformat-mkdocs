@@ -21,8 +21,20 @@ Example entry, appended to the 'repos' array in 'canary_repos.json'::
         "url": "https://github.com/some-org/some-project",
         "patterns": ["docs/**/*.md"],
         "excludes": ["docs/changelog.md"],
-        "options": {"wrap": 120}
+        "options": {"wrap": 120},
+        "extensions": ["mkdocs"]
     }
+
+'options' is passed straight to 'mdformat.text', so it carries this plugin's own
+settings too, under 'plugin.mkdocs'. That is the only way to canary a
+plugin whose behavior is off by default::
+
+    "options": {"plugin": {"mkdocs": {"argument": true}}}
+
+'extensions' names other mdformat plugins the repo's own docs build depends on
+(e.g. 'mkdocs' for MkDocs admonitions), on top of the 'mkdocs' this
+project always tests. Add the matching PyPI package to the canary tox env's
+deps in pyproject.toml.
 """
 
 # ruff:file-ignore[print, subprocess-without-shell-equals-true, start-process-with-partial-path]
@@ -55,6 +67,7 @@ class Repo:
     patterns: tuple[str, ...]
     excludes: tuple[str, ...] = ()
     options: dict[str, Any] = field(default_factory=dict)
+    extensions: tuple[str, ...] = ()
 
     @property
     def display(self) -> str:
@@ -138,6 +151,7 @@ def _load_repos(path: Path) -> list[Repo]:
             patterns=tuple(entry.get("patterns", ())),
             excludes=tuple(entry.get("excludes", ())),
             options=entry.get("options", {}),
+            extensions=tuple(entry.get("extensions", ())),
         )
         for entry in data.get("repos", [])
     ]
@@ -194,7 +208,9 @@ def _collect_files(repo: Repo, target_dir: Path) -> list[Path]:
     return sorted(included - excluded)
 
 
-def _check_file(path: Path, options: dict[str, Any]) -> FileResult:
+def _check_file(
+    path: Path, options: dict[str, Any], extensions: set[str]
+) -> FileResult:
     """Verify mdformat produces idempotent output for a single file."""
     try:
         original = path.read_text(encoding="utf-8")
@@ -202,8 +218,8 @@ def _check_file(path: Path, options: dict[str, Any]) -> FileResult:
         return FileResult(path=path, error=f"read error: {err}")
 
     try:
-        pass1 = mdformat.text(original, options=options, extensions=_EXTENSIONS)
-        pass2 = mdformat.text(pass1, options=options, extensions=_EXTENSIONS)
+        pass1 = mdformat.text(original, options=options, extensions=extensions)
+        pass2 = mdformat.text(pass1, options=options, extensions=extensions)
     except Exception as err:
         return FileResult(path=path, error=f"mdformat error: {err}")
 
@@ -231,9 +247,10 @@ def _check_repo(repo: Repo, target_dir: Path) -> CheckResult:
             error=f"no files matched patterns {repo.patterns}",
         )
         return CheckResult(repo=repo, file_results=(no_match,))
+    extensions = _EXTENSIONS | set(repo.extensions)
     return CheckResult(
         repo=repo,
-        file_results=tuple(_check_file(f, repo.options) for f in files),
+        file_results=tuple(_check_file(f, repo.options, extensions) for f in files),
     )
 
 

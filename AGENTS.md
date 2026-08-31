@@ -167,8 +167,9 @@ Configuration can be passed via:
     ```
 1. API: `mdformat.text(content, extensions={"mkdocs"}, options={...})`
 
-Two footguns to avoid:
+Three footguns to avoid:
 
+- `POSTPROCESSORS` is keyed on `node.type`, and the node covering the whole document is `"root"`, not `"document"`. A postprocessor filed under the wrong key never runs, and mdformat reports nothing, so the plugin is silently inert everywhere except tests that build the node themselves. The root node's text also arrives before mdformat appends link reference definitions and the trailing newline
 - Boolean flags in `add_cli_argument_group` must use `action="store_const", const=True` (default `None`), not `store_true`. A `store_true` default (`False`) is indistinguishable from an explicit choice to `get_conf()`, so it silently overrides `argument = true` from `.mdformat.toml` whenever the CLI flag isn't passed. mdformat's CLI builder raises a `DeprecationWarning` for any plugin flag whose default isn't `None` or `argparse.SUPPRESS`
 - Read config lazily. Call `get_conf()` (or read `RenderContext.options`) inside the rule/renderer function itself, not inside `update_mdit`. mdformat runs extensions' `update_mdit` in an unguaranteed order, so a value captured there can be stale by the time every extension has finished configuring options
 
@@ -178,33 +179,19 @@ Two footguns to avoid:
 
 - Fixture files (before/after markdown pairs) live in `tests/format/fixtures/` and `tests/render/fixtures/`, parsed with `markdown_it.utils.read_fixture_file`
 - `tests/test_mdformat.py` verifies idempotent formatting against `tests/pre-commit-test.md`
-- This project layers `syrupy` on top of these fixtures, so `--snapshot-update` applies
+- A downstream project may layer a snapshot library (e.g. syrupy) on top of these fixtures; check `pyproject.toml` before assuming `--snapshot-update` applies
+- At least one test per feature must drive `mdformat.text` or `mdformat._cli.run` end to end. A test that hands a hand-built node or a mocked `RenderContext` to a renderer or postprocessor passes whether or not mdformat ever calls it, so a suite made only of those stays green over a plugin that does nothing
 
 **Test Organization**
 
 - `tests/format/`: Tests formatting output (input markdown → formatted markdown)
 - `tests/render/`: Tests HTML rendering (markdown → HTML via markdown-it)
 - `tests/test_hypothesis.py`: Property-based idempotency testing over generated markdown documents
-- `tests/test_inline_rule_protocol.py`: Unit tests for the `StateInline` rule contract (see above)
 
 ## Development Notes
 
 - Do not use `uv` commands (there is no `uv.lock` file). Always use `tox` (installed via mise and available on PATH), which manages environments and dependencies
 
-## mdformat-mkdocs Specific Guidance
+This file is template-owned and `copier update` keeps it current. Put project-specific guidance in `AGENTS.local.md` (loaded below when present) or in a nested `AGENTS.md` scoped to its directory.
 
-**List Indentation**
-
-- MkDocs requires 4-space indentation for nested list items
-- When `--align-semantic-breaks-in-lists` is enabled, continuation lines in ordered lists use 3-space indent (align with text after "1. ")
-- The `_normalize_list.py` module handles this complex logic with state machines tracking code blocks, HTML blocks, and list nesting
-
-**Link References**
-
-- By default, escapes undefined link references `[foo]` → `\[foo\]`
-- With `--ignore-missing-references`, leaves them as-is (required for mkdocstrings dynamic references)
-
-**Definition Lists**
-
-- Material for MkDocs definition lists require blank line between term and definition
-- Handled by `_material_deflist.py` plugin and special rendering in `plugin.py`
+@AGENTS.local.md
